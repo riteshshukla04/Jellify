@@ -7,7 +7,10 @@ import TrackPlayer from 'react-native-track-player';
 import Client from './api/client';
 
 console.debug("Launching...");
-// Client.instance;
+
+Client.instance;
+console.debug("Created Jellify client");
+
 AppRegistry.registerComponent(appName, () => App);
-AppRegistry.registerComponent('RNCarPlayScene', () => App)
-TrackPlayer.registerPlaybackService(() => PlaybackService);
+// AppRegistry.registerComponent('RNCarPlayScene', () => App)
+// TrackPlayer.registerPlaybackService(() => PlaybackService);
