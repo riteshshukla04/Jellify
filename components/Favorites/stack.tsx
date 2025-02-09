@@ -13,7 +13,7 @@ import PlaylistsScreen from "../Playlists/screen";
 
 const LibraryStack = createNativeStackNavigator<StackParamList>();
 
-export default function Library(): React.JSX.Element {
+export default function Favorites(): React.JSX.Element {
     return (
         <LibraryStack.Navigator
             initialRouteName="Favorites"

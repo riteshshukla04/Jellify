@@ -2,14 +2,13 @@ import React from "react";
 import { BottomTabBar, createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from "./Home/stack";
 import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
-import { useColorScheme } from "react-native";
-import Favorites from "./Favorites/component";
 import Settings from "./Settings/stack";
 import { Discover } from "./Discover/stack";
 import { Miniplayer } from "./Player/mini-player";
 import { getTokens, Separator } from "tamagui";
 import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
+import Favorites from "./Favorites/stack";
 
 const Tab = createBottomTabNavigator();
 
