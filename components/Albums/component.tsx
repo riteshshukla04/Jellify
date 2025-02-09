@@ -28,7 +28,7 @@ export default function Albums({ navigation }: AlbumsProps) : React.JSX.Element 
                             subCaption={album.ProductionYear?.toString() ?? ""}
                             cornered
                             onPress={() => {
-                                navigation.push("Album", { album })
+                                navigation.navigate("Album", { album })
                             }}
                             width={width / 2.1}
                         />

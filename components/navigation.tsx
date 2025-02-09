@@ -11,7 +11,6 @@ export default function Navigation(): React.JSX.Element {
   
     return (
       <RootStack.Navigator>
-        <RootStack.Group>
           <RootStack.Screen 
             name="Tabs" 
             component={Tabs}
@@ -19,16 +18,14 @@ export default function Navigation(): React.JSX.Element {
               headerShown: false
             }}
           />
-        </RootStack.Group>
-        <RootStack.Group screenOptions={{ presentation: 'modal' }}>
           <RootStack.Screen 
             name="Player" 
             component={Player} 
             options={{
-               headerShown: false
+               headerShown: false,
+               presentation: 'modal'
             }}
           />
-        </RootStack.Group>
     </RootStack.Navigator>
     )
 }

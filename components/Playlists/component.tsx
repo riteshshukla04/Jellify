@@ -27,7 +27,7 @@ export default function Playlists({ navigation }: PlaylistsProps) : React.JSX.El
                         item={playlist}
                         caption={playlist.Name ?? "Untitled Playlist"}
                         onPress={() => {
-                            navigation.push("Playlist", { playlist })
+                            navigation.navigate("Playlist", { playlist })
                         }}
                         width={width / 2.1}
                     />

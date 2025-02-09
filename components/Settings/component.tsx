@@ -1,11 +1,11 @@
 import React from "react";
 import { SafeAreaView } from "react-native";
 import { ListItem, ScrollView, Separator, YGroup } from "tamagui";
-import SignOut from "../helpers/sign-out";
-import ServerDetails from "../helpers/server-details";
-import LibraryDetails from "../helpers/library-details";
+import SignOut from "./helpers/sign-out";
+import ServerDetails from "./helpers/server-details";
+import LibraryDetails from "./helpers/library-details";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackParamList } from "../../../components/types";
+import { StackParamList } from "../types";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 
 export default function Root({ 
@@ -30,7 +30,7 @@ export default function Root({
                         title="Account Details"
                         subTitle="Everything is about you, man"
                         onPress={() => {
-                            navigation.push("AccountDetails")
+                            navigation.navigate("AccountDetails")
                         }}
                     />
                 </YGroup.Item>
@@ -41,7 +41,7 @@ export default function Root({
                         title="Developer Tools"
                         subTitle="Nerds rule!"
                         onPress={() => {
-                            navigation.push("DevTools");
+                            navigation.navigate("DevTools");
                         }}
                     />
                 </YGroup.Item>

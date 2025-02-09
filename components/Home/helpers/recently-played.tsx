@@ -41,7 +41,7 @@ export default function RecentlyPlayed({
                             }}
                             onLongPress={() => {
                                 trigger("impactMedium");
-                                navigation.push("Details", {
+                                navigation.navigate("Details", {
                                     item: recentlyPlayedTrack,
                                     isNested: false
                                 })

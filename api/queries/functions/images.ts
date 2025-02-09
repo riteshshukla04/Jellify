@@ -4,7 +4,7 @@ import _ from "lodash"
 import Client from "../../../api/client"
 import { Dirs, FileSystem } from 'react-native-file-access'
 
-export function fetchItemImage(itemId: string, imageType: ImageType = ImageType.Primary, width: number = 150, height: number = 150) {
+export function fetchItemImage(itemId: string, imageType: ImageType, width: number, height: number) {
     
     return new Promise<string>(async (resolve, reject) => {
 
@@ -21,8 +21,8 @@ export function fetchItemImage(itemId: string, imageType: ImageType = ImageType.
                 .getItemImage({
                     itemId,
                     imageType,
-                    width: Math.ceil(width) * 2,
-                    height: Math.ceil(width) * 2,
+                    width: Math.ceil(width / 100) * 100 * 2, // Round to the nearest 100 for simplicity and to avoid 
+                    height: Math.ceil(height / 100) * 100 * 2, // redundant images in storage, then double it to make sure it's crispy
                     format: ImageFormat.Png
                 },
                 {
