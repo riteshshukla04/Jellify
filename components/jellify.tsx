@@ -13,6 +13,8 @@ import { JellifyProvider, useJellifyContext } from "./provider";
 
 export default function Jellify(): React.JSX.Element {
 
+  console.debug("Gathering data...");
+
   return (
     <PortalProvider shouldAddRootHost>
       <JellifyProvider>
@@ -26,6 +28,8 @@ function App(): React.JSX.Element {
 
   const isDarkMode = useColorScheme() === "dark";
   const { loggedIn } = useJellifyContext();
+
+  console.debug(` User is ${!loggedIn ? "" : "not"} logged in to Jellyfin`);
   
   return (
     <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>

@@ -5,7 +5,9 @@ import { StackParamList } from "./types";
 
 export default function Navigation(): React.JSX.Element {
 
-  const RootStack = createNativeStackNavigator<StackParamList>()
+  const RootStack = createNativeStackNavigator<StackParamList>();
+
+  console.debug("Rendering navigational tree...")
   
     return (
       <RootStack.Navigator>

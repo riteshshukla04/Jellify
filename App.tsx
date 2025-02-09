@@ -12,6 +12,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 export default function App(): React.JSX.Element {
   
+  console.debug("Starting Jellify...")
+
   const isDarkMode = useColorScheme() === 'dark';
 
   return (

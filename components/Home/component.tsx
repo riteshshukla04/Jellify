@@ -12,6 +12,8 @@ const HomeStack = createNativeStackNavigator<StackParamList>();
 
 export default function Home(): React.JSX.Element {
 
+    console.debug("Home sweet home!");
+
     return (
         <HomeProvider>
             <HomeStack.Navigator 
