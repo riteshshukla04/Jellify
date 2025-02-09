@@ -18,7 +18,7 @@ jobs:
           node-version: 20
 
       - name: 💬 Echo package.json version to Github ENV
-        run: echo VERSION_NUMBER=$(npm version minor --tag-version-prefix="" --no-commit-hooks) >> $GITHUB_ENV
+        run: echo VERSION_NUMBER=$(npm version patch --tag-version-prefix="" --no-commit-hooks) >> $GITHUB_ENV
 
       - name: 🟢 Run npm run init
         run: npm run init

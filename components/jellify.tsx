@@ -8,7 +8,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { JellifyDarkTheme, JellifyLightTheme } from "./theme";
 import { PlayerProvider } from "../player/provider";
 import { useColorScheme } from "react-native";
-import { PortalProvider } from "tamagui";
+import { PortalProvider } from "@tamagui/portal";
 import { JellifyProvider, useJellifyContext } from "./provider";
 
 export default function Jellify(): React.JSX.Element {

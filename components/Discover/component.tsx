@@ -1,28 +1,13 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { StackParamList } from "../types";
-import Index from "./screens";
+import React from "react";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { ScrollView } from "tamagui";
 
-export const DiscoverStack = createNativeStackNavigator<StackParamList>();
-
-export function Discover(): React.JSX.Element {
+export default function Index() : React.JSX.Element {
     return (
-        <DiscoverStack.Navigator
-            initialRouteName="Discover"
-            screenOptions={{
-
-            }}>
-
-            <DiscoverStack.Screen
-                name="Discover"
-                component={Index}
-                options={{
-                    headerLargeTitle: true,
-                    headerLargeTitleStyle: {
-                        fontFamily: 'Aileron-Bold'
-                    }
-                }}
-            />
-
-        </DiscoverStack.Navigator>
+        <SafeAreaView>
+            <ScrollView>
+                
+            </ScrollView>
+        </SafeAreaView>
     )
 }

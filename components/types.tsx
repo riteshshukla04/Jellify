@@ -20,7 +20,10 @@ export type StackParamList = {
     AccountDetails: undefined;
     DevTools: undefined;
 
-    Tabs: undefined;
+    Tabs: {
+        screen: string;
+        params: any
+    };
 
     Player: undefined;
     Queue: undefined;

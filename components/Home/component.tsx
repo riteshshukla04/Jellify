@@ -1,81 +1,64 @@
-import _ from "lodash";
-import { HomeProvider } from "./provider";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
-import { ArtistScreen } from "../Artist/screens";
-import { AlbumScreen } from "../Album/screens";
-import { PlaylistScreen } from "../Playlist/screens";
-import { ProvidedHome } from "./screens";
-import DetailsScreen from "../ItemDetail/screen";
+import { ScrollView, RefreshControl } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { YStack, XStack, Separator } from "tamagui";
+import Playlists from "./helpers/playlists";
+import RecentArtists from "./helpers/recent-artists";
+import RecentlyPlayed from "./helpers/recently-played";
+import { useHomeContext } from "./provider";
+import { H3 } from "../Global/helpers/text";
+import Avatar from "../Global/components/avatar";
+import Client from "../../api/client";
+import { usePlayerContext } from "../../player/provider";
+import { useEffect } from "react";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-const HomeStack = createNativeStackNavigator<StackParamList>();
+export function ProvidedHome({ 
+    navigation 
+} : { 
+    navigation: NativeStackNavigationProp<StackParamList>
+}): React.JSX.Element {
 
-export default function Home(): React.JSX.Element {
+    const { refreshing: refetching, onRefresh: onRefetch } = useHomeContext()
+
+    const { nowPlayingIsFavorite } = usePlayerContext();
+
+    useEffect(() => {
+        onRefetch()
+    }, [
+        nowPlayingIsFavorite
+    ])
 
     console.debug("Home sweet home!");
 
     return (
-        <HomeProvider>
-            <HomeStack.Navigator 
-                initialRouteName="Home"
-                screenOptions={{
-                }}
-            >
-                <HomeStack.Group>
-                    <HomeStack.Screen 
-                        name="Home" 
-                        component={ProvidedHome} 
-                        options={{
-                            headerLargeTitle: true,
-                            headerLargeTitleStyle: {
-                                fontFamily: 'Aileron-Bold'
-                            }
-                        }}
+        <SafeAreaView edges={["top", "right", "left"]}>
+            <ScrollView 
+                contentInsetAdjustmentBehavior="automatic"
+                refreshControl={
+                    <RefreshControl 
+                        refreshing={refetching} 
+                        onRefresh={onRefetch}
                     />
+                }>
+                <YStack alignContent='flex-start'>
+                    <XStack margin={"$2"}>
+                        <H3>{`Hi, ${Client.user!.name}`}</H3>
+                    </XStack>
 
-                    <HomeStack.Screen 
-                        name="Artist" 
-                        component={ArtistScreen} 
-                        options={({ route }) => ({
-                            title: route.params.artist.Name ?? "Unknown Artist",
-                            headerLargeTitle: true,
-                            headerLargeTitleStyle: {
-                                fontFamily: 'Aileron-Bold'
-                            }
-                        })}
-                    />
+                    <Separator marginVertical={"$2"} />
 
-                    <HomeStack.Screen
-                        name="Album"
-                        component={AlbumScreen}
-                        options={({ route }) => ({
-                            headerShown: true,
-                            headerTitle: ""
-                        })}
-                    />
+                    <RecentArtists navigation={navigation} />
 
-                    <HomeStack.Screen
-                        name="Playlist"
-                        component={PlaylistScreen}
-                        options={({ route }) => ({
-                            headerShown: true,
-                            headerTitle: ""
-                        })}
-                    />
+                    <Separator marginVertical={"$3"} />
 
-                </HomeStack.Group>
+                    <RecentlyPlayed navigation={navigation} />
 
-                <HomeStack.Group screenOptions={{ presentation: "modal"}}>
-                    <HomeStack.Screen
-                        name="Details"
-                        component={DetailsScreen}
-                        options={{
-                            headerShown: false,
-                            presentation: "modal"
-                        }}
-                    />
-                </HomeStack.Group>
-            </HomeStack.Navigator>
-        </HomeProvider>
+                    <Separator marginVertical={"$3"} />
+
+                    <Playlists navigation={navigation}/>
+                </YStack>
+            </ScrollView>
+        </SafeAreaView>
     );
 }

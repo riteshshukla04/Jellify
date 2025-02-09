@@ -67,7 +67,7 @@ export default function Track({
                 onLongPress={
                     onLongPress ? () => onLongPress() 
                     : () => {
-                        navigation.push("Details", {
+                        navigation.navigate("Details", {
                             item: track,
                             isNested: isNested
                         })
@@ -162,7 +162,7 @@ export default function Track({
                         <Icon 
                             name="dots-vertical" 
                             onPress={() => {
-                                navigation.push("Details", {
+                                navigation.navigate("Details", {
                                     item: track,
                                     isNested: isNested
                                 });

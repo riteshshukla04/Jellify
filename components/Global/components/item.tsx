@@ -35,14 +35,14 @@ export default function Item({
                 onPress={() => {
                     switch (item.Type) {
                         case ("MusicArtist") : {
-                            navigation.push("Artist", {
+                            navigation.navigate("Artist", {
                                 artist: item
                             })
                             break;
                         }
 
                         case ("MusicAlbum") : {
-                            navigation.push("Album", {
+                            navigation.navigate("Album", {
                                 album: item
                             })
                             break;
@@ -61,7 +61,7 @@ export default function Item({
 
                 }}
                 onLongPress={() => {
-                    navigation.push("Details", {
+                    navigation.navigate("Details", {
                         item,
                         isNested: false
                     })
@@ -122,7 +122,7 @@ export default function Item({
                         <Icon  
                         name="dots-vertical"
                         onPress={() => {
-                            navigation.push("Details", {
+                            navigation.navigate("Details", {
                                 item,
                                 isNested: false
                             })

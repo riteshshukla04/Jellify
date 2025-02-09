@@ -16,12 +16,15 @@ interface ArtistProps {
     navigation: NativeStackNavigationProp<StackParamList>
 }
 
-export default function Artist(props: ArtistProps): React.JSX.Element {
+export default function Artist({
+    artist,
+    navigation
+}: ArtistProps): React.JSX.Element {
 
-    props.navigation.setOptions({
+    navigation.setOptions({
         headerRight: () => { 
             return (
-                <FavoriteButton item={props.artist} />
+                <FavoriteButton item={artist} />
             )
         }
     });
@@ -32,7 +35,7 @@ export default function Artist(props: ArtistProps): React.JSX.Element {
 
     const bannerHeight = height / 6;
 
-    const { data: albums } = useArtistAlbums(props.artist.Id!);
+    const { data: albums } = useArtistAlbums(artist.Id!);
 
     return (
         <ScrollView 
@@ -40,7 +43,7 @@ export default function Artist(props: ArtistProps): React.JSX.Element {
             alignContent="center">
             <YStack alignContent="center" justifyContent="center" minHeight={bannerHeight}>
                 <BlurhashedImage
-                    item={props.artist}
+                    item={artist}
                     width={width}
                 />
             </YStack>
@@ -62,7 +65,7 @@ export default function Artist(props: ArtistProps): React.JSX.Element {
                                 cornered 
                                 item={album}
                                 onPress={() => {
-                                    props.navigation.push('Album', {
+                                    navigation.navigate('Album', {
                                         album
                                     })
                                 }}

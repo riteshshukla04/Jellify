@@ -100,7 +100,7 @@ export default function ItemDetail({
                                         navigation.getParent()!.goBack();
                                     
                                     navigation.goBack();
-                                    navigation.push("Artist", {
+                                    navigation.navigate("Artist", {
                                         artist: item.ArtistItems[0]
                                     });
                                 }

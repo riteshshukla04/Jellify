@@ -93,7 +93,7 @@ export default function Album({
                                         item={artist}
                                         width={width / 4}
                                         onPress={() => {
-                                            navigation.push("Artist", {
+                                            navigation.navigate("Artist", {
                                                 artist
                                             });
                                         }}

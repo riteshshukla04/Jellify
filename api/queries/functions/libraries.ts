@@ -64,7 +64,7 @@ export function fetchUserViews() : Promise<BaseItemDto[]> {
             })
             .then((response) => {
                 if (response.data.Items)
-                    resolve(response.data.Items.filter(library => library.CollectionType === 'music'))
+                    resolve(response.data.Items)
 
                 else
                     resolve([])

@@ -22,7 +22,7 @@ export default function RecentArtists({ navigation }: { navigation: NativeStackN
                             item={recentArtist}
                             caption={recentArtist.Name ?? "Unknown Artist"}
                             onPress={() => {
-                                navigation.push('Artist', 
+                                navigation.navigate('Artist', 
                                     { 
                                         artist: recentArtist, 
                                     }
