@@ -11,7 +11,7 @@
     "start": "react-native start",
     "test": "jest",
     "pod:install": "cd ios && bundle install && RCT_NEW_ARCH_ENABLED=0 pod install",
-    "pod:install:new-arch": "cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 pod install",
+    "pod:install:new-arch": "cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
     "pod:clean": "cd ios && pod deintegrate",
     "fastlane:ios:build": "cd ios && fastlane build",
     "fastlane:ios:beta": "cd ios && fastlane beta",
