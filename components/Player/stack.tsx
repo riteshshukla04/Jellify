@@ -1,5 +1,5 @@
 import React from "react";
-import { createNativeStackNavigator, NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
 import PlayerScreen from "./screens";
 import Queue from "./screens/queue";
@@ -7,7 +7,7 @@ import DetailsScreen from "../ItemDetail/screen";
 
 export const PlayerStack = createNativeStackNavigator<StackParamList>();
 
-export default function Player({ navigation }: { navigation: NativeStackNavigationProp<StackParamList>}) : React.JSX.Element {
+export default function Player() : React.JSX.Element {
     return (
         <PlayerStack.Navigator
             initialRouteName="Player"

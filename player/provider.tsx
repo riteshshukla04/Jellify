@@ -3,7 +3,7 @@ import { JellifyTrack } from "../types/JellifyTrack";
 import { storage } from "../constants/storage";
 import { MMKVStorageKeys } from "../enums/mmkv-storage-keys";
 import { findPlayNextIndexStart, findPlayQueueIndexStart } from "./helpers/index";
-import TrackPlayer, { Event, Progress, State, Track, usePlaybackState, useProgress, useTrackPlayerEvents } from "react-native-track-player";
+import TrackPlayer, { Event, Progress, State, usePlaybackState, useProgress, useTrackPlayerEvents } from "react-native-track-player";
 import _, { isEqual, isUndefined } from "lodash";
 import { getPlaystateApi } from "@jellyfin/sdk/lib/utils/api";
 import { handlePlaybackProgressUpdated, handlePlaybackState } from "./handlers";
