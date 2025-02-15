@@ -3,8 +3,8 @@ import SearchScreen from "./screen";
 import { StackParamList } from "../types";
 import { ArtistScreen } from "../Artist/screens";
 import { AlbumScreen } from "../Album";
-import { PlaylistScreen } from "../Playlist/screens";
 import DetailsScreen from "../ItemDetail/screen";
+import { PlaylistScreen } from "../Playlist";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
