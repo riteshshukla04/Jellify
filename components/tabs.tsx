@@ -8,15 +8,15 @@ import { Miniplayer } from "./Player/mini-player";
 import { getTokens, Separator } from "tamagui";
 import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
-import Favorites from "./Favorites/stack";
+import LibraryStack from "./Library/stack";
 
 const Tab = createBottomTabNavigator();
 
 export function Tabs() : React.JSX.Element {
 
-    const { showMiniplayer } = usePlayerContext();
+    const { nowPlaying } = usePlayerContext();
 
-    console.debug(`${showMiniplayer ? "Showing miniplayer" : "Miniplayer is hidden"}`);
+    console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
 
     return (
             <Tab.Navigator
@@ -28,12 +28,11 @@ export function Tabs() : React.JSX.Element {
                 }}
                 tabBar={(props) => (
                     <>
-                        { showMiniplayer && (
+                        { nowPlaying && (
                             /* Hide miniplayer if the queue is empty */
                             <>
                                 <Separator />
                                 <Miniplayer navigation={props.navigation} />
-                                <Separator />
                             </>
                         )}
                         <BottomTabBar {...props} />
@@ -52,12 +51,12 @@ export function Tabs() : React.JSX.Element {
                 />
 
                 <Tab.Screen
-                    name="Favorites"
-                    component={Favorites}
+                    name="Library"
+                    component={LibraryStack}
                     options={{
                         headerShown: false,
                         tabBarIcon: ({color, size }) => (
-                            <MaterialCommunityIcons name="heart-multiple-outline" color={color} size={size} />
+                            <MaterialCommunityIcons name="book-music-outline" color={color} size={size} />
                         )
                     }}
                 />

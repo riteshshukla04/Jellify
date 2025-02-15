@@ -9,7 +9,6 @@ import jellifyConfig from './tamagui.config';
 import { clientPersister } from './constants/storage';
 import { queryClient } from './constants/query-client';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { createWorkletRuntime } from 'react-native-reanimated';
 
 // export const backgroundRuntime = createWorkletRuntime('background');
 

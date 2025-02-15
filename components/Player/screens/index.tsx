@@ -16,6 +16,7 @@ import { ProgressMultiplier, TextTickerConfig } from "../component.config";
 import { toUpper } from "lodash";
 import { trigger } from "react-native-haptic-feedback";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 
 const scrubGesture = Gesture.Pan();
 
@@ -34,7 +35,8 @@ export default function PlayerScreen({
         useSeekTo, 
         useSkip, 
         usePrevious, 
-        queueName,
+        playQueue,
+        queue
     } = usePlayerContext();
     
     const [seeking, setSeeking] = useState<boolean>(false);
@@ -92,7 +94,14 @@ export default function PlayerScreen({
                         >
                             <Text>Playing from</Text>
                             <TextTicker {...TextTickerConfig}>
-                                <Text bold>{ queueName ?? "Queue"}</Text>
+                                <Text bold>
+                                    { 
+                                        // If the Queue is a BaseItemDto, display the name of it
+                                        typeof(queue) === 'object' 
+                                        ? (queue as BaseItemDto).Name ?? "Untitled"
+                                        : queue
+                                    }
+                                </Text>
                             </TextTicker>
                         </YStack>
 
@@ -103,14 +112,20 @@ export default function PlayerScreen({
                         justifyContent="center"
                         alignContent="center"
                         minHeight={width / 1.1}
-                        onPress={() => {
-                            useTogglePlayback.mutate(undefined)
-                        }}
+                        // onPress={() => {
+                        //     useTogglePlayback.mutate(undefined)
+                        // }}
                     >
-                        <BlurhashedImage
-                            item={nowPlaying!.item}
-                            width={width / 1.1}
+                    { useMemo(() => {
+                        return (
+                            <BlurhashedImage
+                                item={nowPlaying!.item}
+                                width={width / 1.1}
                             />
+                        )
+                    }, [
+                        nowPlaying
+                    ])}
                     </XStack>
 
                     <XStack marginHorizontal={20} paddingVertical={5}>
@@ -288,8 +303,8 @@ export default function PlayerScreen({
 
                                 setSeeking(true);
                                 setProgressState(progressState - (15 * ProgressMultiplier));
-                                useSeekTo.mutate(progress!.position - 15);
                                 setSeeking(false);
+                                useSeekTo.mutate(progress!.position - 15);
                             }}
                         />
                         
@@ -316,16 +331,14 @@ export default function PlayerScreen({
                             onPress={() => { 
                                 setSeeking(true);
                                 setProgressState(progressState + (15 * ProgressMultiplier));
-                                useSeekTo.mutate(progress!.position + 15);
                                 setSeeking(false);
+                                useSeekTo.mutate(progress!.position + 15);
                             }}  
                         />              
                     </XStack>
 
                     <XStack justifyContent="space-evenly" marginVertical={"$7"}>
-                        <Icon
-                            name="speaker-multiple"
-                            large
+                        <Icon name="speaker-multiple"
                         />
 
                         <Spacer />
@@ -335,7 +348,6 @@ export default function PlayerScreen({
                             onPress={() => {
                                 navigation.navigate("Queue");
                             }}
-                            large
                         />
                     </XStack>
                 </YStack>
