@@ -1,4 +1,6 @@
 // Learn more https://docs.expo.io/guides/customizing-metro
+const { wrapWithReanimatedMetroConfig } = require("react-native-reanimated/metro-config")
+
 const { getDefaultConfig } = require('@react-native/metro-config')
 
 const config = getDefaultConfig(__dirname, {
@@ -16,4 +18,4 @@ config.watchFolders = [
     "player"
 ]
 
-module.exports = config;
+module.exports = wrapWithReanimatedMetroConfig(config);

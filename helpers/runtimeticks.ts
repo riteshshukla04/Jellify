@@ -1,5 +1,4 @@
 // import { backgroundRuntime } from "@/App";
-import { runOnRuntime } from "react-native-reanimated";
 
 /**
  * Converts the run time seconds of a track to the RunTimeTicks standard set by Emby / Jellyfin
