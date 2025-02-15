@@ -1,6 +1,6 @@
 import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { StackParamList } from "../types";
+import { HomePlaylistProps, StackParamList } from "../types";
 import { getToken, Separator, Spacer, XStack, YStack } from "tamagui";
 import { RunTimeTicks } from "../Global/helpers/time-codes";
 import { H4, H5, Text } from "../Global/helpers/text";
@@ -34,10 +34,13 @@ interface RemoveFromPlaylistMutation {
     index: number;
 }
 
-export default function Playlist({
-    playlist,
-    navigation
-}: PlaylistProps): React.JSX.Element {
+export function PlaylistScreen(
+{ 
+    route, 
+    navigation 
+}: HomePlaylistProps) : React.JSX.Element {
+
+    const { playlist } = route.params;
 
     const [editing, setEditing] = useState<boolean>(false);
     const [playlistTracks, setPlaylistTracks] = useState<BaseItemDto[]>([]);

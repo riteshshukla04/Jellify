@@ -4,10 +4,10 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
 import { ArtistScreen } from "../Artist/screens";
 import { AlbumScreen } from "../Album";
-import { PlaylistScreen } from "../Playlist/screens";
 import { ProvidedHome } from "./component";
 import DetailsScreen from "../ItemDetail/screen";
 import ArtistsScreen from "../Artists/screen";
+import { PlaylistScreen } from "../Playlist";
 
 const HomeStack = createNativeStackNavigator<StackParamList>();
 

@@ -27,7 +27,7 @@ export function ItemCard(props: CardProps) {
                 size="$4" 
                 backgroundColor={getToken("$color.amethyst")}
                 borderRadius={props.squared ? 2 : dimensions.width}
-                animation="bouncy"
+                // animation="bouncy"
                 hoverStyle={props.onPress ? { scale: 0.925 } : {}}
                 pressStyle={props.onPress ? { scale: 0.875 } : {}}
                 width={props.width ?? 150}

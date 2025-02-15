@@ -4,7 +4,6 @@ import { StackParamList } from "../types";
 import Library from "./component";
 import { ArtistScreen } from "../Artist/screens";
 import { AlbumScreen } from "../Album";
-import { PlaylistScreen } from "../Playlist/screens";
 import ArtistsScreen from "../Artists/screen";
 import AlbumsScreen from "../Albums/screen";
 import TracksScreen from "../Tracks/screen";
@@ -12,6 +11,7 @@ import DetailsScreen from "../ItemDetail/screen";
 import PlaylistsScreen from "../Playlists/screen";
 import AddPlaylist from "./components/add-playlist";
 import DeletePlaylist from "./components/delete-playlist";
+import { PlaylistScreen } from "../Playlist";
 
 const Stack = createNativeStackNavigator<StackParamList>();
 
