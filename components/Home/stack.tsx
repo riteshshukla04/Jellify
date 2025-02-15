@@ -7,7 +7,6 @@ import { AlbumScreen } from "../Album";
 import { PlaylistScreen } from "../Playlist/screens";
 import { ProvidedHome } from "./component";
 import DetailsScreen from "../ItemDetail/screen";
-import AddPlaylist from "../Library/components/add-playlist";
 import ArtistsScreen from "../Artists/screen";
 
 const HomeStack = createNativeStackNavigator<StackParamList>();
@@ -26,10 +25,6 @@ export default function Home(): React.JSX.Element {
                         name="Home" 
                         component={ProvidedHome} 
                         options={{
-                            // headerLargeTitle: true,
-                            // headerLargeTitleStyle: {
-                            //     fontFamily: 'Aileron-Bold'
-                            // }
                         }}
                     />
 

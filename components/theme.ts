@@ -1,5 +1,5 @@
 import { DarkTheme, DefaultTheme } from "@react-navigation/native";
-import { getTokens } from "tamagui";
+import { getToken, getTokens } from "tamagui";
 
 interface Fonts {
   regular: FontStyle;
@@ -36,10 +36,10 @@ export const JellifyDarkTheme : ReactNavigation.Theme = {
     dark: true,
     colors: {
       ...DarkTheme.colors,
-      card: getTokens().color.$purpleDark.val,
-      border: getTokens().color.$amethyst.val,
-      background: getTokens().color.$purpleDark.val,
-      primary: getTokens().color.$telemagenta.val,
+      card: getToken("$color.purpleDark"),
+      border: getToken("$color.amethyst"),
+      background: getToken("$color.purpleDark"),
+      primary: getToken("$color.telemagenta"),
     },
     fonts: JellifyFonts
 };
@@ -48,7 +48,7 @@ export const JellifyLightTheme = {
   ...DefaultTheme,
   colors: {
     ...DefaultTheme.colors,
-    primary: getTokens().color.$telemagenta.val
+    primary: getToken("$color.telemagenta")
   },
   fonts: JellifyFonts
 };
