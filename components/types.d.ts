@@ -33,7 +33,9 @@ export type StackParamList = {
         query: QueryKeys.FavoriteArtists | QueryKeys.RecentlyPlayedArtists
     };
     Albums: undefined;
-    Tracks: undefined;
+    Tracks: {
+        query: QueryKeys.FavoriteTracks | QueryKeys.RecentlyPlayed
+    };
     Genres: undefined;
     Playlists: undefined;
     DeletePlaylist: {
@@ -103,7 +105,7 @@ export type AlbumsProps = NativeStackScreenProps<StackParamList, "Albums">;
 export type FavoritePlaylistsProps = NativeStackScreenProps<StackParamList, "Playlists">;
 export type DeletePlaylistProps = NativeStackScreenProps<StackParamList, "DeletePlaylist">;
 
-export type FavoriteTracksProps = NativeStackScreenProps<StackParamList, "Tracks">;
+export type TracksProps = NativeStackScreenProps<StackParamList, "Tracks">;
 
 export type GenresProps = NativeStackScreenProps<StackParamList, "Genres">;
 

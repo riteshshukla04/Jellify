@@ -36,9 +36,6 @@ export default function Playlists({ navigation }: { navigation: NativeStackNavig
                             }} />
                     )
                 }}
-                style={{
-                    overflow: 'hidden' // Prevent unnecessary memory usage
-                }} 
             />
         </View>
     )

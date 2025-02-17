@@ -74,9 +74,6 @@ export default function Queue({ navigation }: { navigation: NativeStackNavigatio
                     />
                 )
             }}
-            style={{
-                overflow: 'hidden' // Prevent unnecessary memory usage
-            }} 
         />
     )
 }

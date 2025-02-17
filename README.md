@@ -39,35 +39,48 @@ This app was designed with me and my dad in mind, since I wanted to give him a s
 
 ## 👀 Lemme see!
 ### Home
-![Jellify Home](screenshots/home.png)
+Home
+
+<img src="screenshots/playlist.png" alt="Jellify Home" width="275" height="600">
 
 ### Library
-![Library](screenshots/library.png)
+Library
 
-![Library Artists](screenshots/library_artists.png)
+<img src="screenshots/library.png" alt="Library" width="275" height="600">
 
-![Artist](screenshots/artist.png)
+Library Artists
 
-![Album](screenshots/album.png)
+<img src="screenshots/library_artists.png" alt="Library Artists" width="275" height="600">
 
-![Track Options](screenshots/track_options.png)
+Artist
 
-![Playlist](screenshots/playlist.png)
+<img src="screenshots/artist.png" alt="Artist" width="275" height="600">
+
+Album
+
+<img src="screenshots/album.png" alt="Album" width="275" height="600">
+
+Track Options
+ 
+<img src="screenshots/track_options.png" alt="Track Options" width="275" height="600">
+
+Playlist
+
+<img src="screenshots/playlist.png" alt="Playlist" width="275" height="600">
 
 ### Search
-![Search](screenshots/search.png)
+<img src="screenshots/search.png" alt="Search" width="275" height="600">
 
 ### Player
-![Player](screenshots/player.png)
+<img src="screenshots/player.png" alt="Player" width="275" height="600">
 
-![Queue](screenshots/player_queue.png)
+<img src="screenshots/player_queue.png" alt="Queue" width="275" height="600">
 
-### CarPlay
-![Now Playing](screenshots/carplay_nowplaying.jpeg)
+### CarPlay (Sneak Preview)
+<img src="screenshots/carplay_nowplaying.jpeg" alt="Now Playing (CarPlay)" width="500" height="350">
 
 ### On the Server
-![image](https://github.com/user-attachments/assets/741884a2-b9b7-4081-b3a0-6655d08071dc)
-
+<img src="https://github.com/user-attachments/assets/741884a2-b9b7-4081-b3a0-6655d08071dc" alt="Playback Tracking" width="300" height="200">
 
 ## 🏗 Built with:
 ### 🎨 Frontend

@@ -14,6 +14,7 @@ import { QueryKeys } from "../../enums/query-keys";
 import { getItemsApi } from "@jellyfin/sdk/lib/utils/api";
 import Client from "../../api/client";
 import { useMemo } from "react";
+import { useSharedValue } from "react-native-reanimated";
 
 
 export function AlbumScreen({ 
@@ -76,7 +77,7 @@ export function AlbumScreen({
                                     height={width / 1.1}
                                     />
 
-                                <H5>{ album.Name ?? "Untitled Album" }</H5>
+                                <H5 textAlign="center">{ album.Name ?? "Untitled Album" }</H5>
                                 <Text>{ album.ProductionYear?.toString() ?? "" }</Text>
                             </YStack>
                         )
@@ -99,6 +100,7 @@ export function AlbumScreen({
                     
                 }}
                 ListFooterComponent={(
+                    
                     <YStack justifyContent="flex-start">
                         <XStack flex={1} marginTop={"$3"} justifyContent="flex-end">
                             <Text 
@@ -121,7 +123,7 @@ export function AlbumScreen({
                                     <Avatar
                                         circular
                                         item={artist}
-                                        width={width / 4}
+                                        width={"$10"}
                                         onPress={() => {
                                             navigation.navigate("Artist", {
                                                 artist
@@ -135,9 +137,6 @@ export function AlbumScreen({
                     </YStack>
 
                 )}
-                // style={{
-                //     overflow: 'hidden' // Prevent unnecessary memory usage
-                // }} 
             />
     )
 }

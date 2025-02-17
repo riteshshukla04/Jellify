@@ -1,5 +1,3 @@
-// import { backgroundRuntime } from "@/App";
-
 /**
  * Converts the run time seconds of a track to the RunTimeTicks standard set by Emby / Jellyfin
  * @param seconds The run time seconds of the item to convert to Jellyfin ticks
@@ -8,11 +6,9 @@
  * @see https://emby.media/community/index.php?/topic/63357-runtimeticks-microseconds-milliseconds-or-nanoseconds/
  */
 export function convertSecondsToRunTimeTicks(seconds: number) {
-    // return runOnRuntime(backgroundRuntime, (runTimeSeconds: number) => {
-        const runTimeMilliseconds = seconds * 1000 * 10000;
-    
-        return runTimeMilliseconds;
-    // })(seconds);
+    'worklet';
+    const runTimeMilliseconds = seconds * 1000 * 10000;
+    return runTimeMilliseconds;
 }
 
 /**
@@ -23,9 +19,8 @@ export function convertSecondsToRunTimeTicks(seconds: number) {
  * @see https://emby.media/community/index.php?/topic/63357-runtimeticks-microseconds-milliseconds-or-nanoseconds/
  */
 export function convertRunTimeTicksToSeconds(ticks: number) {
-    // return runOnRuntime(backgroundRuntime, (runTimeTicks : number) => {
-        const runTimeMilliseconds = ticks / 10000; 
-        const runTimeTotalSeconds = Math.floor(runTimeMilliseconds / 1000);
-        return runTimeTotalSeconds;
-    // })(ticks);
+    'worklet';
+    const runTimeMilliseconds = ticks / 10000; 
+    const runTimeTotalSeconds = Math.floor(runTimeMilliseconds / 1000);
+    return runTimeTotalSeconds;
 }

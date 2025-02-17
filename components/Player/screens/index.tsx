@@ -71,7 +71,10 @@ export default function PlayerScreen({
             <>
                 <YStack>
 
-                    <XStack marginHorizontal={"$2"}>
+                    <XStack 
+                        marginBottom={"$2"}
+                        marginHorizontal={"$2"}
+                    >
 
                         <YStack 
                             alignContent="flex-end"
@@ -88,21 +91,20 @@ export default function PlayerScreen({
                         </YStack>
 
                         <YStack 
-                            alignItems="center"
-                            alignContent="center"
-                            flex={3}
+                        alignItems="center"
+                        alignContent="center"
+                        flex={3}
                         >
+
                             <Text>Playing from</Text>
-                            <TextTicker {...TextTickerConfig}>
-                                <Text bold>
-                                    { 
-                                        // If the Queue is a BaseItemDto, display the name of it
-                                        typeof(queue) === 'object' 
-                                        ? (queue as BaseItemDto).Name ?? "Untitled"
-                                        : queue
-                                    }
-                                </Text>
-                            </TextTicker>
+                            <Text bold>
+                                { 
+                                    // If the Queue is a BaseItemDto, display the name of it
+                                    typeof(queue) === 'object' 
+                                    ? (queue as BaseItemDto).Name ?? "Untitled"
+                                    : queue
+                                }
+                            </Text>
                         </YStack>
 
                         <Spacer flex={1} />
@@ -119,6 +121,7 @@ export default function PlayerScreen({
                     { useMemo(() => {
                         return (
                             <BlurhashedImage
+                                borderRadius={2}
                                 item={nowPlaying!.item}
                                 width={width / 1.1}
                             />

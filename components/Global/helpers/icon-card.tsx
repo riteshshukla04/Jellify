@@ -26,7 +26,7 @@ export default function IconCard({
             margin={5}
             >
             <Card 
-                borderRadius={circular ? 300 : 25}
+                borderRadius={circular ? 300 : 5}
                 hoverStyle={{ scale: 0.925 }}
                 pressStyle={{ scale: 0.875 }}
                 width={width ? width : 150}
@@ -46,7 +46,7 @@ export default function IconCard({
                 </Card.Footer>
                 <Card.Background 
                     backgroundColor={getTokens().color.telemagenta}
-                    borderRadius={circular ? 300 : 25}
+                    borderRadius={circular ? 300 : 5}
                 >
 
                 </Card.Background>

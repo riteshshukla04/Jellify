@@ -79,6 +79,7 @@ export default function ItemDetail({
                     <BlurhashedImage
                         item={item}
                         width={width / 1.5}
+                        borderRadius={item.Type === "MusicArtist" ? 100 : 2}
                         />
                 </XStack>
 
@@ -129,7 +130,7 @@ export default function ItemDetail({
 
                     <YStack 
                         flex={1}
-                        alignContent="center"
+                        alignItems="flex-end"
                         justifyContent="center"
                     >
                         <FavoriteButton item={item} />

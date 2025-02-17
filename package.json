@@ -1,6 +1,6 @@
 {
   "name": "jellify",
-  "version": "0.10.30",
+  "version": "0.10.38",
   "private": true,
   "scripts": {
     "init": "npm i && npm run pod:install",

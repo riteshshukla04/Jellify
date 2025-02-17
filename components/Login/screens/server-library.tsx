@@ -75,8 +75,8 @@ export default function ServerLibrary(): React.JSX.Element {
                         musicLibraryId: libraryId!,
                         musicLibraryName: libraries?.filter((library) => library.Id == libraryId)[0].Name ?? "No library name",
                         musicLibraryPrimaryImageId: libraries?.filter((library) => library.Id == libraryId)[0].ImageTags!.Primary,
-                        playlistLibraryId: playlistLibrary!.Id!,
-                        playlistLibraryPrimaryImageId: playlistLibrary!.ImageTags!.Primary,
+                        playlistLibraryId: playlistLibrary?.Id!,
+                        playlistLibraryPrimaryImageId: playlistLibrary?.ImageTags!.Primary,
                     });
                     setLoggedIn(true);
                 }}>

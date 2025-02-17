@@ -16,6 +16,7 @@ import { queryClient } from "../../constants/query-client";
 import { QueryKeys } from "../../enums/query-keys";
 import { getItemsApi } from "@jellyfin/sdk/lib/utils/api";
 import Client from "../../api/client";
+import { RefreshControl } from "react-native";
 
 interface PlaylistProps { 
     playlist: BaseItemDto;
@@ -55,6 +56,7 @@ export function PlaylistScreen(
                 return response.data.Items ? response.data.Items! : [];
             })
         },
+        staleTime: (1000 * 60 * 1 * 1) * 1 // 1 minute, since these are mutable by nature
     });
 
     navigation.setOptions({
@@ -110,7 +112,7 @@ export function PlaylistScreen(
             trigger('notificationSuccess');
 
             queryClient.invalidateQueries({
-                queryKey: [QueryKeys.ItemTracks, playlist.Id, false]
+                queryKey: [QueryKeys.ItemTracks, playlist.Id]
             })
         },
         onError: () => {
@@ -132,29 +134,16 @@ export function PlaylistScreen(
         onError: () => {
             trigger("notificationError")
         }
-    })
-
-    /**
-     * @deprecated this doesn't reorder the playlist reliably enough
-     */
-    const useReorderPlaylist = useMutation({
-        mutationFn: ({ playlist, track, to } : PlaylistOrderMutation) => {
-            return reorderPlaylist(playlist.Id!, track.Id!, to)
-        },
-        onSuccess: () => {
-            trigger("notificationSuccess");
-
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.ItemTracks, playlist.Id, false]
-            })
-        },
-        onError: () => {
-            trigger("notificationError");
-        }
     });
 
     return (
         <DraggableFlatList
+            refreshControl={
+                <RefreshControl
+                    refreshing={isPending}
+                    onRefresh={refetch}
+                />
+            }
             contentInsetAdjustmentBehavior="automatic"
             data={playlistTracks}
             dragHitSlop={{ left: -50 }} // https://github.com/computerjazz/react-native-draggable-flatlist/issues/336
@@ -215,14 +204,11 @@ export function PlaylistScreen(
                         color={"$borderColor"} 
                         style={{ display: "block"}}
                     >
-                        Total Runtime:
+                        Total Runtime: 
                     </Text>
                     <RunTimeTicks>{ playlist.RunTimeTicks }</RunTimeTicks>
                 </XStack>
             )}
-            // style={{
-            //     overflow: 'hidden' // Prevent unnecessary memory usage
-            // }} 
         />
     )
 }

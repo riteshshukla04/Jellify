@@ -52,9 +52,6 @@ export default function HorizontalCardList({
                 />
                 ) : undefined}
             }
-            style={{
-                overflow: 'hidden' // Prevent unnecessary memory usage
-            }} 
         />
     )
 }

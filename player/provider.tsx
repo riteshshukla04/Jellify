@@ -3,13 +3,13 @@ import { JellifyTrack } from "../types/JellifyTrack";
 import { storage } from "../constants/storage";
 import { MMKVStorageKeys } from "../enums/mmkv-storage-keys";
 import { findPlayNextIndexStart, findPlayQueueIndexStart } from "./helpers/index";
-import TrackPlayer, { Event, IOSCategory, IOSCategoryOptions, Progress, State, usePlaybackState, useProgress, useTrackPlayerEvents } from "react-native-track-player";
+import TrackPlayer, { Event, Progress, State, usePlaybackState, useProgress, useTrackPlayerEvents } from "react-native-track-player";
 import { isEqual, isUndefined } from "lodash";
 import { getPlaystateApi } from "@jellyfin/sdk/lib/utils/api";
 import { handlePlaybackProgressUpdated, handlePlaybackState } from "./handlers";
 import { useUpdateOptions } from "../player/hooks";
 import { UPDATE_INTERVAL } from "./config";
-import { useMutation, UseMutationResult, useQuery } from "@tanstack/react-query";
+import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { mapDtoToTrack } from "../helpers/mappings";
 import { QueuingType } from "../enums/queuing-type";
 import { trigger } from "react-native-haptic-feedback";
@@ -19,10 +19,8 @@ import Client from "../api/client";
 import { AddToQueueMutation, QueueMutation, QueueOrderMutation } from "./interfaces";
 import { Section } from "../components/Player/types";
 import { Queue } from "./types/queue-item";
-import { markItemPlayed } from "../api/mutations/functions/item";
-import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { QueryKeys } from "../enums/query-keys";
-import { CAPABILITIES } from "./constants";
+
+import * as Burnt from "burnt";
 
 interface PlayerContext {
     initialized: boolean;
@@ -114,13 +112,24 @@ const PlayerContextInitializer = () => {
     //#region Hooks
     const useAddToQueue = useMutation({
         mutationFn: async (mutation: AddToQueueMutation) => {
-            trigger("effectDoubleClick");
-
+            
             if (mutation.queuingType === QueuingType.PlayingNext)
                 return addToNext([mapDtoToTrack(mutation.track, mutation.queuingType)]);
-
+            
             else
-                return addToQueue([mapDtoToTrack(mutation.track, mutation.queuingType)])
+            return addToQueue([mapDtoToTrack(mutation.track, mutation.queuingType)])
+        },
+        onSuccess: (data, { queuingType }) => {
+            trigger("notificationSuccess");
+
+            Burnt.alert({
+                title: queuingType === QueuingType.PlayingNext ? "Playing next" : "Added to Queue",
+                duration: 1,
+                preset: 'done'
+            });
+        },
+        onError: () => {
+            trigger("notificationError")
         }
     });
 
@@ -217,9 +226,6 @@ const PlayerContextInitializer = () => {
             await addToQueue(mutation.tracklist.map((track) => {
                 return mapDtoToTrack(track, QueuingType.FromSelection)
             }));
-
-            if (typeof(queue) === 'object')
-                await markItemPlayed(mutation.queue as BaseItemDto);
             
             setQueue(mutation.queue);
         },

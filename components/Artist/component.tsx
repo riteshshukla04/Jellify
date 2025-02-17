@@ -97,9 +97,6 @@ export default function Artist({
                             />
                         )
                     }}
-                    style={{
-                        overflow: 'hidden' // Prevent unnecessary memory usage
-                    }} 
                 />
         </ScrollView>
     )
