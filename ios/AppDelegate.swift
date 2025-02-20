@@ -2,6 +2,7 @@
 import UIKit
 import CarPlay
 import React
+import ReactAppDependencyProvider
 #if DEBUG
 #if FB_SONARKIT_ENABLED
 import FlipperKit
@@ -27,6 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     initializeFlipper(with: application)
+    self.dependencyProvider = RCTAppDependencyProvider()
     self.bridge = RCTBridge.init(delegate: self, launchOptions: launchOptions)
     self.rootView = RCTRootView.init(bridge: self.bridge!, moduleName: "Jellify", initialProperties: nil)
     return true
