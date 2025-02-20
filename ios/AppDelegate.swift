@@ -23,9 +23,8 @@ class AppDelegate: RCTAppDelegate {
 
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     initializeFlipper(with: application)
+    self.moduleName = "Jellify"
     self.dependencyProvider = RCTAppDependencyProvider()
-    self.bridge = RCTBridge.init(delegate: self, launchOptions: launchOptions)
-    self.rootView = RCTRootView.init(bridge: self.bridge!, moduleName: "Jellify", initialProperties: nil)
     return true
   }
 
