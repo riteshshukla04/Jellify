@@ -8,11 +8,6 @@ import ReactAppDependencyProvider
 @main
 class AppDelegate: RCTAppDelegate {
 
-  // Access the shared instance from your AppDelegate
-  static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
-
-  // Then get the window:
-  let window = shared.window
   override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
     self.moduleName = "Jellify"
     self.dependencyProvider = RCTAppDependencyProvider()
@@ -28,7 +23,7 @@ class AppDelegate: RCTAppDelegate {
     self.bundleURL()
   }
 
-  func bundleURL(for bridge: RCTBridge) -> URL? {
+  override func bundleURL(for bridge: RCTBridge) -> URL? {
     #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index");
     #else
