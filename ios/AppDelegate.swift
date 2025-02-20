@@ -13,7 +13,7 @@ import FlipperKit
 @main
 class AppDelegate: RCTAppDelegate {
 
-  func sourceURL(for bridge: RCTBridge) -> URL? {
+  override func sourceURL(for bridge: RCTBridge) -> URL? {
     #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index");
     #else
@@ -21,7 +21,7 @@ class AppDelegate: RCTAppDelegate {
     #endif
   }
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+  override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     initializeFlipper(with: application)
     self.dependencyProvider = RCTAppDependencyProvider()
     self.bridge = RCTBridge.init(delegate: self, launchOptions: launchOptions)
@@ -29,7 +29,7 @@ class AppDelegate: RCTAppDelegate {
     return true
   }
 
-  func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
+  override func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
     if (connectingSceneSession.role == UISceneSession.Role.carTemplateApplication) {
       let scene =  UISceneConfiguration(name: "CarPlay", sessionRole: connectingSceneSession.role)
       scene.delegateClass = CarSceneDelegate.self
@@ -41,7 +41,7 @@ class AppDelegate: RCTAppDelegate {
     }
   }
 
-  func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
+  override func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
   }
 
   private func initializeFlipper(with application: UIApplication) {
