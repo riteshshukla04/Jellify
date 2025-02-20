@@ -105,6 +105,15 @@ Playlist
 ### 💜 Love from Wisconsin 🧀
 This is undoubtedly a passion project of [mine](https://github.com/anultravioletaurora), and I've learned a lot from working on it (and the many failed attempts before it). I hope you enjoy using it! Feature requests and bug reports are welcome :)
 
+## 🏃‍♀️Running Locally
+- iOS Instructions
+  - Clone this repository
+  - Run `npm run init` to install `npm` packages, to install `bundler` and required gems, and to install CocoaPods
+  - In the `ios` directory, run `fastlane match development --readonly` to fetch the development signing certificates
+    - You will need access to the *Jellify Signing* private repository
+
+- Android Instructions
+  - Coming Soon™️
 
 ## 🙏 Special Thanks To
 - The [Jellyfin Team](https://jellyfin.org/) for their amazing server software, SDKs, and documentation

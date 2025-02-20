@@ -40,7 +40,6 @@ interface PlayerContext {
     usePrevious: UseMutationResult<void, Error, void, unknown>;
     usePlayNewQueue: UseMutationResult<void, Error, QueueMutation, unknown>;
     playbackState: State | undefined;
-    progress: Progress | undefined;
 }
 
 const PlayerContextInitializer = () => {
@@ -85,7 +84,7 @@ const PlayerContextInitializer = () => {
     
     const resetQueue = async (hideMiniplayer?: boolean | undefined) => {
         console.debug("Clearing queue")
-        await TrackPlayer.reset();
+        await TrackPlayer.setQueue([]);
         setPlayQueue([]);        
     }
     
@@ -244,7 +243,6 @@ const PlayerContextInitializer = () => {
     //#region RNTP Setup
     
     const { state: playbackState } = usePlaybackState();
-    const progress = useProgress(UPDATE_INTERVAL);
 
     useTrackPlayerEvents([
         Event.RemoteLike,
@@ -268,7 +266,7 @@ const PlayerContextInitializer = () => {
             }
 
             case (Event.PlaybackState) : {
-                handlePlaybackState(Client.sessionId, playStateApi, await TrackPlayer.getActiveTrack() as JellifyTrack, event.state, progress);
+                handlePlaybackState(Client.sessionId, playStateApi, await TrackPlayer.getActiveTrack() as JellifyTrack, event.state);
                 break;
             }
             case (Event.PlaybackProgressUpdated) : {
@@ -363,7 +361,6 @@ const PlayerContextInitializer = () => {
         usePrevious,
         usePlayNewQueue,
         playbackState,
-        progress,
     }
     //#endregion return
 }
@@ -540,7 +537,6 @@ export const PlayerContext = createContext<PlayerContext>({
         submittedAt: 0
     },
     playbackState: undefined,
-    progress: undefined,
 });
 //#endregion Create PlayerContext
 
@@ -563,7 +559,6 @@ export const PlayerProvider: ({ children }: { children: ReactNode }) => React.JS
         usePrevious,
         usePlayNewQueue,
         playbackState,
-        progress
     } = PlayerContextInitializer();
 
     return <PlayerContext.Provider value={{
@@ -584,7 +579,6 @@ export const PlayerProvider: ({ children }: { children: ReactNode }) => React.JS
         usePrevious,
         usePlayNewQueue,
         playbackState,
-        progress
     }}>
         { children }
     </PlayerContext.Provider>

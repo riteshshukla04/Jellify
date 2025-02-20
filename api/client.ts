@@ -121,7 +121,6 @@ export default class Client {
 
     private removeCredentials() {
         this.library = undefined;
-        this.library = undefined;
         this.server = undefined;
         this.user = undefined;
 

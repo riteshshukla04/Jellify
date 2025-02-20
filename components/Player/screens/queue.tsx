@@ -6,12 +6,20 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import DraggableFlatList from "react-native-draggable-flatlist";
 import { trigger } from "react-native-haptic-feedback";
-import { getTokens, Separator } from "tamagui";
+import { Separator } from "tamagui";
 
 export default function Queue({ navigation }: { navigation: NativeStackNavigationProp<StackParamList>}): React.JSX.Element {
 
     const { width } = useSafeAreaFrame();
-    const { playQueue, queue, useClearQueue, useRemoveFromQueue, useReorderQueue, useSkip, nowPlaying } = usePlayerContext();
+    const { 
+        playQueue, 
+        queue, 
+        useClearQueue, 
+        useRemoveFromQueue, 
+        useReorderQueue, 
+        useSkip, 
+        nowPlaying 
+    } = usePlayerContext();
 
     navigation.setOptions({
         headerRight: () => {
@@ -21,7 +29,7 @@ export default function Queue({ navigation }: { navigation: NativeStackNavigatio
                 }}/>
             )
         }
-    })
+    });
 
     const scrollIndex = playQueue.findIndex(queueItem => queueItem.item.Id! === nowPlaying!.item.Id!)
 
@@ -47,33 +55,30 @@ export default function Queue({ navigation }: { navigation: NativeStackNavigatio
             onDragEnd={({ data, from, to}) => {
                 useReorderQueue.mutate({ newOrder: data, from, to });
             }}
-            renderItem={({ item: queueItem, getIndex, drag, isActive }) => {
-
-                const index = getIndex();
-
-                return (
-                    <Track
-                        queue={queue}
-                        navigation={navigation}
-                        track={queueItem.item}
-                        index={getIndex()}
-                        showArtwork
-                        onPress={() => {
-                            useSkip.mutate(index);
-                        }}
-                        onLongPress={() => {
-                            trigger('impactLight');
-                            drag();
-                        }}
-                        isNested
-                        showRemove
-                        onRemove={() => {
-                            if (index)
-                                useRemoveFromQueue.mutate(index)
-                        }}
-                    />
-                )
-            }}
+            renderItem={({ item: queueItem, getIndex, drag, isActive }) =>
+                                
+                <Track
+                    queue={queue}
+                    navigation={navigation}
+                    track={queueItem.item}
+                    index={getIndex()}
+                    showArtwork
+                    onPress={() => {
+                        useSkip.mutate(getIndex());
+                    }}
+                    onLongPress={() => {
+                        trigger('impactLight');
+                        drag();
+                    }}
+                    isNested
+                    showRemove
+                    onRemove={() => {
+                        if (getIndex())
+                            useRemoveFromQueue.mutate(getIndex()!)
+                    }}
+                />
+                    
+            }
         />
     )
 }

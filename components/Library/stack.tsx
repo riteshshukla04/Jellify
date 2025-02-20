@@ -2,7 +2,6 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React from "react";
 import { StackParamList } from "../types";
 import Library from "./component";
-import { ArtistScreen } from "../Artist/screens";
 import { AlbumScreen } from "../Album";
 import ArtistsScreen from "../Artists/screen";
 import AlbumsScreen from "../Albums/screen";
@@ -11,6 +10,7 @@ import DetailsScreen from "../ItemDetail/screen";
 import PlaylistsScreen from "../Playlists/screen";
 import AddPlaylist from "./components/add-playlist";
 import DeletePlaylist from "./components/delete-playlist";
+import { ArtistScreen } from "../Artist";
 import { PlaylistScreen } from "../Playlist";
 
 const Stack = createNativeStackNavigator<StackParamList>();

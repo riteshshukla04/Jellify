@@ -15,6 +15,7 @@ import { getItemsApi } from "@jellyfin/sdk/lib/utils/api";
 import Client from "../../api/client";
 import { useMemo } from "react";
 import { useSharedValue } from "react-native-reanimated";
+import { ItemCard } from "../Global/components/item-card";
 
 
 export function AlbumScreen({ 
@@ -86,21 +87,16 @@ export function AlbumScreen({
                     ])
 
                 )}
-                renderItem={({ item: track, index }) => {
-                    
-                    return (
-                        <Track
-                            track={track}
-                            tracklist={tracks!}
-                            index={index}
-                            navigation={navigation}
-                            queue={album}
-                        />
-                    )
-                    
-                }}
+                renderItem={({ item: track, index }) =>
+                    <Track
+                        track={track}
+                        tracklist={tracks!}
+                        index={index}
+                        navigation={navigation}
+                        queue={album}
+                    />                    
+                }
                 ListFooterComponent={(
-                    
                     <YStack justifyContent="flex-start">
                         <XStack flex={1} marginTop={"$3"} justifyContent="flex-end">
                             <Text 
@@ -118,22 +114,19 @@ export function AlbumScreen({
                             horizontal
                             keyExtractor={(item) => item.Id!}
                             data={album.ArtistItems}
-                            renderItem={({ index, item: artist }) => {
-                                return (
-                                    <Avatar
-                                        circular
-                                        item={artist}
-                                        width={"$10"}
-                                        onPress={() => {
-                                            navigation.navigate("Artist", {
-                                                artist
-                                            });
-                                        }}
-                                        subheading={artist.Name ?? "Unknown Artist"}
-                                    />
-                                )
-                            }}
-                            />
+                            renderItem={({ index, item: artist }) =>
+                                <ItemCard
+                                    width={100}
+                                    item={artist}
+                                    caption={artist.Name ?? "Unknown Artist"}
+                                    onPress={() => {
+                                        navigation.navigate("Artist", {
+                                            artist
+                                        });
+                                    }}
+                                />
+                            }
+                        />
                     </YStack>
 
                 )}

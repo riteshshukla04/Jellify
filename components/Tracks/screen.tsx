@@ -6,6 +6,7 @@ import { QueryKeys } from "../../enums/query-keys";
 import { fetchRecentlyPlayed } from "../../api/queries/functions/recents";
 import { fetchFavoriteTracks } from "../../api/queries/functions/favorites";
 import { useQuery } from "@tanstack/react-query";
+import { Separator } from "tamagui";
 
 export default function TracksScreen({
     route,
@@ -14,13 +15,14 @@ export default function TracksScreen({
     const { data: tracks, refetch, isPending } = useQuery({
         queryKey: [route.params.query],
         queryFn: () => route.params.query === QueryKeys.RecentlyPlayed 
-            ? fetchRecentlyPlayed() 
+            ? fetchRecentlyPlayed(20) 
             : fetchFavoriteTracks()
     });
 
     return (
         <FlatList
             contentInsetAdjustmentBehavior="automatic"
+            ItemSeparatorComponent={() => <Separator />}
             numColumns={1}
             data={tracks}
             refreshControl={
@@ -29,18 +31,15 @@ export default function TracksScreen({
                     onRefresh={refetch}
                 />
             }
-            renderItem={({ index, item: track}) => {
-                return (
-                    <Track
-                        navigation={navigation}
-                        showArtwork
-                        track={track}
-                        tracklist={tracks?.slice(index, index + 50) ?? []}
-                        queue="Favorite Tracks"
-                    />
-
-                )
-            }}
+            renderItem={({ index, item: track}) =>
+                <Track
+                    navigation={navigation}
+                    showArtwork
+                    track={track}
+                    tracklist={tracks?.slice(index, index + 50) ?? []}
+                    queue="Favorite Tracks"
+                />
+            }
         />
     )
 }

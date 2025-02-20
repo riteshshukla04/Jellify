@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack"
 import SearchScreen from "./screen";
 import { StackParamList } from "../types";
-import { ArtistScreen } from "../Artist/screens";
+import { ArtistScreen } from "../Artist";
 import { AlbumScreen } from "../Album";
 import DetailsScreen from "../ItemDetail/screen";
 import { PlaylistScreen } from "../Playlist";

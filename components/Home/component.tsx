@@ -7,8 +7,6 @@ import RecentlyPlayed from "./helpers/recently-played";
 import { useHomeContext } from "./provider";
 import { H3 } from "../Global/helpers/text";
 import Client from "../../api/client";
-import { usePlayerContext } from "../../player/provider";
-import { useEffect } from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 export function ProvidedHome({ 
@@ -17,46 +15,38 @@ export function ProvidedHome({
     navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
 
-    const { refreshing: refetching, onRefresh: onRefetch } = useHomeContext()
-
-    const { nowPlayingIsFavorite } = usePlayerContext();
-
-    useEffect(() => {
-        onRefetch()
-    }, [
-        nowPlayingIsFavorite
-    ])
+    const { refreshing: refetching, onRefresh } = useHomeContext()
 
     console.debug("Home sweet home!");
 
     return (
-            <ScrollView 
-                contentInsetAdjustmentBehavior="automatic"
-                refreshControl={
-                    <RefreshControl 
-                    refreshing={refetching} 
-                    onRefresh={onRefetch}
-                    />
-                }
-                removeClippedSubviews // Save memory usage
-            >
-                <YStack alignContent='flex-start'>
-                    <XStack margin={"$2"}>
-                        <H3>{`Hi, ${Client.user!.name}`}</H3>
-                    </XStack>
+        <ScrollView 
+            contentInsetAdjustmentBehavior="automatic"
+            refreshControl={
+                <RefreshControl 
+                refreshing={refetching} 
+                onRefresh={onRefresh}
+                />
+            }
+            removeClippedSubviews // Save memory usage
+        >
+            <YStack alignContent='flex-start'>
+                <XStack margin={"$2"}>
+                    <H3>{`Hi, ${Client.user!.name}`}</H3>
+                </XStack>
 
-                    <Separator marginVertical={"$2"} />
+                <Separator marginVertical={"$2"} />
 
-                    <RecentArtists navigation={navigation} />
+                <RecentArtists navigation={navigation} />
 
-                    <Separator marginVertical={"$3"} />
+                <Separator marginVertical={"$3"} />
 
-                    <RecentlyPlayed navigation={navigation} />
+                <RecentlyPlayed navigation={navigation} />
 
-                    <Separator marginVertical={"$3"} />
+                <Separator marginVertical={"$3"} />
 
-                    <Playlists navigation={navigation}/>
-                </YStack>
-            </ScrollView>
+                <Playlists navigation={navigation}/>
+            </YStack>
+        </ScrollView>
     );
 }

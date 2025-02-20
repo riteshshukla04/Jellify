@@ -2,6 +2,27 @@ import { BaseItemDto, BaseItemKind, ItemSortBy, SortOrder } from "@jellyfin/sdk/
 import { getItemsApi } from "@jellyfin/sdk/lib/utils/api/items-api";
 import { QueryConfig } from "../query.config";
 import Client from "../../client";
+import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api";
+
+export function fetchRecentlyAdded(offset?: number | undefined) : Promise<BaseItemDto[]> {
+    return new Promise(async (resolve, reject) => {
+
+        if (!!!Client.api)
+            return reject("Client not set")
+
+        if (!!!Client.library)
+            return reject("Library not set")
+        else
+            getUserLibraryApi(Client.api)
+                .getLatestMedia({
+                    parentId: Client.library.musicLibraryId,
+                    limit: QueryConfig.limits.recents,
+                })
+                .then(({ data }) => {
+                    resolve(data);
+                });
+    })
+}
 
 export function fetchRecentlyPlayed(offset?: number | undefined): Promise<BaseItemDto[]> {
 

@@ -2,7 +2,6 @@ import { ImageFormat, ImageType } from "@jellyfin/sdk/lib/generated-client/model
 import { getImageApi } from "@jellyfin/sdk/lib/utils/api"
 import _ from "lodash"
 import Client from "../../../api/client"
-import { Dirs, FileSystem } from 'react-native-file-access'
 
 export function fetchItemImage(itemId: string, imageType: ImageType, width: number, height: number) {
     
@@ -10,16 +9,10 @@ export function fetchItemImage(itemId: string, imageType: ImageType, width: numb
 
         console.debug("Fetching item image");
 
-        // Make sure images folder exists in cache, create if it doesn't
-        if (!(await FileSystem.exists(`${Dirs.CacheDir}/images`)))
-            await FileSystem.mkdir(`${Dirs.CacheDir}/images`)
-
-        const existingImage = await FileSystem.exists(getImageFilePath(itemId, width, height, imageType));
-
-        if (existingImage)
-            resolve(await FileSystem.readFile(getImageFilePath(itemId, width, height, imageType)));
+        if (!!!Client.api) 
+            return reject("Client instance not set")
         else
-            getImageApi(Client.api!)
+            getImageApi(Client.api)
                 .getItemImage({
                     itemId,
                     imageType,
@@ -34,23 +27,15 @@ export function fetchItemImage(itemId: string, imageType: ImageType, width: numb
 
                 if (response.status < 300) {
 
-
-                    FileSystem.writeFile(getImageFilePath(itemId, width, height, imageType), await blobToBase64(response.data))
-                    .then(async () => {
-                        resolve(await FileSystem.readFile(getImageFilePath(itemId, width, height, imageType)));
-                    })
+                    return resolve(await blobToBase64(response.data))
                 } else {
-                    reject();
+                    return reject("Invalid image response");
                 }
             }).catch((error) => {
                 console.error(error);
                 reject(error);
             })
     });
-}
-
-export function getImageFilePath(itemId: string, width: number, height: number, imageType: ImageType) {
-    return `${Dirs.CacheDir}/images/${itemId}_${imageType}_${width}x${height}.png`
 }
 
 function blobToBase64(blob : Blob) {

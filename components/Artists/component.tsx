@@ -22,7 +22,7 @@ export default function Artists({
             
             QueryKeys.RecentlyPlayedArtists ? useQuery({
                 queryKey: [QueryKeys.RecentlyPlayedArtists],
-                queryFn: () => fetchRecentlyPlayedArtists()
+                queryFn: () => fetchRecentlyPlayedArtists(20)
             }) :
             
             useQuery({
@@ -43,18 +43,16 @@ export default function Artists({
                     onRefresh={refetch}
                 />
             }
-            renderItem={({ index, item: artist}) => {
-                return (
-                    <ItemCard
-                        item={artist}
-                        caption={artist.Name ?? "Unknown Artist"}
-                        onPress={() => {
-                            navigation.navigate("Artist", { artist })
-                        }}
-                        width={width / 2.1}
-                    />
-                )
-            }}
+            renderItem={({ index, item: artist}) =>
+                <ItemCard
+                    item={artist}
+                    caption={artist.Name ?? "Unknown Artist"}
+                    onPress={() => {
+                        navigation.navigate("Artist", { artist })
+                    }}
+                    width={width / 2.1}
+                />
+            }
         />
     )
 }

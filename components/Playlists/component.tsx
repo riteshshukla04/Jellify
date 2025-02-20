@@ -38,19 +38,17 @@ export default function FavoritePlaylists({ navigation }: FavoritePlaylistsProps
                     onRefresh={refetch}
                 />
             }
-            renderItem={({ index, item: playlist }) => {
-                return (
-                    <ItemCard
-                        item={playlist}
-                        caption={playlist.Name ?? "Untitled Playlist"}
-                        onPress={() => {
-                            navigation.navigate("Playlist", { playlist })
-                        }}
-                        width={width / 2.1}
-                        squared
-                    />
-                )
-            }}
+            renderItem={({ index, item: playlist }) => 
+                <ItemCard
+                    item={playlist}
+                    caption={playlist.Name ?? "Untitled Playlist"}
+                    onPress={() => {
+                        navigation.navigate("Playlist", { playlist })
+                    }}
+                    width={width / 2.1}
+                    squared
+                />
+            }
         />
     )
 }

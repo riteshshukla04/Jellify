@@ -9,11 +9,13 @@ import { getToken, getTokens, Separator } from "tamagui";
 import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
+import { useColorScheme } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
 export function Tabs() : React.JSX.Element {
 
+    const isDarkMode = useColorScheme() === 'dark'
     const { nowPlaying } = usePlayerContext();
 
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
@@ -23,8 +25,8 @@ export function Tabs() : React.JSX.Element {
                 initialRouteName="Home"
                 screenOptions={{
                     animation: 'shift',
-                    tabBarActiveTintColor: getToken("$color.telemagenta"),
-                    tabBarInactiveTintColor: getToken("$color.amethyst")
+                    tabBarActiveTintColor: getTokens().color.telemagenta.val,
+                    tabBarInactiveTintColor: isDarkMode ? getToken("$color.amethyst") : getToken("$color.purpleGray")
                 }}
                 tabBar={(props) => (
                     <>

@@ -150,13 +150,16 @@ export default function TrackOptions({
                         { playlists.map(playlist => {
 
                             return (
-                                <YGroup.Item>
-                                    <ListItem hoverTheme onPress={() => {
-                                        useAddToPlaylist.mutate({
-                                            track,
-                                            playlist
-                                        })
-                                    }}>
+                                <YGroup.Item key={playlist.Id!}>
+                                    <ListItem 
+                                        hoverTheme 
+                                        onPress={() => {
+                                            useAddToPlaylist.mutate({
+                                                track,
+                                                playlist
+                                            })
+                                        }}
+                                    >
                                         <XStack alignItems="center">
                                             <YStack flex={1}>
 

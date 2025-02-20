@@ -180,24 +180,19 @@ export function PlaylistScreen(
                 });
             }}
             refreshing={isPending}
-            renderItem={({ item: track, getIndex, drag }) => {
-
-                const index = getIndex();
-
-                return (
-                    <Track
-                        navigation={navigation}
-                        track={track}
-                        tracklist={tracks!}
-                        index={index}
-                        queue={playlist}
-                        showArtwork
-                        onLongPress={editing ? drag : undefined}
-                        showRemove={editing}
-                        onRemove={() => useRemoveFromPlaylist.mutate({ playlist, track, index: index! })}
-                    />
-                )    
-            }}
+            renderItem={({ item: track, getIndex, drag }) => 
+                <Track
+                    navigation={navigation}
+                    track={track}
+                    tracklist={tracks!}
+                    index={getIndex()}
+                    queue={playlist}
+                    showArtwork
+                    onLongPress={editing ? drag : undefined}
+                    showRemove={editing}
+                    onRemove={() => useRemoveFromPlaylist.mutate({ playlist, track, index: getIndex()! })}
+                />
+            }
             ListFooterComponent={(
                 <XStack justifyContent="flex-end">
                     <Text 

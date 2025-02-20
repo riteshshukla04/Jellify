@@ -1,5 +1,5 @@
 import { FlatList } from "react-native";
-import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
 import Categories from "./categories";
 import IconCard from "../../components/Global/helpers/icon-card";
 import { StackParamList } from "../../components/types";
@@ -17,25 +17,21 @@ export default function Library({
     const { width } = useSafeAreaFrame();
 
     return (
-        <SafeAreaView style={{ flex: 1 }} edges={["top", "right", "left"]}>
-            <FlatList
-                contentInsetAdjustmentBehavior="automatic"
-                data={Categories}
-                numColumns={2}
-                renderItem={({ index, item }) => {
-                    return (
-                        <IconCard 
-                            name={item.iconName}
-                            caption={item.name}
-                            width={width / 2.1}
-                            onPress={() => {
-                                navigation.navigate(item.name, item.params)
-                            }}
-                            largeIcon
-                        />
-                    )
-                }}
-            />
-        </SafeAreaView>
+        <FlatList
+            contentInsetAdjustmentBehavior="automatic"
+            data={Categories}
+            numColumns={2}
+            renderItem={({ index, item }) =>
+                    <IconCard 
+                        name={item.iconName}
+                        caption={item.name}
+                        width={width / 2.1}
+                        onPress={() => {
+                            navigation.navigate(item.name, item.params)
+                        }}
+                        largeIcon
+                    />
+            }
+        />
     )
 }

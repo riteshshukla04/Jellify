@@ -1,28 +1,29 @@
-import { ScrollView, YStack } from "tamagui";
-import { FlatList } from "react-native";
-import { ItemCard } from "../Global/components/item-card";
+import { RouteProp, useIsFocused } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
-import { H2 } from "../Global/helpers/text";
-import { useState } from "react";
-import { BaseItemDto, BaseItemKind, ItemSortBy, SortOrder } from "@jellyfin/sdk/lib/generated-client/models";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
-import FavoriteButton from "../Global/components/favorite-button";
-import BlurhashedImage from "../Global/components/blurhashed-image";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "../../enums/query-keys";
 import Client from "../../api/client";
+import { QueryKeys } from "../../enums/query-keys";
+import { BaseItemKind, ItemSortBy, SortOrder } from "@jellyfin/sdk/lib/generated-client/models";
 import { getItemsApi } from "@jellyfin/sdk/lib/utils/api";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { ScrollView, FlatList } from "react-native";
+import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { YStack } from "tamagui";
+import BlurhashedImage from "../Global/components/blurhashed-image";
+import FavoriteButton from "../Global/components/favorite-button";
+import { ItemCard } from "../Global/components/item-card";
+import { H2 } from "../Global/helpers/text";
 
-interface ArtistProps {
-    artist: BaseItemDto
+export function ArtistScreen({ 
+    route, 
+    navigation 
+} : { 
+    route: RouteProp<StackParamList, "Artist">, 
     navigation: NativeStackNavigationProp<StackParamList>
-}
+}): React.JSX.Element {
 
-export default function Artist({
-    artist,
-    navigation
-}: ArtistProps): React.JSX.Element {
+    const { artist } = route.params;
 
     navigation.setOptions({
         headerRight: () => { 
@@ -61,7 +62,6 @@ export default function Artist({
 
     return (
         <ScrollView 
-            alignContent="center"
             contentInsetAdjustmentBehavior="automatic"
             removeClippedSubviews
         >
@@ -81,22 +81,20 @@ export default function Artist({
                     }}
                     data={albums}
                     numColumns={columns} // TODO: Make this adjustable
-                    renderItem={({ item: album }) => {
-                        return (
-                            <ItemCard
-                                caption={album.Name}
-                                subCaption={album.ProductionYear?.toString()}
-                                width={(width / 1.1) / columns}
-                                squared 
-                                item={album}
-                                onPress={() => {
-                                    navigation.navigate('Album', {
-                                        album
-                                    })
-                                }}
-                            />
-                        )
-                    }}
+                    renderItem={({ item: album }) => 
+                        <ItemCard
+                            caption={album.Name}
+                            subCaption={album.ProductionYear?.toString()}
+                            width={(width / 1.1) / columns}
+                            squared 
+                            item={album}
+                            onPress={() => {
+                                navigation.navigate('Album', {
+                                    album
+                                })
+                            }}
+                        />
+                    }
                 />
         </ScrollView>
     )

@@ -23,19 +23,18 @@ export default function Playlists({ navigation }: { navigation: NativeStackNavig
             </XStack>
             <FlatList horizontal
                 data={playlists}
-                renderItem={({ item: playlist }) => {
-                    return (
-                        <ItemCard
-                            item={playlist}
-                            squared
-                            caption={playlist.Name ?? "Untitled Playlist"}
-                            onPress={() => {
-                                navigation.navigate('Playlist', {
-                                    playlist
-                                })
-                            }} />
-                    )
-                }}
+                renderItem={({ item: playlist }) => 
+                    <ItemCard
+                        item={playlist}
+                        squared
+                        caption={playlist.Name ?? "Untitled Playlist"}
+                        onPress={() => {
+                            navigation.navigate('Playlist', {
+                                playlist
+                            })
+                        }} 
+                    />
+                }
             />
         </View>
     )

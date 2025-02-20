@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { View } from "tamagui";
 import { useHomeContext } from "../provider";
 import { H2 } from "../../Global/helpers/text";
@@ -17,23 +17,24 @@ export default function RecentlyPlayed({
     navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
 
-    const { usePlayNewQueue } = usePlayerContext();
+    const { nowPlaying, usePlayNewQueue } = usePlayerContext();
     const { recentTracks } = useHomeContext();
 
     return (
-        <View>
-            <H2 marginLeft={"$2"}>Play it again</H2>
+        useMemo(() => {
+            return (
+                <View>
+                <H2 marginLeft={"$2"}>Play it again</H2>
 
-            <HorizontalCardList
-                squared
-                items={recentTracks}
-                onSeeMore={() => {
-                    navigation.navigate("Tracks", {
-                        query: QueryKeys.RecentlyPlayed
-                    })
-                }}
-                renderItem={({ index, item: recentlyPlayedTrack }) => {
-                    return (
+                <HorizontalCardList
+                    squared
+                    data={recentTracks}
+                    onSeeMore={() => {
+                        navigation.navigate("Tracks", {
+                            query: QueryKeys.RecentlyPlayed
+                        })
+                    }}
+                    renderItem={({ index, item: recentlyPlayedTrack }) => 
                         <ItemCard
                             caption={recentlyPlayedTrack.Name}
                             subCaption={`${recentlyPlayedTrack.Artists?.join(", ")}`}
@@ -57,9 +58,13 @@ export default function RecentlyPlayed({
                                 })
                             }}
                         />                                
-                    )
-                }}
-            />
-        </View>
+                    }
+                    />
+            </View>
+            )
+        }, [
+            recentTracks,
+            nowPlaying
+        ])
     )
 }

@@ -1,6 +1,5 @@
-import { SizeTokens, XStack, Separator, Switch, ColorTokens, Theme } from "tamagui";
+import { SizeTokens, XStack, Separator, Switch, Theme, styled, getToken } from "tamagui";
 import { Label } from "./text";
-import { Colors } from "react-native/Libraries/NewAppScreen";
 
 interface SwitchWithLabelProps {
   onCheckedChange: (value: boolean) => void,
@@ -8,8 +7,12 @@ interface SwitchWithLabelProps {
   checked: boolean;
   label: string;
   width?: number | undefined;
-  backgroundColor?: ColorTokens;
 }
+
+const JellifySliderThumb = styled(Switch.Thumb, {
+  borderColor: getToken("$color.amethyst"),
+  backgroundColor: getToken("$color.purpleDark")
+})
 
 export function SwitchWithLabel(props: SwitchWithLabelProps) {
     const id = `switch-${props.size.toString().slice(1)}-${props.checked ?? ''}}`
@@ -22,18 +25,17 @@ export function SwitchWithLabel(props: SwitchWithLabelProps) {
           >
             {props.label}
           </Label>
-          <Theme name={"inverted_purple"}>
             <Separator minHeight={20} vertical />
             <Switch 
               id={id} 
               size={props.size} 
               checked={props.checked} 
               onCheckedChange={(checked: boolean) => props.onCheckedChange(checked)}
-              backgroundColor={props.backgroundColor ?? Colors.Primary}
-              >
-              <Switch.Thumb animation="bouncy" />
+              backgroundColor={props.checked ? getToken("$color.telemagenta") : getToken("$color.purpleGray")}
+              borderColor={getToken("$color.purpleDark")}
+            >
+              <JellifySliderThumb animation="bouncy" />
             </Switch>
-          </Theme>
         </XStack>
     )
   }

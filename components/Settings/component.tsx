@@ -1,12 +1,12 @@
 import React from "react";
-import { SafeAreaView } from "react-native";
-import { ListItem, ScrollView, Separator, YGroup } from "tamagui";
+import { ScrollView } from "tamagui";
 import SignOut from "./helpers/sign-out";
-import ServerDetails from "./helpers/server-details";
-import LibraryDetails from "./helpers/library-details";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
+import { FlatList } from "react-native";
+import IconCard from "../Global/helpers/icon-card";
+import Categories from "./categories";
 
 export default function Root({ 
     navigation 
@@ -17,43 +17,23 @@ export default function Root({
     const { width } = useSafeAreaFrame();
 
     return (
-        <ScrollView 
+        <FlatList
             contentInsetAdjustmentBehavior="automatic"
-            removeClippedSubviews
-        >
-            <YGroup 
-                alignSelf="center" 
-                bordered 
-                width={width / 1.5} 
-            >
-                <YGroup.Item>
-                    <ListItem
-                        hoverTheme
-                        pressTheme
-                        title="Account Details"
-                        subTitle="Everything is about you, man"
+            data={Categories}
+            numColumns={2}
+            renderItem={({ index, item }) =>
+                    <IconCard 
+                        name={item.iconName}
+                        caption={item.name}
+                        width={width / 2.1}
                         onPress={() => {
-                            navigation.navigate("AccountDetails")
+                            navigation.navigate(item.name, item.params)
                         }}
+                        largeIcon
                     />
-                </YGroup.Item>
-                <YGroup.Item>
-                    <ListItem
-                        hoverTheme
-                        pressTheme
-                        title="Developer Tools"
-                        subTitle="Nerds rule!"
-                        onPress={() => {
-                            navigation.navigate("DevTools");
-                        }}
-                    />
-                </YGroup.Item>
-            </YGroup>
+            }
+            ListFooterComponent={(<SignOut />)}
+        />
 
-            <ServerDetails />
-            <Separator marginVertical={15} />
-            <LibraryDetails />
-            <SignOut />
-        </ScrollView>
     )
 }
