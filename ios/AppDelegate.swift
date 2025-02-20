@@ -23,7 +23,7 @@ class AppDelegate: RCTAppDelegate {
     self.bundleURL()
   }
 
-  override func bundleURL(for bridge: RCTBridge) -> URL? {
+  override func bundleURL() -> URL? {
     #if DEBUG
     return RCTBundleURLProvider.sharedSettings().jsBundleURL(forBundleRoot: "index");
     #else
