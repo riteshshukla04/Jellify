@@ -2,6 +2,7 @@
 import UIKit
 import CarPlay
 import React
+import React_RCTAppDelegate
 import ReactAppDependencyProvider
 #if DEBUG
 #if FB_SONARKIT_ENABLED
@@ -10,13 +11,7 @@ import FlipperKit
 #endif
 
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate, RCTBridgeDelegate {
-
-  var window: UIWindow?
-  var bridge: RCTBridge?;
-  var rootView: RCTRootView?;
-
-  static var shared: AppDelegate { return UIApplication.shared.delegate as! AppDelegate }
+class AppDelegate: RCTAppDelegate {
 
   func sourceURL(for bridge: RCTBridge) -> URL? {
     #if DEBUG
