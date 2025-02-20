@@ -10,13 +10,28 @@ import FlipperKit
 #endif
 #endif
 
+
+import UIKit
+import React
+import React_RCTAppDelegate
+import ReactAppDependencyProvider
+
 @main
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: RCTAppDelegate {
+  override func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey : Any]? = nil) -> Bool {
+    self.moduleName = "Jellify"
+    self.dependencyProvider = RCTAppDependencyProvider()
 
-  var window: UIWindow?
+    // You can add your custom initial props in the dictionary below.
+    // They will be passed down to the ViewController used by React Native.
+    self.initialProps = [:]
 
-  var reactNativeDelegate: ReactNativeDelegate?
-  var reactNativeFactory: RCTReactNativeFactory?
+    return super.application(application, didFinishLaunchingWithOptions: launchOptions)
+  }
+
+  override func sourceURL(for bridge: RCTBridge) -> URL? {
+    self.bundleURL()
+  }
 
   func bundleURL(for bridge: RCTBridge) -> URL? {
     #if DEBUG
@@ -24,28 +39,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     #else
     return Bundle.main.url(forResource:"main", withExtension:"jsbundle")
     #endif
-  }
-
-  func application(
-    _ application: UIApplication,
-    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil
-  ) -> Bool {
-    let delegate = ReactNativeDelegate()
-    let factory = RCTReactNativeFactory(delegate: delegate)
-    delegate.dependencyProvider = RCTAppDependencyProvider()
-
-    reactNativeDelegate = delegate
-    reactNativeFactory = factory
-
-    window = UIWindow(frame: UIScreen.main.bounds)
-
-    factory.startReactNative(
-      withModuleName: "Jellify",
-      in: window,
-      launchOptions: launchOptions
-    )
-
-    return true
   }
 
   override func application(_ application: UIApplication, configurationForConnecting connectingSceneSession: UISceneSession, options: UIScene.ConnectionOptions) -> UISceneConfiguration {
@@ -61,19 +54,5 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 
   override func application(_ application: UIApplication, didDiscardSceneSessions sceneSessions: Set<UISceneSession>) {
-  }
-
-  private func initializeFlipper(with application: UIApplication) {
-    #if DEBUG
-    #if FB_SONARKIT_ENABLED
-    let client = FlipperClient.shared()
-    let layoutDescriptorMapper = SKDescriptorMapper(defaults: ())
-    client?.add(FlipperKitLayoutPlugin(rootNode: application, with: layoutDescriptorMapper!))
-    client?.add(FKUserDefaultsPlugin(suiteName: nil))
-    client?.add(FlipperKitReactPlugin())
-    client?.add(FlipperKitNetworkPlugin(networkAdapter: SKIOSNetworkAdapter()))
-    client?.start()
-    #endif
-    #endif
   }
 }
