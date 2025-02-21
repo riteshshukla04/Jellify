@@ -50,7 +50,7 @@
     "react-native-haptic-feedback": "^2.3.3",
     "react-native-mmkv": "^3.2.0",
     "react-native-reanimated": "^4.0.0-beta.2",
-    "react-native-screens": "^4.8.0",
+    "react-native-screens": "^4.9.0",
     "react-native-safe-area-context": "^5.2.0",
     "react-native-swipeable-item": "^2.0.9",
     "react-native-text-ticker": "^1.14.0",
