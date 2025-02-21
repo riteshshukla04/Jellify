@@ -12,7 +12,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import TrackPlayer, { IOSCategory, IOSCategoryOptions } from 'react-native-track-player';
 import { CAPABILITIES } from './player/constants';
 import { createWorkletRuntime } from 'react-native-reanimated';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
 export const backgroundRuntime = createWorkletRuntime('background');
 
@@ -57,7 +57,7 @@ export default function App(): React.JSX.Element {
       persistOptions={{ 
         persister: clientPersister,
     }}>
-      <SafeAreaProvider>
+      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <GestureHandlerRootView>
         <TamaguiProvider config={jellifyConfig}>
           <Theme name={isDarkMode ? 'dark' : 'light'}>
