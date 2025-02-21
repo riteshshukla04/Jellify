@@ -34,7 +34,8 @@ function App(): React.JSX.Element {
   console.debug(` User is ${!loggedIn ? "" : "not"} logged in to Jellyfin`);
   
   return (
-      <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
+    <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
+        <SafeAreaProvider>
         { loggedIn ? (
           <PlayerProvider>
             <Navigation />
@@ -45,6 +46,7 @@ function App(): React.JSX.Element {
           </JellyfinAuthenticationProvider>
         )}
         <SafeToastViewport />
-      </NavigationContainer>
+      </SafeAreaProvider>
+    </NavigationContainer>
   )
 }

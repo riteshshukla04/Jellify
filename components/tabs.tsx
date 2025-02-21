@@ -10,7 +10,6 @@ import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
 import { useColorScheme } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -22,8 +21,6 @@ export function Tabs() : React.JSX.Element {
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
 
     return (
-        <SafeAreaProvider>
-
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
@@ -43,7 +40,7 @@ export function Tabs() : React.JSX.Element {
                         <BottomTabBar {...props} />
                     </>
                 )}
-                >
+            >
                 <Tab.Screen 
                     name="Home" 
                     component={Home}
@@ -53,7 +50,7 @@ export function Tabs() : React.JSX.Element {
                             <MaterialCommunityIcons name="jellyfish-outline" color={color} size={size} />
                         ),
                     }}
-                    />
+                />
 
                 <Tab.Screen
                     name="Library"
@@ -64,7 +61,7 @@ export function Tabs() : React.JSX.Element {
                             <MaterialCommunityIcons name="book-music-outline" color={color} size={size} />
                         )
                     }}
-                    />
+                />
 
                 <Tab.Screen
                     name="Search"
@@ -75,7 +72,7 @@ export function Tabs() : React.JSX.Element {
                             <MaterialCommunityIcons name="magnify" color={color} size={size} />
                         )
                     }}
-                    />
+                />
 
                 <Tab.Screen
                     name="Discover"
@@ -86,7 +83,7 @@ export function Tabs() : React.JSX.Element {
                             <MaterialCommunityIcons name="music-box-multiple-outline" color={color} size={size} />
                         )
                     }}
-                    />
+                />
 
                 <Tab.Screen
                     name="Settings"
@@ -97,8 +94,7 @@ export function Tabs() : React.JSX.Element {
                             <MaterialCommunityIcons name="dip-switch" color={color} size={size} />
                         )
                     }}
-                    />
+                />
             </Tab.Navigator>
-                    </SafeAreaProvider>
     )
 }
