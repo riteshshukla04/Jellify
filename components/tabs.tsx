@@ -10,6 +10,7 @@ import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
 import { useColorScheme } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,6 +22,7 @@ export function Tabs() : React.JSX.Element {
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
 
     return (
+        <SafeAreaView>
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
@@ -96,5 +98,6 @@ export function Tabs() : React.JSX.Element {
                     }}
                 />
             </Tab.Navigator>
+        </SafeAreaView>
     )
 }
