@@ -1850,7 +1850,7 @@ PODS:
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
     - Yoga
-  - RNScreens (4.8.0):
+  - RNScreens (4.9.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1871,9 +1871,9 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - RNScreens/common (= 4.8.0)
+    - RNScreens/common (= 4.9.0)
     - Yoga
-  - RNScreens/common (4.8.0):
+  - RNScreens/common (4.9.0):
     - DoubleConversion
     - glog
     - hermes-engine
@@ -1894,29 +1894,6 @@ PODS:
     - ReactCodegen
     - ReactCommon/turbomodule/bridging
     - ReactCommon/turbomodule/core
-    - Yoga
-  - RNSentry (6.7.0):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-hermes
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Sentry/HybridSDK (= 8.44.0)
     - Yoga
   - RNSentry (6.7.0):
     - DoubleConversion
@@ -2339,7 +2316,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: 8b1080a6db0be82dbca18550d6212b885bfab6b2
   RNReactNativeHapticFeedback: 66c6b0cf19f5d9dae8be36b2336e1fe2a2e42566
   RNReanimated: 303d9702cd617442369e11bc697a1022e3e135e4
-  RNScreens: 40f4d6b58fa33751b8b2b5450e3595898a993ad5
+  RNScreens: fb427360b2ad917997d779b2b63a946182ce9ce1
   RNSentry: d72048c24e2698bd61002e9917318f8cc0f28cbf
   RNVectorIcons: bd818296a51dc2bb8c3bd97a3ca399df1afe216d
   Sentry: 0f9bc9adfc0b960e7f3bb5ec67e9a3d8193f3bdb
