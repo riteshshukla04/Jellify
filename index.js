@@ -1,3 +1,5 @@
+process.env.EXPO_OS = Platform.OS;
+
 import 'react-native-gesture-handler';
 import {AppRegistry} from 'react-native';
 import App from './App';

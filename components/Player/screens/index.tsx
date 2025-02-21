@@ -220,7 +220,7 @@ export default function PlayerScreen({
                             return (
                                 <GestureDetector gesture={scrubGesture}>
                                     <HorizontalSlider 
-                                        value={progressState}
+                                        value={Math.round(progressState)}
                                         max={
                                             progress && progress.duration > 0 
                                             ? progress.duration * ProgressMultiplier 
