@@ -18,7 +18,7 @@ jobs:
         run: echo VERSION_NUMBER=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
 
       - name: 🟢 Run npm run init
-        run: npm run init
+        run: npm run init:new-arch
       
       - name: 🚀 Run fastlane build
         run: npm run fastlane:ios:build

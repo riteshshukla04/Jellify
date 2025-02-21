@@ -18,10 +18,10 @@ jobs:
           node-version: 20
 
       - name: 💬 Echo package.json version to Github ENV
-        run: echo VERSION_NUMBER=$(npm version patch --tag-version-prefix="" --no-commit-hooks) >> $GITHUB_ENV
+        run: echo VERSION_NUMBER=$(npm version minor --tag-version-prefix="" --no-commit-hooks) >> $GITHUB_ENV
 
       - name: 🟢 Run npm run init
-        run: npm run init
+        run: npm run init:new-arch
 
       - name: 🤫 Output App Store Connect API Key JSON to Fastlane
         run: echo -e '${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}' > appstore_connect_api_key.json
