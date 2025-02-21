@@ -23,6 +23,7 @@ export default class Client {
         library?: JellifyLibrary | undefined
     ) {
 
+        console.debug("Setting Client instance")
         const userJson = storage.getString(MMKVStorageKeys.User)
         const serverJson = storage.getString(MMKVStorageKeys.Server);
         const libraryJson = storage.getString(MMKVStorageKeys.Library);
