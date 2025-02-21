@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../../enums/query-keys";
 import { fetchRecentlyPlayed, fetchRecentlyPlayedArtists } from "../../api/queries/functions/recents";
 import { queryClient } from "../../constants/query-client";
+import { QueryConfig } from "../../api/queries/query.config";
 
 interface HomeContext {
     refreshing: boolean;
@@ -28,11 +29,11 @@ const HomeContextInitializer = () => {
         setRefreshing(true);
 
         queryClient.invalidateQueries({
-            queryKey: [QueryKeys.RecentlyPlayedArtists, 20]
+            queryKey: [QueryKeys.RecentlyPlayedArtists, QueryConfig.limits.recents * 4, QueryConfig.limits.recents]
         });
 
         queryClient.invalidateQueries({
-            queryKey: [QueryKeys.RecentlyPlayed, 20]
+            queryKey: [QueryKeys.RecentlyPlayed, QueryConfig.limits.recents * 4, QueryConfig.limits.recents]
         });
         
         await Promise.all([

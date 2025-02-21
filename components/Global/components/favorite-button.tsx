@@ -12,6 +12,8 @@ import { QueryKeys } from "../../../enums/query-keys";
 import { trigger } from "react-native-haptic-feedback";
 import { fetchUserData } from "../../../api/queries/functions/favorites";
 
+import * as Burnt from "burnt";
+
 interface SetFavoriteMutation {
     item: BaseItemDto,
 }
@@ -41,6 +43,12 @@ export default function FavoriteButton({
                 })
         },
         onSuccess: () => {
+            Burnt.alert({
+                title: `Added favorite`,
+                duration: 1,
+                preset: 'heart'
+            });
+
             trigger("notificationSuccess");
 
             setIsFavorite(true);
@@ -68,6 +76,13 @@ export default function FavoriteButton({
                 })
         },
         onSuccess: () => {
+            Burnt.alert({
+                title: `Removed favorite`,
+                duration: 1,
+                preset: 'done'
+            });
+
+            trigger("notificationSuccess")
             setIsFavorite(false);
             onToggle ? onToggle(): {};
         }

@@ -6,6 +6,7 @@ import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../../enums/query-keys";
 import { fetchFavoriteAlbums } from "../../api/queries/functions/favorites";
 import { fetchRecentlyAdded } from "../../api/queries/functions/recents";
+import { QueryConfig } from "../../api/queries/query.config";
 
 export default function Albums({ navigation, route }: AlbumsProps) : React.JSX.Element {
 
@@ -13,7 +14,7 @@ export default function Albums({ navigation, route }: AlbumsProps) : React.JSX.E
 
     const { data: albums, refetch, isPending } = useQuery({
         queryKey: [route.params.query],
-        queryFn: () => fetchRecentlyAddedAlbums ? fetchRecentlyAdded(20) : fetchFavoriteAlbums()
+        queryFn: () => fetchRecentlyAddedAlbums ? fetchRecentlyAdded(QueryConfig.limits.recents * 4, 20) : fetchFavoriteAlbums()
     });
 
     const { width } = useSafeAreaFrame();

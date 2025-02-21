@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Spinner, ToggleGroup } from "tamagui";
+import { getToken, Spinner, ToggleGroup } from "tamagui";
 import { useAuthenticationContext } from "../provider";
 import { H1, H2, Label, Text } from "../../Global/helpers/text";
 import Button from "../../Global/helpers/button";
@@ -56,6 +56,7 @@ export default function ServerLibrary(): React.JSX.Element {
                                     key={library.Id}
                                     value={library.Id!} 
                                     aria-label={library.Name!}
+                                    backgroundColor={libraryId == library.Id! ? getToken("$color.purpleGray") : 'unset'}
                                 >
                                     <Text>{library.Name ?? "Unnamed Library"}</Text>
                                 </ToggleGroup.Item>

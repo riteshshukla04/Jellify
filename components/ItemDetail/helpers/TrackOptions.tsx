@@ -18,6 +18,8 @@ import { QueryKeys } from "../../../enums/query-keys";
 import { fetchItem } from "../../../api/queries/functions/item";
 import { fetchUserPlaylists } from "../../../api/queries/functions/playlists";
 
+import * as Burnt from "burnt";
+
 interface TrackOptionsProps {
     track: BaseItemDto;
     navigation: NativeStackNavigationProp<StackParamList>;
@@ -54,6 +56,14 @@ export default function TrackOptions({
             return addToPlaylist(track, playlist)
         },
         onSuccess: (data, { playlist }) => {
+
+            Burnt.alert({
+                title: `Added to playlist`,
+                duration: 1,
+                preset: 'done'
+            });
+
+            
             trigger("notificationSuccess");
 
             queryClient.invalidateQueries({
@@ -65,6 +75,12 @@ export default function TrackOptions({
             });                                    
         },
         onError: () => {
+            Burnt.alert({
+                title: `Unable to add`,
+                duration: 1,
+                preset: 'error'
+            });
+
             trigger("notificationError")
         }
     })

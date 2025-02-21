@@ -4,7 +4,7 @@ import { QueryConfig } from "../query.config";
 import Client from "../../client";
 import { getUserLibraryApi } from "@jellyfin/sdk/lib/utils/api";
 
-export function fetchRecentlyAdded(offset?: number | undefined) : Promise<BaseItemDto[]> {
+export function fetchRecentlyAdded(limit: number = QueryConfig.limits.recents, offset?: number | undefined) : Promise<BaseItemDto[]> {
     return new Promise(async (resolve, reject) => {
 
         if (!!!Client.api)
@@ -16,7 +16,7 @@ export function fetchRecentlyAdded(offset?: number | undefined) : Promise<BaseIt
             getUserLibraryApi(Client.api)
                 .getLatestMedia({
                     parentId: Client.library.musicLibraryId,
-                    limit: QueryConfig.limits.recents,
+                    limit,
                 })
                 .then(({ data }) => {
                     resolve(data);
@@ -24,7 +24,7 @@ export function fetchRecentlyAdded(offset?: number | undefined) : Promise<BaseIt
     })
 }
 
-export function fetchRecentlyPlayed(offset?: number | undefined): Promise<BaseItemDto[]> {
+export function fetchRecentlyPlayed(limit: number = QueryConfig.limits.recents, offset?: number | undefined): Promise<BaseItemDto[]> {
 
     console.debug("Fetching recently played items");
 
@@ -35,7 +35,7 @@ export function fetchRecentlyPlayed(offset?: number | undefined): Promise<BaseIt
                 BaseItemKind.Audio
             ],
             startIndex: offset,
-            limit: QueryConfig.limits.recents,
+            limit,
             parentId: Client.library!.musicLibraryId, 
             recursive: true,
             sortBy: [ 
@@ -61,8 +61,8 @@ export function fetchRecentlyPlayed(offset?: number | undefined): Promise<BaseIt
     })
 }
 
-export function fetchRecentlyPlayedArtists(offset?: number | undefined) : Promise<BaseItemDto[]> {
-    return fetchRecentlyPlayed(offset)
+export function fetchRecentlyPlayedArtists(limit: number = QueryConfig.limits.recents, offset?: number | undefined) : Promise<BaseItemDto[]> {
+    return fetchRecentlyPlayed(limit * 2, offset ? offset + 10 : undefined)
         .then((tracks) => {
             return getItemsApi(Client.api!)
                 .getItems({ 

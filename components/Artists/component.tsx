@@ -7,6 +7,7 @@ import { QueryKeys } from "../../enums/query-keys";
 import { useQuery } from "@tanstack/react-query";
 import { fetchRecentlyPlayedArtists } from "../../api/queries/functions/recents";
 import { fetchFavoriteArtists } from "../../api/queries/functions/favorites";
+import { QueryConfig } from "../../api/queries/query.config";
 
 export default function Artists({ 
     navigation,
@@ -21,8 +22,8 @@ export default function Artists({
             }) : 
             
             QueryKeys.RecentlyPlayedArtists ? useQuery({
-                queryKey: [QueryKeys.RecentlyPlayedArtists],
-                queryFn: () => fetchRecentlyPlayedArtists(20)
+                queryKey: [QueryKeys.RecentlyPlayedArtists, QueryConfig.limits.recents * 4, QueryConfig.limits.recents],
+                queryFn: () => fetchRecentlyPlayedArtists(QueryConfig.limits.recents * 4, QueryConfig.limits.recents)
             }) :
             
             useQuery({

@@ -76,65 +76,65 @@ export default function PlayerScreen({
                 <>
                 <YStack>
 
-                    <XStack 
-                        marginBottom={"$2"}
-                        marginHorizontal={"$2"}
-                        >
-
-                        <YStack 
-                            alignContent="flex-end"
-                            flex={1}
-                            justifyContent="center"
-                        >
-                            <Icon
-                                name="chevron-down"
-                                onPress={() => {
-                                    navigation.goBack();
-                                }}
-                                small
-                                />
-                        </YStack>
-
-                        <YStack 
-                        alignItems="center"
-                        alignContent="center"
-                        flex={3}
-                        >
-
-                            <Text>Playing from</Text>
-                            <Text bold>
-                                { 
-                                    // If the Queue is a BaseItemDto, display the name of it
-                                    typeof(queue) === 'object' 
-                                    ? (queue as BaseItemDto).Name ?? "Untitled"
-                                    : queue
-                                }
-                            </Text>
-                        </YStack>
-
-                        <Spacer flex={1} />
-                    </XStack>
-
-                    <XStack 
-                        justifyContent="center"
-                        alignContent="center"
-                        minHeight={width / 1.1}
-                        // onPress={() => {
-                        //     useTogglePlayback.mutate(undefined)
-                        // }}
-                    >
                     { useMemo(() => {
                         return (
-                            <BlurhashedImage
-                                borderRadius={2}
-                                item={nowPlaying!.item}
-                                width={width / 1.1}
-                            />
+                        <>
+                            <XStack 
+                                marginBottom={"$2"}
+                                marginHorizontal={"$2"}
+                                >
+
+                                <YStack 
+                                    alignContent="flex-end"
+                                    flex={1}
+                                    justifyContent="center"
+                                    >
+                                    <Icon
+                                        name="chevron-down"
+                                        onPress={() => {
+                                            navigation.goBack();
+                                        }}
+                                        small
+                                        />
+                                </YStack>
+
+                                <YStack 
+                                alignItems="center"
+                                alignContent="center"
+                                flex={3}
+                                >
+
+                                    <Text>Playing from</Text>
+                                    <Text bold>
+                                        { 
+                                            // If the Queue is a BaseItemDto, display the name of it
+                                            typeof(queue) === 'object' 
+                                            ? (queue as BaseItemDto).Name ?? "Untitled"
+                                            : queue
+                                        }
+                                    </Text>
+                                </YStack>
+
+                                <Spacer flex={1} />
+                            </XStack>
+
+                            <XStack 
+                                justifyContent="center"
+                                alignContent="center"
+                                minHeight={width / 1.1}
+                                    >
+                                    <BlurhashedImage
+                                        borderRadius={2}
+                                        item={nowPlaying!.item}
+                                        width={width / 1.1}
+                                        />
+                            </XStack>
+                        </>
                         )
                     }, [
-                        nowPlaying
+                        nowPlaying,
+                        queue
                     ])}
-                    </XStack>
 
                     <XStack marginHorizontal={20} paddingVertical={5}>
 
@@ -320,15 +320,26 @@ export default function PlayerScreen({
                                         
                                         setSeeking(true);
                                         setProgressState(progressState - (15 * ProgressMultiplier));
-                                        setSeeking(false);
                                         useSeekTo.mutate(progress!.position - 15);
+                                        setSeeking(false);
                                     }}
                                     />
                                 
                                 <Icon
                                     color={getTokens().color.amethyst.val}
                                     name="skip-previous"
-                                    onPress={() => usePrevious.mutate()}
+                                    onPress={() => {
+
+                                        console.debug(`Skipping at ${progressState}`)
+                                        if (progressState / ProgressMultiplier < 3)
+                                            usePrevious.mutate()
+                                        else {
+                                            setSeeking(true);
+                                            setProgressState(0);
+                                            useSeekTo.mutate(0);
+                                            setSeeking(false);
+                                        }
+                                    }}
                                     large
                                     />
 
@@ -348,14 +359,15 @@ export default function PlayerScreen({
                                     onPress={() => { 
                                         setSeeking(true);
                                         setProgressState(progressState + (15 * ProgressMultiplier));
-                                        setSeeking(false);
                                         useSeekTo.mutate(progress!.position + 15);
+                                        setSeeking(false);
                                     }}  
                                     />              
                             </XStack>
                             )
                     }, [
-                        playbackState
+                        playbackState,
+                        progressState
                     ])}
                     
                     <XStack justifyContent="space-evenly" marginVertical={"$7"}>

@@ -1,5 +1,6 @@
 import { SizeTokens, XStack, Separator, Switch, Theme, styled, getToken } from "tamagui";
 import { Label } from "./text";
+import { useColorScheme } from "react-native";
 
 interface SwitchWithLabelProps {
   onCheckedChange: (value: boolean) => void,
@@ -15,28 +16,31 @@ const JellifySliderThumb = styled(Switch.Thumb, {
 })
 
 export function SwitchWithLabel(props: SwitchWithLabelProps) {
-    const id = `switch-${props.size.toString().slice(1)}-${props.checked ?? ''}}`
-    return (
-      <XStack alignItems="center" gap="$3">
-          <Label
-          
-          size={props.size}
-          htmlFor={id}
+
+  const isDarkMode = useColorScheme() === 'dark'
+
+  const id = `switch-${props.size.toString().slice(1)}-${props.checked ?? ''}}`
+  return (
+    <XStack alignItems="center" gap="$3">
+        <Label
+        
+        size={props.size}
+        htmlFor={id}
+        >
+          {props.label}
+        </Label>
+          <Separator minHeight={20} vertical />
+          <Switch 
+            id={id} 
+            size={props.size} 
+            checked={props.checked} 
+            onCheckedChange={(checked: boolean) => props.onCheckedChange(checked)}
+            backgroundColor={props.checked ? getToken("$color.telemagenta") : getToken("$color.purpleGray")}
+            borderColor={isDarkMode ? getToken("$color.amethyst") : getToken("$color.purpleDark")}
           >
-            {props.label}
-          </Label>
-            <Separator minHeight={20} vertical />
-            <Switch 
-              id={id} 
-              size={props.size} 
-              checked={props.checked} 
-              onCheckedChange={(checked: boolean) => props.onCheckedChange(checked)}
-              backgroundColor={props.checked ? getToken("$color.telemagenta") : getToken("$color.purpleGray")}
-              borderColor={getToken("$color.purpleDark")}
-            >
-              <JellifySliderThumb animation="bouncy" />
-            </Switch>
-        </XStack>
+            <JellifySliderThumb animation="bouncy" />
+          </Switch>
+      </XStack>
     )
   }
   
