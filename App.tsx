@@ -52,7 +52,7 @@ export default function App(): React.JSX.Element {
   });
 
   return (
-            <SafeAreaProvider>
+  <SafeAreaProvider>
     
     <PersistQueryClientProvider 
       client={queryClient} 

@@ -1,9 +1,7 @@
-import { HorizontalSlider } from "../../../components/Global/helpers/slider";
-import { RunTimeSeconds } from "../../../components/Global/helpers/time-codes";
 import { StackParamList } from "../../../components/types";
 import { usePlayerContext } from "../../../player/provider";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context";
 import { YStack, XStack, Spacer, getTokens } from "tamagui";
 import PlayPauseButton from "../helpers/buttons";
@@ -13,15 +11,10 @@ import FavoriteButton from "../../Global/components/favorite-button";
 import BlurhashedImage from "../../Global/components/blurhashed-image";
 import TextTicker from "react-native-text-ticker";
 import { ProgressMultiplier, TextTickerConfig } from "../component.config";
-import { toUpper } from "lodash";
-import { trigger } from "react-native-haptic-feedback";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { useIsFocused } from "@react-navigation/native";
 import { useProgress } from "react-native-track-player";
 import { UPDATE_INTERVAL } from "../../../player/config";
-
-const scrubGesture = Gesture.Pan();
+import Scrubber from "../helpers/scrubber";
 
 export default function PlayerScreen({ 
     navigation 
@@ -42,8 +35,6 @@ export default function PlayerScreen({
     
     const progress = useProgress(UPDATE_INTERVAL);
 
-    const [seeking, setSeeking] = useState<boolean>(false);
-
     /**
      * TrackPlayer.getProgress() returns a high sig-fig number. We're going to apply
      * a multiplier so that the scrubber bar can take advantage of those extra numbers
@@ -54,21 +45,7 @@ export default function PlayerScreen({
         : 0
     );
 
-    const freeze = !useIsFocused()
-
     const { width } = useSafeAreaFrame();
-
-    useEffect(() => {
-        if (!seeking)
-            progress && progress.position
-            ? setProgressState(
-                Math.ceil(
-                    progress.position * ProgressMultiplier
-                )
-            ) : 0;
-    }, [
-        progress
-    ]);
 
     return (
         <SafeAreaView edges={["right", "left"]}>
@@ -215,95 +192,7 @@ export default function PlayerScreen({
 
                     <XStack justifyContent="center" marginTop={"$3"}>
                         {/* playback progress goes here */}
-                        { useMemo(() => {
-
-                            return (
-                                <GestureDetector gesture={scrubGesture}>
-                                    <HorizontalSlider 
-                                        value={Math.round(progressState)}
-                                        max={
-                                            progress && progress.duration > 0 
-                                            ? progress.duration * ProgressMultiplier 
-                                            : 1
-                                        }
-                                        width={width / 1.1}
-                                        props={{
-                                            // If user swipes off of the slider we should seek to the spot
-                                            onPressOut: () => {
-                                                setSeeking(false);
-
-                                                navigation.setOptions({
-                                                    gestureEnabled: true
-                                                });
-                                                
-                                                useSeekTo.mutate(Math.floor(progressState / ProgressMultiplier));
-                                            },
-                                            onSlideStart: () => {
-                                                trigger("impactLight");
-                                                setSeeking(true);
-
-                                                navigation.setOptions({
-                                                    gestureEnabled: false
-                                                });
-                                            },
-                                            onSlideMove: (event, value) => {
-                                                setSeeking(true);
-                                                
-                                                navigation.setOptions({
-                                                    gestureEnabled: false
-                                                });
-                                                
-                                                setProgressState(value);
-                                            },
-                                            onSlideEnd: (event, value) => {
-                                                setSeeking(false);
-                                                
-                                                navigation.setOptions({
-                                                    gestureEnabled: true
-                                                });
-                                                
-                                                useSeekTo.mutate(Math.floor(value / ProgressMultiplier));
-                                            }
-                                        }}
-                                        />
-                                </GestureDetector>
-                            )}, [
-                                progressState
-                            ]
-                        )}
-                    </XStack>
-
-
-                        <XStack marginHorizontal={20} marginTop={"$3"} marginBottom={"$2"}>
-                        <XStack flex={1} justifyContent="flex-start">
-                            { useMemo(() => {
-                                return (
-                                    <RunTimeSeconds>{Math.floor(progressState / ProgressMultiplier)}</RunTimeSeconds>
-                                )
-                            }, [
-                                progressState,
-                            ])}
-                        </XStack>
-
-                        <XStack flex={1} justifyContent="space-between">
-                            { /** Track metadata can go here */}
-                            { nowPlaying!.item.MediaSources && (
-                                <>
-                                <Text>{toUpper(nowPlaying!.item.MediaSources[0].Container ?? "")}</Text>
-                                <Text>{nowPlaying!.item.MediaSources[0].Bitrate?.toString() ?? ""}</Text>
-                                </>
-                            )}
-                        </XStack>
-
-                        <XStack flex={1} justifyContent="flex-end">
-                            <RunTimeSeconds>
-                                {
-                                    progress && progress.duration
-                                    ? Math.ceil(progress.duration) 
-                                    : 0
-                                }
-                            </RunTimeSeconds>
-                        </XStack>
+                        <Scrubber />
                     </XStack>
 
                     { useMemo(() => {
@@ -317,11 +206,7 @@ export default function PlayerScreen({
                                     color={getTokens().color.amethyst.val}
                                     name="rewind-15"
                                     onPress={() => {
-                                        
-                                        setSeeking(true);
-                                        setProgressState(progressState - (15 * ProgressMultiplier));
                                         useSeekTo.mutate(progress!.position - 15);
-                                        setSeeking(false);
                                     }}
                                     />
                                 
@@ -334,10 +219,7 @@ export default function PlayerScreen({
                                         if (progressState / ProgressMultiplier < 3)
                                             usePrevious.mutate()
                                         else {
-                                            setSeeking(true);
-                                            setProgressState(0);
                                             useSeekTo.mutate(0);
-                                            setSeeking(false);
                                         }
                                     }}
                                     large
@@ -357,10 +239,7 @@ export default function PlayerScreen({
                                     color={getTokens().color.amethyst.val}
                                     name="fast-forward-15"
                                     onPress={() => { 
-                                        setSeeking(true);
-                                        setProgressState(progressState + (15 * ProgressMultiplier));
                                         useSeekTo.mutate(progress!.position + 15);
-                                        setSeeking(false);
                                     }}  
                                     />              
                             </XStack>
