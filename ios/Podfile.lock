@@ -1280,27 +1280,6 @@ PODS:
     - ReactCommon/turbomodule/core
   - react-native-background-actions (4.0.1):
     - React-Core
-  - react-native-blur (4.4.1):
-    - DoubleConversion
-    - glog
-    - hermes-engine
-    - RCT-Folly (= 2024.11.18.00)
-    - RCTRequired
-    - RCTTypeSafety
-    - React-Core
-    - React-debug
-    - React-Fabric
-    - React-featureflags
-    - React-graphics
-    - React-ImageManager
-    - React-NativeModulesApple
-    - React-RCTFabric
-    - React-rendererdebug
-    - React-utils
-    - ReactCodegen
-    - ReactCommon/turbomodule/bridging
-    - ReactCommon/turbomodule/core
-    - Yoga
   - react-native-blurhash (2.1.1):
     - DoubleConversion
     - glog
@@ -2324,8 +2303,7 @@ SPEC CHECKSUMS:
   React-Mapbuffer: 3c11cee7737609275c7b66bd0b1de475f094cedf
   React-microtasksnativemodule: 843f352b32aacbe13a9c750190d34df44c3e6c2c
   react-native-background-actions: 48e6bad9e2a47e3b04858634c5a05ea11062f680
-  react-native-blur: b06c3fe88680beac622d8d13b8c36ec15c50383b
-  react-native-blurhash: bab22da783c13c6fa5004a56559c287f56f0c7a1
+  react-native-blurhash: c22b2642ab1c83c6c5a8bf365134002e99638d76
   react-native-carplay: 8f388f6f73e5e0f73ed154ad8794371343ee20c0
   react-native-mmkv: 24917f0685641ccfd37c9b7004b26c00551128be
   react-native-safe-area-context: 7e513d737b0b5c1d10bbe0e5fcc9f925a7be144c
