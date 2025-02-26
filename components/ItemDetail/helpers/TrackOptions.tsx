@@ -53,6 +53,7 @@ export default function TrackOptions({
 
     const useAddToPlaylist = useMutation({
         mutationFn: ({ track, playlist }: AddToPlaylistMutation) => {
+            trigger("impactLight");
             return addToPlaylist(track, playlist)
         },
         onSuccess: (data, { playlist }) => {
@@ -71,7 +72,7 @@ export default function TrackOptions({
             });
 
             queryClient.invalidateQueries({
-                queryKey: [QueryKeys.ItemTracks, playlist.Id!, false],
+                queryKey: [QueryKeys.ItemTracks, playlist.Id!],
             });                                    
         },
         onError: () => {

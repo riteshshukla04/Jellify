@@ -56,6 +56,10 @@ Artist
 
 <img src="screenshots/artist.png" alt="Artist" width="275" height="600">
 
+Similar Artists
+
+<img src="screenshots/artist_similarto.png" alt="Similar Artists" width="275" height="600">
+
 Album
 
 <img src="screenshots/album.png" alt="Album" width="275" height="600">
@@ -75,6 +79,8 @@ Playlist
 <img src="screenshots/player.png" alt="Player" width="275" height="600">
 
 <img src="screenshots/player_queue.png" alt="Queue" width="275" height="600">
+
+<img src='screenshots/favorite_track.png' alt='Favorite Track' width='275' height='600”'>
 
 ### CarPlay (Sneak Preview)
 <img src="screenshots/carplay_nowplaying.jpeg" alt="Now Playing (CarPlay)" width="500" height="350">
@@ -116,7 +122,7 @@ This is undoubtedly a passion project of [mine](https://github.com/anultraviolet
   - Coming Soon™️
 
 ## 🙏 Special Thanks To
-- The [Jellyfin Team](https://jellyfin.org/) for their amazing server software, SDKs, and documentation
+- The [Jellyfin Team](https://jellyfin.org/) for making this possible with their software, SDKs, and unequivocal helpfulness
 - All contributors of [Finamp](https://github.com/jmshrv/finamp). *Jellify* draws inspiration and wisdom from it, and is another fantastic music app for Jellyfin
 - The folks in the [Margelo Community Discord](https://discord.com/invite/6CSHz2qAvA) for their assistance
 - Tony, Trevor, [Laine](https://github.com/lainie-ftw) and [Jordan](https://github.com/jordanbleu) for their testing and feedback from the early stages of development

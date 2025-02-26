@@ -11,6 +11,7 @@ import { StackParamList } from "../../../components/types";
 import { QueuingType } from "../../../enums/queuing-type";
 import BlurhashedImage from "./blurhashed-image";
 import { Queue } from "../../../player/types/queue-item";
+import FavoriteIcon from "./favorite-icon";
 
 interface TrackProps {
     track: BaseItemDto;
@@ -143,17 +144,7 @@ export default function Track({
                     alignContent="center" 
                     flex={3}
                 >
-                    <YStack
-                        alignContent="center"
-                        justifyContent="center"
-                        minWidth={24}
-                    >
-                        { track.UserData?.IsFavorite ? (
-                            <Icon small name="heart" color={getTokens().color.telemagenta.val} />
-                        ) : (
-                            <Spacer />
-                        )}
-                    </YStack>
+                    <FavoriteIcon item={track} />
 
                     <YStack
                         alignContent="center"

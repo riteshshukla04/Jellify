@@ -17,9 +17,10 @@ export function fetchRecentlyAdded(limit: number = QueryConfig.limits.recents, o
                 .getLatestMedia({
                     parentId: Client.library.musicLibraryId,
                     limit,
+                    
                 })
                 .then(({ data }) => {
-                    resolve(data);
+                    resolve(offset ? data.slice(offset, data.length - 1) : data);
                 });
     })
 }

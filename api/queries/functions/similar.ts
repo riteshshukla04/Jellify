@@ -1,8 +1,8 @@
-import Client from "@/api/client";
+import Client from "../../../api/client";
 import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { getItemsApi, getLibraryApi } from "@jellyfin/sdk/lib/utils/api";
+import { getLibraryApi } from "@jellyfin/sdk/lib/utils/api";
 
-export default function fetchSimilarArtists(artistId : string) : Promise<BaseItemDto[]> {
+export default function fetchSimilar(itemId : string, limit : number = 10, startIndex : number = 0) : Promise<BaseItemDto[]> {
     return new Promise((resolve, reject) => {
 
         if (!Client.api || !Client.user)
@@ -12,7 +12,8 @@ export default function fetchSimilarArtists(artistId : string) : Promise<BaseIte
             getLibraryApi(Client.api)
                 .getSimilarArtists({
                     userId: Client.user.id,
-                    itemId: artistId
+                    itemId: itemId,
+                    limit
                 })
                 .then(({ data }) => {
                     resolve(data.Items ?? [])

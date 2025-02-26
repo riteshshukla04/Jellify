@@ -55,16 +55,7 @@ export default function FavoriteButton({
             onToggle ? onToggle() : {};
 
             // Force refresh of track user data
-            queryClient.invalidateQueries({
-                queryKey: [QueryKeys.UserData, item.Id],
-                exact: true
-            });
-
-            if (item.Type === 'Audio') {
-                queryClient.invalidateQueries({
-                    queryKey: [QueryKeys.ItemTracks]
-                });
-            }
+            queryClient.invalidateQueries({ queryKey: [QueryKeys.UserData, item.Id] });
         }
     })
     

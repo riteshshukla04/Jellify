@@ -1,6 +1,7 @@
 import Client from "../../../api/client";
 import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { getPlaystateApi } from "@jellyfin/sdk/lib/utils/api";
+import { getItemsApi } from "@jellyfin/sdk/lib/utils/api";
+import { isUndefined } from "lodash";
 
 /**
  * Manually marks an item as played.
@@ -15,16 +16,24 @@ import { getPlaystateApi } from "@jellyfin/sdk/lib/utils/api";
  */
 export async function markItemPlayed(item: BaseItemDto) : Promise<void> {
     return new Promise((resolve, reject) => {
-        getPlaystateApi(Client.api!)
-            .markPlayedItem({
+
+        if (isUndefined(Client.api) || isUndefined(Client.user))
+            return reject("Client instance not set")
+
+        getItemsApi(Client.api)
+            .updateItemUserData({
                 itemId: item.Id!,
-                userId: Client.user!.id
+                userId: Client.user.id,
+                updateUserItemDataDto: {
+                    LastPlayedDate: new Date().getUTCDate().toLocaleString(),
+                    Played: true,
+                }
             })
-            .then((response) => {
+            .then(({ data }) => {
                 resolve()
             })
-            .catch(error => {
+            .catch((error) => {
                 reject(error);
-            })
-    })
+            });
+    });
 }

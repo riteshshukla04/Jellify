@@ -5,8 +5,17 @@ import RecentlyAdded from "./helpers/just-added";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { StackParamList } from "../types";
 import { H2 } from "../Global/helpers/text";
+import { useDiscoverContext } from "./provider";
+import { RefreshControl } from "react-native";
 
-export default function Index({ navigation }: { navigation : NativeStackNavigationProp<StackParamList> }) : React.JSX.Element {
+export default function Index({ 
+    navigation 
+} : { 
+    navigation : NativeStackNavigationProp<StackParamList> 
+}) : React.JSX.Element {
+
+    const { refreshing, refresh } = useDiscoverContext();
+
     return (
         <SafeAreaView edges={["top", "left", "right"]}>
             <ScrollView
@@ -14,7 +23,13 @@ export default function Index({ navigation }: { navigation : NativeStackNavigati
                 contentInsetAdjustmentBehavior="automatic"
                 removeClippedSubviews
                 paddingBottom={"$15"}
-            >
+                refreshControl={(
+                    <RefreshControl
+                    refreshing={refreshing}
+                    onRefresh={refresh}
+                    />
+                )}
+                >
                 <H2>{`Recently added`}</H2>
                 <RecentlyAdded navigation={navigation} />
             </ScrollView>

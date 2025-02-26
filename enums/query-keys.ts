@@ -42,4 +42,5 @@ export enum QueryKeys {
     UserViews = "UserViews",
     Audio = "Audio",
     RecentlyAdded = "RecentlyAdded",
+    SimilarItems = "SimilarItems",
 }

@@ -61,7 +61,11 @@ const HomeContext = createContext<HomeContext>({
 
 export const HomeProvider: ({ children }: {
     children: ReactNode;
-}) => React.JSX.Element = ({ children }: { children: ReactNode }) => {
+}) => React.JSX.Element = ({ 
+    children 
+} : { 
+    children: ReactNode
+}) => {
 
     const {
         refreshing,

@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { useProgress } from "react-native-track-player";
-import { ProgressMultiplier } from "../component.config";
-import { HorizontalSlider } from "@/components/Global/helpers/slider";
-import navigation from "@/components/navigation";
+import { HorizontalSlider } from "../../../components/Global/helpers/slider";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { trigger } from "react-native-haptic-feedback";
 import { XStack, YStack } from "tamagui";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { usePlayerContext } from "../../../player/provider";
-import { RunTimeSeconds } from "@/components/Global/helpers/time-codes";
+import { RunTimeSeconds } from "../../../components/Global/helpers/time-codes";
+import { UPDATE_INTERVAL } from "../../../player/config";
+import { ProgressMultiplier } from "../component.config";
 
 const scrubGesture = Gesture.Pan();
 
@@ -21,7 +21,7 @@ export default function Scrubber() : React.JSX.Element {
 
     const { width } = useSafeAreaFrame();
 
-    const progress = useProgress();
+    const progress = useProgress(UPDATE_INTERVAL);
 
     const [seeking, setSeeking] = useState<boolean>(false);
     
@@ -34,28 +34,27 @@ export default function Scrubber() : React.JSX.Element {
 
     useEffect(() => {
         if (!seeking)
-            progress && progress.position
+            progress.position
             ? setPosition(
                 Math.floor(
                     progress.position * ProgressMultiplier
                 )
             ) : 0;
     }, [
-        progress
+        progress.position
     ]);
 
     return (
         <YStack>
-
             <GestureDetector gesture={scrubGesture}>
                 <HorizontalSlider 
                     value={position}
                     max={
                         progress && progress.duration > 0 
-                        ? progress.duration * ProgressMultiplier 
+                        ? progress.duration * ProgressMultiplier
                         : 1
                     }
-                    width={width / 1.1}
+                    width={width / 1.125}
                     props={{
                         // If user swipes off of the slider we should seek to the spot
                         onPressOut: (event) => {
@@ -83,16 +82,16 @@ export default function Scrubber() : React.JSX.Element {
                     />
             </GestureDetector>
 
-            <XStack marginHorizontal={20} marginTop={"$3"} marginBottom={"$2"}>
-                <XStack flex={1} justifyContent="flex-start">
+            <XStack margin={"$2"} marginTop={"$3"}>
+                <YStack flex={1} alignItems="flex-start">
                     <RunTimeSeconds>{Math.floor(position / ProgressMultiplier)}</RunTimeSeconds>
-                </XStack>
+                </YStack>
 
-                <XStack flex={1} justifyContent="space-between">
+                <YStack flex={1} alignItems="center">
                     { /** Track metadata can go here */}
-                </XStack>
+                </YStack>
 
-                <XStack flex={1} justifyContent="flex-end">
+                <YStack flex={1} alignItems="flex-end">
                     <RunTimeSeconds>
                         {
                             progress && progress.duration
@@ -100,7 +99,7 @@ export default function Scrubber() : React.JSX.Element {
                             : 0
                         }
                     </RunTimeSeconds>
-                </XStack>
+                </YStack>
             </XStack>
         </YStack>
     )

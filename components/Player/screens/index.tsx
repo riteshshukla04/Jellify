@@ -78,11 +78,15 @@ export default function PlayerScreen({
                                 <YStack 
                                 alignItems="center"
                                 alignContent="center"
-                                flex={3}
+                                flex={6}
                                 >
 
                                     <Text>Playing from</Text>
-                                    <Text bold>
+                                    <Text 
+                                        bold 
+                                        numberOfLines={1} 
+                                        lineBreakStrategyIOS="standard"
+                                    >
                                         { 
                                             // If the Queue is a BaseItemDto, display the name of it
                                             typeof(queue) === 'object' 

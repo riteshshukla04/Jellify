@@ -3,17 +3,16 @@ import { JellifyTrack } from "../types/JellifyTrack";
 import { storage } from "../constants/storage";
 import { MMKVStorageKeys } from "../enums/mmkv-storage-keys";
 import { findPlayNextIndexStart, findPlayQueueIndexStart } from "./helpers/index";
-import TrackPlayer, { Event, Progress, State, usePlaybackState, useProgress, useTrackPlayerEvents } from "react-native-track-player";
+import TrackPlayer, { Event, State, usePlaybackState, useTrackPlayerEvents } from "react-native-track-player";
 import { isEqual, isUndefined } from "lodash";
 import { getPlaystateApi } from "@jellyfin/sdk/lib/utils/api";
 import { handlePlaybackProgressUpdated, handlePlaybackState } from "./handlers";
 import { useUpdateOptions } from "../player/hooks";
-import { UPDATE_INTERVAL } from "./config";
 import { useMutation, UseMutationResult } from "@tanstack/react-query";
 import { mapDtoToTrack } from "../helpers/mappings";
 import { QueuingType } from "../enums/queuing-type";
 import { trigger } from "react-native-haptic-feedback";
-import { getQueue, pause, seekTo, skip, skipToNext, skipToPrevious } from "react-native-track-player/lib/src/trackPlayer";
+import { getActiveTrackIndex, getQueue, pause, seekTo, skip, skipToNext, skipToPrevious } from "react-native-track-player/lib/src/trackPlayer";
 import { convertRunTimeTicksToSeconds } from "../helpers/runtimeticks";
 import Client from "../api/client";
 import { AddToQueueMutation, QueueMutation, QueueOrderMutation } from "./interfaces";
@@ -21,6 +20,8 @@ import { Section } from "../components/Player/types";
 import { Queue } from "./types/queue-item";
 
 import * as Burnt from "burnt";
+import { markItemPlayed } from "../api/mutations/functions/item";
+import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
 
 interface PlayerContext {
     initialized: boolean;
@@ -111,6 +112,7 @@ const PlayerContextInitializer = () => {
     //#region Hooks
     const useAddToQueue = useMutation({
         mutationFn: async (mutation: AddToQueueMutation) => {
+            trigger("impactLight");
             
             if (mutation.queuingType === QueuingType.PlayingNext)
                 return addToNext([mapDtoToTrack(mutation.track, mutation.queuingType)]);
@@ -122,7 +124,7 @@ const PlayerContextInitializer = () => {
             trigger("notificationSuccess");
 
             Burnt.alert({
-                title: queuingType === QueuingType.PlayingNext ? "Playing next" : "Added to Queue",
+                title: queuingType === QueuingType.PlayingNext ? "Playing next" : "Added to queue",
                 duration: 1,
                 preset: 'done'
             });
@@ -185,16 +187,23 @@ const PlayerContextInitializer = () => {
     const useSkip = useMutation({
         mutationFn: async (index?: number | undefined) => {
             trigger("impactMedium")
-            if (!isUndefined(index)) {
-                setIsSkipping(true);
-                setNowPlaying(playQueue[index]);
-                await skip(index);
-                setIsSkipping(false);
-            }
+
+            // Handle if this is the last track in the queue
+            if (playQueue.length - 1 === await getActiveTrackIndex())
+                return;
+
             else {
-                const nowPlayingIndex = playQueue.findIndex((track) => track.item.Id === nowPlaying!.item.Id);
-                setNowPlaying(playQueue[nowPlayingIndex + 1])
-                await skipToNext();
+                if (!isUndefined(index)) {
+                    setIsSkipping(true);
+                    setNowPlaying(playQueue[index]);
+                    await skip(index);
+                    setIsSkipping(false);
+                }
+                else {
+                    const nowPlayingIndex = playQueue.findIndex((track) => track.item.Id === nowPlaying!.item.Id);
+                    setNowPlaying(playQueue[nowPlayingIndex + 1])
+                    await skipToNext();
+                }
             }
         }
     });
@@ -230,7 +239,10 @@ const PlayerContextInitializer = () => {
         },
         onSuccess: async (data, mutation: QueueMutation) => {
             setIsSkipping(false);
-            await play(mutation.index)
+            await play(mutation.index);
+
+            if (typeof(mutation.queue) === 'object')
+                await markItemPlayed(queue as BaseItemDto);
         },
         onError: async () => {
             setIsSkipping(false);
