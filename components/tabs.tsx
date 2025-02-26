@@ -5,11 +5,12 @@ import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityI
 import Settings from "./Settings/stack";
 import { Discover } from "./Discover/stack";
 import { Miniplayer } from "./Player/mini-player";
-import { getToken, getTokens, Separator } from "tamagui";
+import { getToken, getTokens, Separator, View } from "tamagui";
 import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
 import { useColorScheme } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -19,6 +20,7 @@ export function Tabs() : React.JSX.Element {
     const { nowPlaying } = usePlayerContext();
 
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
+    const insets = useSafeAreaInsets();
 
     return (
             <Tab.Navigator
@@ -29,7 +31,7 @@ export function Tabs() : React.JSX.Element {
                     tabBarInactiveTintColor: isDarkMode ? getToken("$color.amethyst") : getToken("$color.purpleGray")
                 }}
                 tabBar={(props) => (
-                    <>
+                    <View marginBottom={insets.bottom}>
                         { nowPlaying && (
                             /* Hide miniplayer if the queue is empty */
                             <>
@@ -38,7 +40,7 @@ export function Tabs() : React.JSX.Element {
                             </>
                         )}
                         <BottomTabBar {...props} />
-                    </>
+                    </View>
                 )}
             >
                 <Tab.Screen 
