@@ -40,7 +40,7 @@ export function Tabs() : React.JSX.Element {
                                 <Miniplayer navigation={props.navigation} />
                             </>
                         )}
-                        <BottomTabBar { ...props} insets={insets} />
+                        <BottomTabBar { ...props} style={{ marginBottom: insets.bottom }}/>
                     </>
                 )}
             >
