@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useProgress } from "react-native-track-player";
 import { HorizontalSlider } from "../../../components/Global/helpers/slider";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { trigger } from "react-native-haptic-feedback";
-import { XStack, YStack } from "tamagui";
+import { getToken, XStack, YStack } from "tamagui";
 import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { usePlayerContext } from "../../../player/provider";
 import { RunTimeSeconds } from "../../../components/Global/helpers/time-codes";
 import { UPDATE_INTERVAL } from "../../../player/config";
 import { ProgressMultiplier } from "../component.config";
+import Icon from "../../../components/Global/helpers/icon";
+import PlayPauseButton from "./buttons";
 
 const scrubGesture = Gesture.Pan();
 
@@ -16,30 +18,38 @@ export default function Scrubber() : React.JSX.Element {
 
     const { 
         useSeekTo, 
+        useSkip, 
+        usePrevious, 
     } = usePlayerContext();
     
 
     const { width } = useSafeAreaFrame();
 
-    const progress = useProgress(UPDATE_INTERVAL);
-
     const [seeking, setSeeking] = useState<boolean>(false);
-    
 
+    const progress = useProgress(UPDATE_INTERVAL);
     
     const [position, setPosition] = useState<number>(progress && progress.position ? 
         Math.floor(progress.position * ProgressMultiplier)
         : 0
     );
 
+    /**
+     * Update position in the scrubber if the user isn't interacting
+     */
     useEffect(() => {
-        if (!seeking)
-            progress.position
-            ? setPosition(
+        if (
+            !seeking
+            && !useSkip.isPending
+            && !usePrevious.isPending
+            && !useSeekTo.isPending
+            && progress.position
+        )
+            setPosition(
                 Math.floor(
                     progress.position * ProgressMultiplier
                 )
-            ) : 0;
+            );
     }, [
         progress.position
     ]);
@@ -57,29 +67,28 @@ export default function Scrubber() : React.JSX.Element {
                     width={width / 1.125}
                     props={{
                         // If user swipes off of the slider we should seek to the spot
-                        onPressOut: (event) => {
+                        onPressOut: () => {
                             trigger("notificationSuccess")
-                            setSeeking(false);
                             useSeekTo.mutate(Math.floor(position / ProgressMultiplier));
+                            setSeeking(false);
                         },
                         onSlideStart: (event, value) => {
-                            trigger("impactLight");
                             setSeeking(true);
+                            trigger("impactLight");
                             setPosition(value)
                         },
                         onSlideMove: (event, value) => {
                             trigger("clockTick")
-                            setSeeking(true);
                             setPosition(value);
                         },
                         onSlideEnd: (event, value) => {
                             trigger("notificationSuccess")
-                            setSeeking(false);
                             setPosition(value)
                             useSeekTo.mutate(Math.floor(value / ProgressMultiplier));
+                            setSeeking(false);
                         }
                     }}
-                    />
+                />
             </GestureDetector>
 
             <XStack margin={"$2"} marginTop={"$3"}>
@@ -100,6 +109,51 @@ export default function Scrubber() : React.JSX.Element {
                         }
                     </RunTimeSeconds>
                 </YStack>
+            </XStack>
+
+            <XStack 
+                alignItems="center" 
+                justifyContent="space-evenly" 
+                marginVertical={"$2"}
+                >
+                <Icon
+                    color={getToken("$color.amethyst")}
+                    name="rewind-15"
+                    onPress={() => {
+                        useSeekTo.mutate(position / ProgressMultiplier - 15);
+                    }}
+                />
+                
+                <Icon
+                    color={getToken("$color.amethyst")}
+                    name="skip-previous"
+                    onPress={() => {
+                        if (position / ProgressMultiplier < 3)
+                            usePrevious.mutate()
+                        else {
+                            useSeekTo.mutate(0);
+                        }
+                    }}
+                    large
+                />
+
+                {/* I really wanted a big clunky play button */}
+                <PlayPauseButton size={width / 5} />
+
+                <Icon
+                    color={getToken("$color.amethyst")}
+                    name="skip-next" 
+                    onPress={() => useSkip.mutate(undefined)}
+                    large
+                />    
+
+                <Icon
+                    color={getToken("$color.amethyst")}
+                    name="fast-forward-15"
+                    onPress={() => { 
+                        useSeekTo.mutate(position / ProgressMultiplier + 15);
+                    }}  
+                />              
             </XStack>
         </YStack>
     )

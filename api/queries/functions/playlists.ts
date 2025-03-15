@@ -26,9 +26,12 @@ export function fetchUserPlaylists(
                 ]
             })
             .then((response) => {
+
+                console.log(response);
+
                 if (response.data.Items)
                     resolve(response.data.Items.filter(playlist => 
-                        playlist.Path?.includes("/config/data/playlists")
+                        playlist.Path?.includes("/data/playlists")
                     ))
                 else 
                     resolve([]);
@@ -56,8 +59,11 @@ export function fetchPublicPlaylists(): Promise<BaseItemDto[]> {
                 ]
             })
             .then((response) => {
+
+                console.log(response);
+
                 if (response.data.Items)
-                    resolve(response.data.Items.filter(playlist => !playlist.Path?.includes("/config/data/playlists")))
+                    resolve(response.data.Items.filter(playlist => !playlist.Path?.includes("/data/playlists")))
                 else 
                     resolve([]);
             })

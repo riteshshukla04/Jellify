@@ -26,24 +26,8 @@ export default function PlayerScreen({
         nowPlayingIsFavorite,
         setNowPlayingIsFavorite,
         nowPlaying, 
-        useSeekTo, 
-        useSkip, 
-        usePrevious, 
-        playbackState,
         queue
     } = usePlayerContext();
-    
-    const progress = useProgress(UPDATE_INTERVAL);
-
-    /**
-     * TrackPlayer.getProgress() returns a high sig-fig number. We're going to apply
-     * a multiplier so that the scrubber bar can take advantage of those extra numbers
-     */
-    const [progressState, setProgressState] = useState<number>(
-        progress && progress.position 
-        ? Math.ceil(progress.position * ProgressMultiplier)
-        : 0
-    );
 
     const { width } = useSafeAreaFrame();
 
@@ -198,60 +182,6 @@ export default function PlayerScreen({
                         {/* playback progress goes here */}
                         <Scrubber />
                     </XStack>
-
-                    { useMemo(() => {
-                        return (
-                            <XStack 
-                                alignItems="center" 
-                                justifyContent="space-evenly" 
-                                marginVertical={"$2"}
-                                >
-                                <Icon
-                                    color={getTokens().color.amethyst.val}
-                                    name="rewind-15"
-                                    onPress={() => {
-                                        useSeekTo.mutate(progress!.position - 15);
-                                    }}
-                                    />
-                                
-                                <Icon
-                                    color={getTokens().color.amethyst.val}
-                                    name="skip-previous"
-                                    onPress={() => {
-
-                                        console.debug(`Skipping at ${progressState}`)
-                                        if (progressState / ProgressMultiplier < 3)
-                                            usePrevious.mutate()
-                                        else {
-                                            useSeekTo.mutate(0);
-                                        }
-                                    }}
-                                    large
-                                    />
-
-                                {/* I really wanted a big clunky play button */}
-                                <PlayPauseButton size={width / 5} />
-
-                                <Icon
-                                    color={getTokens().color.amethyst.val}
-                                    name="skip-next" 
-                                    onPress={() => useSkip.mutate(undefined)}
-                                    large
-                                    />    
-
-                                <Icon
-                                    color={getTokens().color.amethyst.val}
-                                    name="fast-forward-15"
-                                    onPress={() => { 
-                                        useSeekTo.mutate(progress!.position + 15);
-                                    }}  
-                                    />              
-                            </XStack>
-                            )
-                    }, [
-                        playbackState,
-                        progressState
-                    ])}
                     
                     <XStack justifyContent="space-evenly" marginVertical={"$7"}>
                         <Icon name="speaker-multiple"

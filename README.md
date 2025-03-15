@@ -41,7 +41,7 @@ This app was designed with me and my dad in mind, since I wanted to give him a s
 ### Home
 Home
 
-<img src="screenshots/playlist.png" alt="Jellify Home" width="275" height="600">
+<img src="screenshots/home.png" alt="Jellify Home" width="275" height="600">
 
 ### Library
 Library
@@ -63,6 +63,10 @@ Similar Artists
 Album
 
 <img src="screenshots/album.png" alt="Album" width="275" height="600">
+
+Album Artists
+
+<img src="screenshots/album_artists.png" alt="Album Artists" width="275" height="600">
 
 Track Options
  

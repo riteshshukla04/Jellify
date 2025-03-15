@@ -14,7 +14,10 @@ export default function Albums({ navigation, route }: AlbumsProps) : React.JSX.E
 
     const { data: albums, refetch, isPending } = useQuery({
         queryKey: [route.params.query],
-        queryFn: () => fetchRecentlyAddedAlbums ? fetchRecentlyAdded(QueryConfig.limits.recents * 4, QueryConfig.limits.recents) : fetchFavoriteAlbums()
+        queryFn: () => 
+            fetchRecentlyAddedAlbums 
+            ? fetchRecentlyAdded(QueryConfig.limits.recents * 4, QueryConfig.limits.recents) 
+            : fetchFavoriteAlbums()
     });
 
     const { width } = useSafeAreaFrame();

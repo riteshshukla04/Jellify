@@ -1,6 +1,6 @@
 {
   "name": "jellify",
-  "version": "0.10.52",
+  "version": "0.10.58",
   "private": true,
   "scripts": {
     "init": "npm i && npm run pod:install",
@@ -42,6 +42,7 @@
     "react-native": "0.78.0",
     "react-native-background-actions": "^4.0.1",
     "react-native-blurhash": "^2.1.1",
+    "react-native-boost": "^0.5.5",
     "react-native-carplay": "^2.4.1-beta.0",
     "react-native-device-info": "^14.0.4",
     "react-native-draggable-flatlist": "^4.0.1",

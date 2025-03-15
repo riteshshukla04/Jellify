@@ -11,7 +11,11 @@ import { useSafeAreaFrame } from "react-native-safe-area-context";
 import { TextTickerConfig } from "./component.config";
 import BlurhashedImage from "../Global/components/blurhashed-image";
 
-export function Miniplayer({ navigation }: { navigation : NavigationHelpers<ParamListBase, BottomTabNavigationEventMap> }) : React.JSX.Element {
+export function Miniplayer({ 
+    navigation 
+} : { 
+    navigation : NavigationHelpers<ParamListBase, BottomTabNavigationEventMap> 
+}) : React.JSX.Element {
 
     const theme = useTheme();
 

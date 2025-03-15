@@ -27,6 +27,7 @@ export function Tabs() : React.JSX.Element {
             <Tab.Navigator
                 initialRouteName="Home"
                 screenOptions={{
+                    lazy: false,
                     animation: 'shift',
                     tabBarActiveTintColor: getTokens().color.telemagenta.val,
                     tabBarInactiveTintColor: isDarkMode ? getToken("$color.amethyst") : getToken("$color.purpleGray")
