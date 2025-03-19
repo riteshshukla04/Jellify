@@ -73,7 +73,7 @@ export default function App(): React.JSX.Element {
           </GestureHandlerRootView>
         </PersistQueryClientProvider>
 
-        <SafeToastViewport />
+        {/* <SafeToastViewport /> */}
 
       </NavigationContainer>
     </SafeAreaProvider>
