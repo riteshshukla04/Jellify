@@ -44,7 +44,7 @@ function App(): React.JSX.Element {
             <Login /> 
           </JellyfinAuthenticationProvider>
         )}
-        <SafeToastViewport />
+        {/* <SafeToastViewport /> */}
     </NavigationContainer>
   )
 }
