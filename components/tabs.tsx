@@ -10,7 +10,6 @@ import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
 import { useColorScheme } from "react-native";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator();
 
@@ -18,8 +17,6 @@ export function Tabs() : React.JSX.Element {
 
     const isDarkMode = useColorScheme() === 'dark'
     const { nowPlaying } = usePlayerContext();
-
-    const insets = useSafeAreaInsets();
 
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
 
@@ -41,7 +38,7 @@ export function Tabs() : React.JSX.Element {
                                 <Miniplayer navigation={props.navigation} />
                             </>
                         )}
-                        <BottomTabBar { ...props} insets={insets}/>
+                        <BottomTabBar { ...props} />
                     </>
                 )}
             >
