@@ -52,23 +52,22 @@ export default function App(): React.JSX.Element {
   });
 
   return (
-  <SafeAreaProvider>
-    
-    <PersistQueryClientProvider 
-      client={queryClient} 
-      persistOptions={{ 
-        persister: clientPersister,
-    }}>
-      <GestureHandlerRootView>
-        <TamaguiProvider config={jellifyConfig}>
-          <Theme name={isDarkMode ? 'dark' : 'light'}>
-            { playerIsReady && (
-              <Jellify />
-            )}
-          </Theme>
-        </TamaguiProvider>
-      </GestureHandlerRootView>
-    </PersistQueryClientProvider>
+    <SafeAreaProvider>
+      <PersistQueryClientProvider 
+        client={queryClient} 
+        persistOptions={{ 
+          persister: clientPersister,
+      }}>
+        <GestureHandlerRootView>
+          <TamaguiProvider config={jellifyConfig}>
+            <Theme name={isDarkMode ? 'dark' : 'light'}>
+              { playerIsReady && (
+                <Jellify />
+              )}
+            </Theme>
+          </TamaguiProvider>
+        </GestureHandlerRootView>
+      </PersistQueryClientProvider>
     </SafeAreaProvider>
   );
 }
