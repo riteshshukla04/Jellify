@@ -28,14 +28,12 @@ export default function Jellify(): React.JSX.Element {
 
 function App(): React.JSX.Element {
 
-  const isDarkMode = useColorScheme() === "dark";
   const { loggedIn } = useJellifyContext();
 
   console.debug(` User is ${!loggedIn ? "" : "not"} logged in to Jellyfin`);
   
   return (
-    <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
-        { loggedIn ? (
+        loggedIn ? (
           <PlayerProvider>
             <Navigation />
           </PlayerProvider>
@@ -43,8 +41,6 @@ function App(): React.JSX.Element {
            <JellyfinAuthenticationProvider>
             <Login /> 
           </JellyfinAuthenticationProvider>
-        )}
-        {/* <SafeToastViewport /> */}
-    </NavigationContainer>
+        )
   )
 }
