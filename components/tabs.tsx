@@ -10,8 +10,9 @@ import { usePlayerContext } from "../player/provider";
 import SearchStack from "./Search/stack";
 import LibraryStack from "./Library/stack";
 import { useColorScheme } from "react-native";
+import { StackParamList } from "./types";
 
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator<StackParamList>();
 
 export function Tabs() : React.JSX.Element {
 
