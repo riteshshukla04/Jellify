@@ -9,22 +9,15 @@ import { ToastProvider } from "@tamagui/toast";
 import { NavigationContainer } from "@react-navigation/native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useColorScheme } from "react-native";
-import { JellifyDarkTheme, JellifyLightTheme } from "./theme";
 
 export default function Jellify(): React.JSX.Element {
 
-  const isDarkMode = useColorScheme() === 'dark';
-
   return (
-    <SafeAreaProvider>
-      <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
-        <ToastProvider burntOptions={{ from: 'top'}}>
-          <JellifyProvider>
-            <App />
-          </JellifyProvider>
-        </ToastProvider>
-      </NavigationContainer>
-    </SafeAreaProvider>
+    <ToastProvider burntOptions={{ from: 'top'}}>
+      <JellifyProvider>
+        <App />
+      </JellifyProvider>
+    </ToastProvider>
   );
 }
 

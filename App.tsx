@@ -12,6 +12,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import TrackPlayer, { IOSCategory, IOSCategoryOptions } from 'react-native-track-player';
 import { CAPABILITIES } from './player/constants';
 import { createWorkletRuntime } from 'react-native-reanimated';
+import { NavigationContainer } from '@react-navigation/native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { JellifyDarkTheme, JellifyLightTheme } from './components/theme';
 
 export const backgroundRuntime = createWorkletRuntime('background');
 
@@ -51,6 +54,9 @@ export default function App(): React.JSX.Element {
   });
 
   return (
+    <SafeAreaProvider>
+    <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
+
     <PersistQueryClientProvider 
       client={queryClient} 
       persistOptions={{ 
@@ -66,5 +72,7 @@ export default function App(): React.JSX.Element {
         </TamaguiProvider>
       </GestureHandlerRootView>
     </PersistQueryClientProvider>
+    </NavigationContainer>
+    </SafeAreaProvider>
   );
 }
