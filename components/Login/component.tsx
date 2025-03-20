@@ -5,12 +5,13 @@ import { createStackNavigator } from "@react-navigation/stack";
 import ServerLibrary from "./screens/server-library";
 import { useAuthenticationContext } from "./provider";
 import { useEffect } from "react";
+import { StackParamList } from "../types";
+
+const Stack = createStackNavigator<StackParamList>();
 
 export default function Login(): React.JSX.Element {
 
     const { user, server, setTriggerAuth } = useAuthenticationContext();
-
-    const Stack = createStackNavigator();
 
     useEffect(() => {
         setTriggerAuth(false);
