@@ -1,13 +1,13 @@
 import _, { isUndefined } from "lodash"
 import ServerAuthentication from "./screens/server-authentication";
 import ServerAddress from "./screens/server-address";
-import { createStackNavigator } from "@react-navigation/stack";
 import ServerLibrary from "./screens/server-library";
 import { useAuthenticationContext } from "./provider";
 import { useEffect } from "react";
 import { StackParamList } from "../types";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 
-const Stack = createStackNavigator<StackParamList>();
+const Stack = createNativeStackNavigator<StackParamList>();
 
 export default function Login(): React.JSX.Element {
 
