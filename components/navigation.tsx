@@ -2,7 +2,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Player from "./Player/stack";
 import { Tabs } from "./tabs";
 import { StackParamList } from "./types";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const RootStack = createNativeStackNavigator<StackParamList>();
 
@@ -11,7 +11,7 @@ export default function Navigation(): React.JSX.Element {
   console.debug("Rendering navigational tree...")
   
     return (
-      <SafeAreaView>
+      <SafeAreaProvider>
 
       <RootStack.Navigator>
           <RootStack.Screen 
@@ -30,6 +30,6 @@ export default function Navigation(): React.JSX.Element {
             }}
             />
     </RootStack.Navigator>
-      </SafeAreaView>
+      </SafeAreaProvider>
     )
 }
