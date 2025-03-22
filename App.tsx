@@ -54,7 +54,7 @@ export default function App(): React.JSX.Element {
   });
 
   return (
-    <SafeAreaProvider style={{ marginVertical: 20 }}>
+    <SafeAreaProvider style={{ paddingVertical: 20 }}>
       <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
 
       <PersistQueryClientProvider 
