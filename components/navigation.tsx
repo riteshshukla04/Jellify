@@ -17,7 +17,7 @@ export default function Navigation(): React.JSX.Element {
             options={{
               headerShown: false
             }}
-            />
+          />
           <RootStack.Screen 
             name="Player" 
             component={Player} 
@@ -25,7 +25,7 @@ export default function Navigation(): React.JSX.Element {
               headerShown: false,
               presentation: 'modal'
             }}
-            />
+          />
     </RootStack.Navigator>
     )
 }

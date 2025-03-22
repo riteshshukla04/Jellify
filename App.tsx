@@ -54,25 +54,25 @@ export default function App(): React.JSX.Element {
   });
 
   return (
-    <SafeAreaProvider>
-    <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
+    <SafeAreaProvider style={{ marginVertical: 20 }}>
+      <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
 
-    <PersistQueryClientProvider 
-      client={queryClient} 
-      persistOptions={{ 
-        persister: clientPersister,
-    }}>
-      <GestureHandlerRootView>
-        <TamaguiProvider config={jellifyConfig}>
-          <Theme name={isDarkMode ? 'dark' : 'light'}>
-            { playerIsReady && (
-              <Jellify />
-            )}
-          </Theme>
-        </TamaguiProvider>
-      </GestureHandlerRootView>
-    </PersistQueryClientProvider>
-    </NavigationContainer>
+      <PersistQueryClientProvider 
+        client={queryClient} 
+        persistOptions={{ 
+          persister: clientPersister,
+      }}>
+        <GestureHandlerRootView>
+          <TamaguiProvider config={jellifyConfig}>
+            <Theme name={isDarkMode ? 'dark' : 'light'}>
+              { playerIsReady && (
+                <Jellify />
+              )}
+            </Theme>
+          </TamaguiProvider>
+        </GestureHandlerRootView>
+      </PersistQueryClientProvider>
+      </NavigationContainer>
     </SafeAreaProvider>
   );
 }
