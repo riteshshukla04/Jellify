@@ -5,17 +5,32 @@ import { QueuingType } from "../enums/queuing-type";
 import { getImageApi } from "@jellyfin/sdk/lib/utils/api";
 import Client from "../api/client";
 import { isUndefined } from "lodash";
-import { runOnRuntime } from "react-native-reanimated";
-import { backgroundRuntime } from "../App";
 
-// TODO: Make this configurable
-const transcodingContainer = "m4a";
+/**
+ * The container that the Jellyfin server will attempt to transcode to
+ * 
+ * This is set to `ts` (MPEG-TS), as that is what HLS relies upon
+ * 
+ * Finamp and Jellyfin Web also have this set to `ts`
+ * @see https://jmshrv.com/posts/jellyfin-api/#playback-in-the-case-of-music
+ */
+const transcodingContainer = "ts";
 
+/**
+ * A mapper function that can be used to get a RNTP `Track` compliant object
+ * from a Jellyfin server `BaseItemDto`. Applies a queuing type to the track
+ * object so that it can be referenced later on for determining where to place
+ * the track in the queue
+ * 
+ * @param item The `BaseItemDto` of the track
+ * @param queuingType The type of queuing we are performing
+ * @returns A `JellifyTrack`, which represents a Jellyfin library track queued in the player
+ */
 export function mapDtoToTrack(item: BaseItemDto, queuingType?: QueuingType) : JellifyTrack {
     const urlParams = {
         "Container": item.Container!,
         "TranscodingContainer": transcodingContainer,
-        "TranscodingProtocol": "http",
+        "TranscodingProtocol": TrackType.HLS,
         "EnableRemoteMedia": "true",
         "EnableRedirection": "true",
         "api_key": Client.api!.accessToken,

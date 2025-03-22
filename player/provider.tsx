@@ -223,6 +223,7 @@ const PlayerContextInitializer = () => {
 
     const usePlayNewQueue = useMutation({
         mutationFn: async (mutation: QueueMutation) => {
+
             trigger("effectDoubleClick");
 
             setIsSkipping(true);
@@ -231,10 +232,11 @@ const PlayerContextInitializer = () => {
             setNowPlaying(mapDtoToTrack(mutation.tracklist[mutation.index ?? 0], QueuingType.FromSelection));
 
             await resetQueue(false);
+        
             await addToQueue(mutation.tracklist.map((track) => {
                 return mapDtoToTrack(track, QueuingType.FromSelection)
             }));
-            
+                
             setQueue(mutation.queue);
         },
         onSuccess: async (data, mutation: QueueMutation) => {
