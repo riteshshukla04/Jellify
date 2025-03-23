@@ -4,7 +4,7 @@ import "react-native-url-polyfill/auto";
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
 import Jellify from './components/jellify';
 import { TamaguiProvider, Theme } from 'tamagui';
-import { useColorScheme } from 'react-native';
+import { Dimensions, useColorScheme } from 'react-native';
 import jellifyConfig from './tamagui.config';
 import { clientPersister } from './constants/storage';
 import { queryClient } from './constants/query-client';
@@ -54,7 +54,20 @@ export default function App(): React.JSX.Element {
   });
 
   return (
-    <SafeAreaProvider>
+    <SafeAreaProvider initialMetrics={{ 
+      frame: {
+        x: 0,
+        y: 0,
+        width: Dimensions.get('window').width,
+        height: Dimensions.get('window').height,
+      },
+      insets: {
+        top: 20,
+        right: 5,
+        bottom: 20,
+        left: 5
+      }
+    }}>
       <NavigationContainer theme={isDarkMode ? JellifyDarkTheme : JellifyLightTheme}>
 
       <PersistQueryClientProvider 
