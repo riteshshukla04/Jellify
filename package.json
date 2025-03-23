@@ -34,7 +34,7 @@
     "@tanstack/react-query-persist-client": "^5.66.0",
     "axios": "^1.7.9",
     "burnt": "^0.12.2",
-    "expo": "^52.0.37",
+    "expo": "^52.0.40",
     "invert-color": "^2.0.0",
     "lodash": "^4.17.21",
     "react": "19.0.0",

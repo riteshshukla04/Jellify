@@ -20,8 +20,6 @@ export function Tabs() : React.JSX.Element {
     const isDarkMode = useColorScheme() === 'dark'
     const { nowPlaying } = usePlayerContext();
 
-    const insets = useSafeAreaInsets();
-
     console.debug(`${nowPlaying ? "Showing miniplayer" : "Miniplayer is hidden"}`);
 
     return (
@@ -42,7 +40,7 @@ export function Tabs() : React.JSX.Element {
                                 <Miniplayer navigation={props.navigation} />
                             </>
                         )}
-                        <BottomTabBar { ...props} insets={insets} />
+                        <BottomTabBar { ...props} />
                     </>
                 )}
             >
