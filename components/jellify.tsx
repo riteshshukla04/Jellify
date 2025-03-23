@@ -6,9 +6,6 @@ import { JellyfinAuthenticationProvider } from "./Login/provider";
 import { PlayerProvider } from "../player/provider";
 import { JellifyProvider, useJellifyContext } from "./provider";
 import { ToastProvider } from "@tamagui/toast";
-import { NavigationContainer } from "@react-navigation/native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { useColorScheme } from "react-native";
 
 export default function Jellify(): React.JSX.Element {
 

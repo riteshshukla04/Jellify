@@ -1,4 +1,4 @@
-name: publish-ios-beta
+name: publish-beta
 on:
   push:
     branches:
@@ -27,13 +27,16 @@ jobs:
         run: echo -e '${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}' > appstore_connect_api_key.json
         working-directory: ./ios/fastlane
 
-      - name: 🚀 Run fastlane build and publish to TestFlight
+      - name: 🚀 Run iOS fastlane build and publish to TestFlight
         run: npm run fastlane:ios:beta
         env:
           APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_REPO_PAT: "anultravioletaurora:${{ secrets.SIGNING_REPO_PAT }}"
+
+      - name: 🚀 Run Android fastlane build
+        run: npm run fastlane:android:build
 
       # Commit Fastlane Xcode build number increment
       - name: 🔢 Commit Xcode build number increment
@@ -45,7 +48,7 @@ jobs:
       - name: 🎉 Create Github release 
         uses: ncipollo/release-action@v1
         with:
-          artifacts: "ios/Jellify.ipa"
+          artifacts: "ios/Jellify.ipa,android/Jellify.apk"
           name: ${{ env.VERSION_NUMBER }}
           prerelease: true
           tag: ${{ env.VERSION_NUMBER }}

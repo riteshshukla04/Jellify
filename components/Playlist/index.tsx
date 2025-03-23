@@ -111,6 +111,7 @@ export function PlaylistScreen(
         onSuccess: () => {
             trigger('notificationSuccess');
 
+            // Refresh playlist component data
             queryClient.invalidateQueries({
                 queryKey: [QueryKeys.ItemTracks, playlist.Id]
             })
