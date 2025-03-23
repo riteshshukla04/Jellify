@@ -1,9 +1,13 @@
 import Client from "../api/client";
 import { isUndefined } from "lodash";
 import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
-import { CarPlay } from "react-native-carplay";
-import CarPlayNavigation from "./CarPlay/Navigation";
-import CarPlayNowPlaying from "./CarPlay/NowPlaying";
+import { Platform } from 'react-native'
+import { CarPlayInterface } from "react-native-carplay";
+
+// 'react-native-carplay' has also been disabled for android builds in react-native.config.js 
+const CarPlay = Platform.OS === 'ios' ? require('react-native-carplay').CarPlay as CarPlayInterface : null;
+const CarPlayNavigation = CarPlay ? require('./CarPlay/Navigation').CarPlayNavigation : null;
+const CarPlayNowPlaying = CarPlay ? require('./CarPlay/NowPlaying').CarPlayNowPlaying : null;
 
 interface JellifyContext {
     loggedIn: boolean;
@@ -22,14 +26,14 @@ const JellifyContextInitializer = () => {
     );
 
 
-    const [carPlayConnected, setCarPlayConnected] = useState(CarPlay.connected);
+    const [carPlayConnected, setCarPlayConnected] = useState(CarPlay ? CarPlay.connected : false);
 
     useEffect(() => {
   
       function onConnect() {
         setCarPlayConnected(true);
 
-        if (loggedIn) {
+        if (loggedIn && CarPlay) {
             CarPlay.setRootTemplate(CarPlayNavigation, true);
             CarPlay.pushTemplate(CarPlayNowPlaying, true);
             CarPlay.enableNowPlaying(true); // https://github.com/birkir/react-native-carplay/issues/185
@@ -40,12 +44,14 @@ const JellifyContextInitializer = () => {
         setCarPlayConnected(false);
       }
 
-      CarPlay.registerOnConnect(onConnect);
-      CarPlay.registerOnDisconnect(onDisconnect);
-      return () => {
-        CarPlay.unregisterOnConnect(onConnect)
-        CarPlay.unregisterOnDisconnect(onDisconnect)
-      };
+      if (CarPlay) {
+          CarPlay.registerOnConnect(onConnect);
+          CarPlay.registerOnDisconnect(onDisconnect);
+          return () => {
+            CarPlay.unregisterOnConnect(onConnect)
+            CarPlay.unregisterOnDisconnect(onDisconnect)
+          };
+      }
     });
 
     return {
