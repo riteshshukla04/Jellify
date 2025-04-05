@@ -32,8 +32,8 @@ export default function FavoriteButton({
 
     const { data, isFetching, isFetched, refetch } = useQuery({
         queryKey: [QueryKeys.UserData, item.Id!],
-        queryFn: () => fetchUserData(item.Id!)
-    });;
+        queryFn: () => fetchUserData(item.Id!),
+    });
 
     const useSetFavorite = useMutation({
         mutationFn: async (mutation: SetFavoriteMutation) => {
@@ -87,17 +87,6 @@ export default function FavoriteButton({
     }
 
     useEffect(() => {
-        if (isFetched 
-            && !isUndefined(data) 
-            && !isUndefined(data.IsFavorite)
-        )
-            setIsFavorite(data.IsFavorite)
-    }, [
-        isFetched,
-        data
-    ])
-
-    useEffect(() => {
         refetch();
     }, [
         item
@@ -108,7 +97,7 @@ export default function FavoriteButton({
             <Spinner />
         ) : (
             <Icon
-                name={isFavorite ? "heart" : "heart-outline"}
+                name={data?.IsFavorite ?? isFavorite ? "heart" : "heart-outline"}
                 color={getTokens().color.telemagenta.val}
                 onPress={toggleFavorite}
             /> 

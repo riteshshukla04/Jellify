@@ -16,11 +16,6 @@ export default function Artists({
 
     const { data: artists, refetch, isPending } = 
         route.params.query === 
-            QueryKeys.FavoriteArtists ? useQuery({
-                queryKey: [QueryKeys.FavoriteArtists],
-                queryFn: () => fetchFavoriteArtists()
-            }) : 
-            
             QueryKeys.RecentlyPlayedArtists ? useQuery({
                 queryKey: [QueryKeys.RecentlyPlayedArtists, QueryConfig.limits.recents * 4, QueryConfig.limits.recents],
                 queryFn: () => fetchRecentlyPlayedArtists(QueryConfig.limits.recents * 4, QueryConfig.limits.recents)

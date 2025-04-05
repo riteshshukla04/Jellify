@@ -21,13 +21,3 @@ jobs:
       
       - name: 🚀 Run fastlane build
         run: npm run fastlane:android:build
-
-      - name: Debug
-        run: ls
-        working-directory: android
-        # env:
-        #   # FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        #   APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}
-        #   FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
-        #   MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
-        #   MATCH_REPO_PAT: "anultravioletaurora:${{ secrets.SIGNING_REPO_PAT }}"

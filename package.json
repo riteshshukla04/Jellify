@@ -1,6 +1,6 @@
 {
   "name": "jellify",
-  "version": "0.10.61",
+  "version": "0.10.70",
   "private": true,
   "scripts": {
     "init": "npm i && npm run pod:install",
@@ -10,6 +10,8 @@
     "lint": "eslint .",
     "start": "react-native start",
     "test": "jest",
+    "clean:ios": "cd ios && pod deintegrate",
+    "clean:android": "cd android && rm -rf app/ build/",
     "pod:install": "cd ios && bundle install && RCT_NEW_ARCH_ENABLED=0 bundle exec pod install",
     "pod:install:new-arch": "cd ios && bundle install && RCT_NEW_ARCH_ENABLED=1 bundle exec pod install",
     "pod:clean": "cd ios && pod deintegrate",

@@ -15,6 +15,7 @@ import { createWorkletRuntime } from 'react-native-reanimated';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { JellifyDarkTheme, JellifyLightTheme } from './components/theme';
+import uuid from "react-native-uuid"
 
 export const backgroundRuntime = createWorkletRuntime('background');
 
@@ -27,7 +28,6 @@ export default function App(): React.JSX.Element {
 
   TrackPlayer.setupPlayer({
     autoHandleInterruptions: true,
-    maxCacheSize: 1000 * 100, // 100MB, TODO make this adjustable
     iosCategory: IOSCategory.Playback,
     iosCategoryOptions: [
         IOSCategoryOptions.AllowAirPlay,
@@ -59,8 +59,14 @@ export default function App(): React.JSX.Element {
 
       <PersistQueryClientProvider 
         client={queryClient} 
-        persistOptions={{ 
+        persistOptions={{           
           persister: clientPersister,
+
+          /**
+           * Infinity, since data can remain the 
+           * same forever on the server
+           */
+          maxAge: Infinity 
       }}>
         <GestureHandlerRootView>
           <TamaguiProvider config={jellifyConfig}>

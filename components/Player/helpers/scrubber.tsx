@@ -56,6 +56,7 @@ export default function Scrubber() : React.JSX.Element {
 
     return (
         <YStack>
+
             <GestureDetector gesture={scrubGesture}>
                 <HorizontalSlider 
                     value={position}
@@ -109,51 +110,6 @@ export default function Scrubber() : React.JSX.Element {
                         }
                     </RunTimeSeconds>
                 </YStack>
-            </XStack>
-
-            <XStack 
-                alignItems="center" 
-                justifyContent="space-evenly" 
-                marginVertical={"$2"}
-                >
-                <Icon
-                    color={getToken("$color.amethyst")}
-                    name="rewind-15"
-                    onPress={() => {
-                        useSeekTo.mutate(position / ProgressMultiplier - 15);
-                    }}
-                />
-                
-                <Icon
-                    color={getToken("$color.amethyst")}
-                    name="skip-previous"
-                    onPress={() => {
-                        if (position / ProgressMultiplier < 3)
-                            usePrevious.mutate()
-                        else {
-                            useSeekTo.mutate(0);
-                        }
-                    }}
-                    large
-                />
-
-                {/* I really wanted a big clunky play button */}
-                <PlayPauseButton size={width / 5} />
-
-                <Icon
-                    color={getToken("$color.amethyst")}
-                    name="skip-next" 
-                    onPress={() => useSkip.mutate(undefined)}
-                    large
-                />    
-
-                <Icon
-                    color={getToken("$color.amethyst")}
-                    name="fast-forward-15"
-                    onPress={() => { 
-                        useSeekTo.mutate(position / ProgressMultiplier + 15);
-                    }}  
-                />              
             </XStack>
         </YStack>
     )

@@ -35,6 +35,9 @@ export default function ServerAddress({
 
     const useServerMutation = useMutation({
         mutationFn: () => {
+
+            console.debug(`Connecting to ${useHttps ? https : http}${serverAddress}`);
+
             let jellyfin = new Jellyfin(JellyfinInfo);
 
             if (!!!serverAddress) 

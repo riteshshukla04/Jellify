@@ -44,7 +44,7 @@ export default function TracksScreen({
                     showArtwork
                     track={track}
                     tracklist={tracks?.slice(index, index + 50) ?? []}
-                    queue="Favorite Tracks"
+                    queue={route.params.query === QueryKeys.RecentlyPlayed ? "Recently Played" : "Favorite Tracks"}
                 />
             }
         />

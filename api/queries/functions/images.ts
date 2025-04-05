@@ -6,7 +6,6 @@ import Client from "../../../api/client"
 export function fetchItemImage(itemId: string, imageType: ImageType, width: number, height: number) {
     
     return new Promise<string>(async (resolve, reject) => {
-
         console.debug("Fetching item image");
 
         if (!!!Client.api) 

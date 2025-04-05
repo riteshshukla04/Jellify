@@ -20,5 +20,4 @@ const clientStorage = {
   
 export const clientPersister = createSyncStoragePersister({ 
   storage: clientStorage,
-  throttleTime: 0 // MMKV is FAST 
 });

@@ -1,20 +1,18 @@
 import { StackParamList } from "../../../components/types";
 import { usePlayerContext } from "../../../player/provider";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import React, { useState, useMemo } from "react";
+import React, { useMemo } from "react";
 import { SafeAreaView, useSafeAreaFrame } from "react-native-safe-area-context";
 import { YStack, XStack, Spacer, getTokens } from "tamagui";
-import PlayPauseButton from "../helpers/buttons";
 import { Text } from "../../../components/Global/helpers/text";
 import Icon from "../../../components/Global/helpers/icon";
 import FavoriteButton from "../../Global/components/favorite-button";
 import BlurhashedImage from "../../Global/components/blurhashed-image";
 import TextTicker from "react-native-text-ticker";
-import { ProgressMultiplier, TextTickerConfig } from "../component.config";
+import { TextTickerConfig } from "../component.config";
 import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { useProgress } from "react-native-track-player";
-import { UPDATE_INTERVAL } from "../../../player/config";
 import Scrubber from "../helpers/scrubber";
+import Controls from "../helpers/controls";
 
 export default function PlayerScreen({ 
     navigation 
@@ -182,6 +180,8 @@ export default function PlayerScreen({
                         {/* playback progress goes here */}
                         <Scrubber />
                     </XStack>
+
+                    <Controls />
                     
                     <XStack justifyContent="space-evenly" marginVertical={"$7"}>
                         <Icon name="speaker-multiple"

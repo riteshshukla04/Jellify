@@ -1,10 +1,12 @@
 ![Jellify App Icon](assets/icon_dark_60pt_3x.png)
 # 🪼 Jellify
 
-[![publish-ios-beta](https://github.com/anultravioletaurora/Jellify/actions/workflows/publish-ios-beta.yml/badge.svg)](https://github.com/anultravioletaurora/Jellify/actions/workflows/publish-ios-beta.yml)
+[![publish-beta](https://github.com/anultravioletaurora/Jellify/actions/workflows/publish-beta.yml/badge.svg?branch=main)](https://github.com/anultravioletaurora/Jellify/actions/workflows/publish-beta.yml)
 
 ### 🔗 Quick Links
 [Discord Server](https://discord.gg/yf8fBatktn)
+
+[TestFlight](https://testflight.apple.com/join/etVSc7ZQ)
 
 ### ℹ️ About
 
@@ -24,23 +26,23 @@ This app was designed with me and my dad in mind, since I wanted to give him a s
 
 ## 💡 Features
 ### ✨ Current
-- Available via Private Testflight
-- iOS support
+- Available via Testflight and Android APK
+  - APKs are associated with each [release](https://github.com/anultravioletaurora/Jellify/releases)
 - Light and Dark modes
 - Home screen access to previously played tracks, artists, and your playlists
+- Quick access to similar artists and items for discovering music in your library
 - Jellyfin playback reporting and [Last.FM Plugin](https://github.com/jesseward/jellyfin-plugin-lastfm) support
 - Library of Favorited Music, not too dissimilar to how streaming services handle your 'library'
 - Full playlist support, including creating, updating, and reordering
 
 ### 🛠 Roadmap
-- [Android Support](https://github.com/anultravioletaurora/Jellify/issues/54)
-- Quick access to similar artists and items for discovering music in your library
-- [Support for Jellyfin Instant Mixes](https://github.com/anultravioletaurora/Jellify/issues/50)
-- [CarPlay / Android Auto Support](https://github.com/anultravioletaurora/Jellify/issues/5)
-- Public Testflight
 - [Offline Playback](https://github.com/anultravioletaurora/Jellify/issues/10)
-- Shared, Public, and Collaborative Playlists
-- Web / Desktop support
+- [CarPlay / Android Auto Support](https://github.com/anultravioletaurora/Jellify/issues/5)
+- [Support for Jellyfin Instant Mixes](https://github.com/anultravioletaurora/Jellify/issues/50)
+- [Shared, Public, and Collaborative Playlists](https://github.com/anultravioletaurora/Jellify/issues/175)
+- [Web / Desktop support](https://github.com/anultravioletaurora/Jellify/issues/71)
+- [Watch (Apple Watch / WearOS) Support](https://github.com/anultravioletaurora/Jellify/issues/61)
+- [TV (Android, Samsung) Support](https://github.com/anultravioletaurora/Jellify/issues/85)
 
 ## 👀 Lemme see!
 ### Home
@@ -121,18 +123,36 @@ Playlist
 This is undoubtedly a passion project of [mine](https://github.com/anultravioletaurora), and I've learned a lot from working on it (and the many failed attempts before it). I hope you enjoy using it! Feature requests and bug reports are welcome :)
 
 ## 🏃‍♀️Running Locally
-- iOS Instructions
-  - Clone this repository
-  - Run `npm run init` to install `npm` packages, to install `bundler` and required gems, and to install CocoaPods
-  - In the `ios` directory, run `fastlane match development --readonly` to fetch the development signing certificates
-    - You will need access to the *Jellify Signing* private repository
 
-- Android Instructions
-  - Coming Soon™️
+#### Universal Dependencies
+- Ruby
+- NodeJS
+
+#### iOS Instructions
+- Clone this repository
+- Run `npm run init` to initialize the project
+  - This will install `npm` packages, install `bundler` and required gems, and installs CocoaPods
+- In the `ios` directory, run `fastlane match development --readonly` to fetch the development signing certificates
+  - You will need access to the *Jellify Signing* private repository
+- To run locally, run `npm run start` then run the app on your device or in the simulator
+  - Make sure you open the `Jellify.xcodeworkspace`, *not* the `Jellify.xcodeproject`
+- To create a build, run `npm run fastlane:ios:build` to use fastlane to compile an `.ipa` for you
+
+#### Android Instructions
+- Clone this repository
+- Run `npm i` to install `npm` packages
+- To run locally, run `npm run start`, then run the app on your devvice or in the emulator
+- To create a build, run `npm run fastlane:android:build` to use fastlane to compile an `.apk` for you  
 
 ## 🙏 Special Thanks To
 - The [Jellyfin Team](https://jellyfin.org/) for making this possible with their software, SDKs, and unequivocal helpfulness. 
-- James and all other contributors of [Finamp](https://github.com/jmshrv/finamp). *Jellify* draws inspiration and wisdom from it, and is another fantastic music app for Jellyfin. James’ [API Blog Post](https://jmshrv.com/posts/jellyfin-api/) proved to be exceptionally valuable during development
+  - Special thanks to [Niels](https://github.com/nielsvanvelzen) and [Bill](https://github.com/thornbill)
+- [James](https://github.com/jmshrv) and all other contributors of [Finamp](https://github.com/jmshrv/finamp). *Jellify* draws inspiration and wisdom from it, and is another fantastic music app for Jellyfin. 
+  - James’ [API Blog Post](https://jmshrv.com/posts/jellyfin-api/) proved to be exceptionally valuable during development
 - The folks in the [Margelo Community Discord](https://discord.com/invite/6CSHz2qAvA) for their assistance
-- Tony, Trevor, [Laine](https://github.com/lainie-ftw) and [Jordan](https://github.com/jordanbleu) for their testing and feedback from the early stages of development
-- [Alyssa](https://www.instagram.com/uhh.lyssarae?igsh=MTRmczExempnbjBwZw==), for your design knowledge and for making the artwork for *Jellify*. You’ve been instrumental in shaping it’s user experience
+- My dear friends that have heard me talk about *Jellify* for literally **eons**. Thank you for testing *Jellify* during it's infancy and for supporting me all the way back at the beginning of this project 
+  - Tony (iOS, Android)
+  - Trevor (Android)
+  - [Laine](https://github.com/lainie-ftw) (Android)  
+  - [Jordan](https://github.com/jordanbleu) (iOS)
+- My best(est) friend [Alyssa](https://www.instagram.com/uhh.lyssarae?igsh=MTRmczExempnbjBwZw==), for your design knowledge and for making various artwork for *Jellify*. You’ve been instrumental in shaping it’s user experience

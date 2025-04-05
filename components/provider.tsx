@@ -2,12 +2,12 @@ import Client from "../api/client";
 import { isUndefined } from "lodash";
 import { createContext, ReactNode, SetStateAction, useContext, useEffect, useState } from "react";
 import { Platform } from 'react-native'
-import { CarPlayInterface } from "react-native-carplay";
+import { CarPlayInterface, NowPlayingTemplate, TabBarTemplate } from "react-native-carplay";
 
 // 'react-native-carplay' has also been disabled for android builds in react-native.config.js 
 const CarPlay = Platform.OS === 'ios' ? require('react-native-carplay').CarPlay as CarPlayInterface : null;
-const CarPlayNavigation = CarPlay ? require('./CarPlay/Navigation').CarPlayNavigation : null;
-const CarPlayNowPlaying = CarPlay ? require('./CarPlay/NowPlaying').CarPlayNowPlaying : null;
+const CarPlayNavigation : TabBarTemplate = CarPlay ? require('./CarPlay/Navigation').CarPlayNavigation : null;
+const CarPlayNowPlaying : NowPlayingTemplate = CarPlay ? require('./CarPlay/NowPlaying').CarPlayNowPlaying : null;
 
 interface JellifyContext {
     loggedIn: boolean;
