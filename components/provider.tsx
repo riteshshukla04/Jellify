@@ -24,14 +24,14 @@ const JellifyContextInitializer = () => {
 	const [carPlayConnected, setCarPlayConnected] = useState(CarPlay ? CarPlay.connected : false)
 
 	useEffect(() => {
+		CarPlay.bridge.reload()
 		function onConnect() {
 			setCarPlayConnected(true)
 
 			if (loggedIn) {
-				CarPlay.setRootTemplate(CarPlayNavigation)
-				CarPlay.pushTemplate(CarPlayNowPlaying)
-
 				if (Platform.OS === 'ios') {
+					CarPlay.setRootTemplate(CarPlayNavigation)
+					CarPlay.pushTemplate(CarPlayNowPlaying)
 					CarPlay.enableNowPlaying(true) // https://github.com/birkir/react-native-carplay/issues/185
 				}
 			}
