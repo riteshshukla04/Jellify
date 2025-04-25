@@ -48,6 +48,7 @@ export function mapDtoToTrack(
 		PlaySessionId: Client.sessionId,
 	}
 
+	console.debug(`Mapping BaseItemDTO to Track object`)
 	const isFavorite = !isUndefined(item.UserData) && (item.UserData.IsFavorite ?? false)
 
 	const downloads = downloadedTracks.filter((download) => download.item.Id === item.Id)
@@ -56,18 +57,24 @@ export function mapDtoToTrack(
 
 	if (downloads.length > 0 && downloads[0].path) url = downloads[0].path
 	else {
-		const { MediaSources } = queryClient.getQueryData([
+		const PlaybackInfoResponse = queryClient.getQueryData([
 			QueryKeys.MediaSources,
 			item.Id!,
-		]) as PlaybackInfoResponse
+		]) as PlaybackInfoResponse | undefined
 
-		if (MediaSources && MediaSources[0].TranscodingUrl) url = MediaSources![0].TranscodingUrl
+		if (
+			PlaybackInfoResponse &&
+			PlaybackInfoResponse.MediaSources &&
+			PlaybackInfoResponse.MediaSources[0].TranscodingUrl
+		)
+			url = PlaybackInfoResponse.MediaSources![0].TranscodingUrl
 		else
 			url = `${Client.api!.basePath}/Audio/${item.Id!}/universal?${new URLSearchParams(
 				urlParams,
 			)}`
 	}
 
+	console.debug(url.length)
 	return {
 		url,
 		type: TrackType.Default,

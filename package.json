@@ -1,6 +1,6 @@
 {
   "name": "jellify",
-  "version": "0.11.3",
+  "version": "0.11.4",
   "private": true,
   "scripts": {
     "init:ios": "yarn install && yarn pod:install",

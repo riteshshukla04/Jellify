@@ -38,6 +38,7 @@ import { getPlaystateApi } from '@jellyfin/sdk/lib/utils/api'
 import { SKIP_TO_PREVIOUS_THRESHOLD } from './config'
 import { useNetworkContext } from '../components/Network/provider'
 import { networkStatusCheck } from './helpers/queue'
+import { QueueProvider } from './queue-provider'
 
 interface PlayerContext {
 	initialized: boolean
@@ -308,6 +309,8 @@ const PlayerContextInitializer = () => {
 			const queueTracks = queueItems.map((queueItem) => {
 				return mapDtoToTrack(queueItem, downloadedTracks ?? [], QueuingType.FromSelection)
 			})
+
+			console.debug(`Slotting ${queueTracks.length} track(s)`)
 
 			await addToQueue(queueTracks)
 
@@ -670,30 +673,32 @@ export const PlayerProvider: ({ children }: { children: ReactNode }) => React.JS
 	} = PlayerContextInitializer()
 
 	return (
-		<PlayerContext.Provider
-			value={{
-				initialized,
-				nowPlayingIsFavorite,
-				setNowPlayingIsFavorite,
-				nowPlaying,
-				playQueue,
-				queue,
-				getQueueSectionData,
-				useAddToQueue,
-				useClearQueue,
-				useRemoveFromQueue,
-				useReorderQueue,
-				useTogglePlayback,
-				useSeekTo,
-				useSkip,
-				usePrevious,
-				setNowPlaying,
-				usePlayNewQueue,
-				playbackState,
-			}}
-		>
-			{children}
-		</PlayerContext.Provider>
+		<QueueProvider>
+			<PlayerContext.Provider
+				value={{
+					initialized,
+					nowPlayingIsFavorite,
+					setNowPlayingIsFavorite,
+					nowPlaying,
+					playQueue,
+					queue,
+					getQueueSectionData,
+					useAddToQueue,
+					useClearQueue,
+					useRemoveFromQueue,
+					useReorderQueue,
+					useTogglePlayback,
+					useSeekTo,
+					useSkip,
+					usePrevious,
+					setNowPlaying,
+					usePlayNewQueue,
+					playbackState,
+				}}
+			>
+				{children}
+			</PlayerContext.Provider>
+		</QueueProvider>
 	)
 }
 
