@@ -1,5 +1,5 @@
 export interface JellifyUser {
-    id: string;
-    name: string;
-    accessToken: string;
+	id: string
+	name: string
+	accessToken: string
 }

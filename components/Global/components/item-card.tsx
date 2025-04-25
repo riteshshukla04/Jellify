@@ -1,43 +1,37 @@
-import React from "react";
-import type { CardProps as TamaguiCardProps } from "tamagui"
-import { getToken, Card as TamaguiCard, View } from "tamagui";
-import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { Text } from "../helpers/text";
-import BlurhashedImage from "./blurhashed-image";
+import React from 'react'
+import type { CardProps as TamaguiCardProps } from 'tamagui'
+import { getToken, Card as TamaguiCard, View, YStack } from 'tamagui'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
+import { Text } from '../helpers/text'
+import { Image } from 'expo-image'
+import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
+import Client from '../../../api/client'
 
 interface CardProps extends TamaguiCardProps {
-    caption?: string | null | undefined;
-    subCaption?: string | null | undefined;
-    item: BaseItemDto;
-    squared?: boolean;
+	caption?: string | null | undefined
+	subCaption?: string | null | undefined
+	item: BaseItemDto
+	squared?: boolean
 }
 
 export function ItemCard(props: CardProps) {
-
-    const dimensions = props.width && typeof(props.width) === "number" ? { width: props.width, height: props.width } : { width: 150, height: 150 };
-
-    const logoDimensions = props.width && typeof(props.width) === "number" ? { width: props.width / 2, height: props.width / 6 }: { width: 100, height: 75 };
-
-    return (
-        <View 
-            alignItems="center"
-            margin={5}
-            >
-            <TamaguiCard 
-                size="$4" 
-                backgroundColor={getToken("$color.amethyst")}
-                borderRadius={props.squared ? 2 : dimensions.width}
-                // animation="bouncy"
-                hoverStyle={props.onPress ? { scale: 0.925 } : {}}
-                pressStyle={props.onPress ? { scale: 0.875 } : {}}
-                width={props.width ?? 150}
-                height={props.width ?? 150}
-                {...props}
-            >
-                <TamaguiCard.Header>
-                </TamaguiCard.Header>
-                <TamaguiCard.Footer padded>
-                    {/* { props.item.Type === 'MusicArtist' && (
+	return (
+		<View alignItems='center' margin={5}>
+			<TamaguiCard
+				size={'$12'}
+				height={props.size}
+				width={props.size}
+				backgroundColor={getToken('$color.amethyst')}
+				circular={!props.squared}
+				borderRadius={props.squared ? 5 : 'unset'}
+				animation='bouncy'
+				hoverStyle={props.onPress ? { scale: 0.925 } : {}}
+				pressStyle={props.onPress ? { scale: 0.875 } : {}}
+				{...props}
+			>
+				<TamaguiCard.Header></TamaguiCard.Header>
+				<TamaguiCard.Footer padded>
+					{/* { props.item.Type === 'MusicArtist' && (
                         <BlurhashedImage
                             cornered
                             item={props.item}
@@ -46,41 +40,38 @@ export function ItemCard(props: CardProps) {
                             height={logoDimensions.height}
                             />
                         )} */}
-                </TamaguiCard.Footer>
-                <TamaguiCard.Background>
-                <BlurhashedImage
-                        item={props.item}
-                        width={dimensions.width}
-                        height={dimensions.height}
-                        borderRadius={props.squared ? 5 : dimensions.width}
-                    />
-                </TamaguiCard.Background>
-            </TamaguiCard>
-            { props.caption && (
-                <View 
-                    alignContent="center"
-                    alignItems="center"
-                    width={dimensions.width}
-                >
-                    <Text 
-                        bold
-                        lineBreakStrategyIOS="standard"
-                        numberOfLines={1}
-                    >
-                        { props.caption }
-                    </Text>
-            
-                    { props.subCaption && (
-                        <Text
-                            lineBreakStrategyIOS="standard"
-                            numberOfLines={1}
-                            textAlign="center"
-                        >
-                            { props.subCaption }
-                        </Text>
-                    )}
-                </View>
-            )}
-        </View>
-    )
+				</TamaguiCard.Footer>
+				<TamaguiCard.Background>
+					<Image
+						source={getImageApi(Client.api!).getItemImageUrlById(
+							props.item.Type === 'Audio' ? props.item.AlbumId! : props.item.Id!,
+						)}
+						placeholder={
+							props.item.ImageBlurHashes && props.item.ImageBlurHashes['Primary']
+								? props.item.ImageBlurHashes['Primary'][0]
+								: undefined
+						}
+						style={{
+							width: '100%',
+							height: '100%',
+							borderRadius: props.squared ? 2 : 100,
+						}}
+					/>
+				</TamaguiCard.Background>
+			</TamaguiCard>
+			{props.caption && (
+				<YStack alignContent='center' alignItems='center' maxWidth={props.size}>
+					<Text bold lineBreakStrategyIOS='standard' numberOfLines={1}>
+						{props.caption}
+					</Text>
+
+					{props.subCaption && (
+						<Text lineBreakStrategyIOS='standard' numberOfLines={1} textAlign='center'>
+							{props.subCaption}
+						</Text>
+					)}
+				</YStack>
+			)}
+		</View>
+	)
 }

@@ -1,2 +1,2 @@
-export const http = "http://"
-export const https = "https://"
+export const http = 'http://'
+export const https = 'https://'

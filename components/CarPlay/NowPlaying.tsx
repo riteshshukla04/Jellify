@@ -1,7 +1,5 @@
-import { NowPlayingTemplate } from "react-native-carplay";
+import { NowPlayingTemplate } from 'react-native-carplay'
 
-const CarPlayNowPlaying : NowPlayingTemplate = new NowPlayingTemplate({
-    
-})
+const CarPlayNowPlaying = new NowPlayingTemplate({})
 
-export default CarPlayNowPlaying;
+export default CarPlayNowPlaying

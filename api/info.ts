@@ -1,7 +1,7 @@
-import { Jellyfin } from "@jellyfin/sdk";
-import { getModel, getUniqueIdSync } from "react-native-device-info";
-import { name, version } from "../package.json"
-import { capitalize } from "lodash";
+import { Jellyfin } from '@jellyfin/sdk'
+import { getModel, getUniqueIdSync } from 'react-native-device-info'
+import { name, version } from '../package.json'
+import { capitalize } from 'lodash'
 
 console.debug(`Building Jellyfin Info`)
 
@@ -9,12 +9,12 @@ console.debug(`Building Jellyfin Info`)
  * Client object that represents Jellify on the Jellyfin server.
  */
 export const JellyfinInfo: Jellyfin = new Jellyfin({
-    clientInfo: {
-        name: capitalize(name),
-        version: version
-    },
-    deviceInfo: {
-        name: getModel(),
-        id: getUniqueIdSync()
-    }
-});
+	clientInfo: {
+		name: capitalize(name),
+		version: version,
+	},
+	deviceInfo: {
+		name: getModel(),
+		id: getUniqueIdSync(),
+	},
+})

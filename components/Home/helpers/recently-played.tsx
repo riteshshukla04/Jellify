@@ -1,70 +1,73 @@
-import React, { useMemo } from "react";
-import { View } from "tamagui";
-import { useHomeContext } from "../provider";
-import { H2 } from "../../Global/helpers/text";
-import { ItemCard } from "../../Global/components/item-card";
-import { usePlayerContext } from "../../../player/provider";
-import { StackParamList } from "../../../components/types";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { trigger } from "react-native-haptic-feedback";
-import { QueuingType } from "../../../enums/queuing-type";
-import HorizontalCardList from "../../../components/Global/components/horizontal-list";
-import { QueryKeys } from "../../../enums/query-keys";
+import React, { useMemo } from 'react'
+import { View, XStack } from 'tamagui'
+import { useHomeContext } from '../provider'
+import { H2 } from '../../Global/helpers/text'
+import { ItemCard } from '../../Global/components/item-card'
+import { usePlayerContext } from '../../../player/provider'
+import { StackParamList } from '../../../components/types'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { trigger } from 'react-native-haptic-feedback'
+import { QueuingType } from '../../../enums/queuing-type'
+import HorizontalCardList from '../../../components/Global/components/horizontal-list'
+import { QueryKeys } from '../../../enums/query-keys'
+import Icon from '../../../components/Global/helpers/icon'
 
-export default function RecentlyPlayed({ 
-    navigation 
-} : { 
-    navigation: NativeStackNavigationProp<StackParamList>
+export default function RecentlyPlayed({
+	navigation,
+}: {
+	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
+	const { nowPlaying, usePlayNewQueue } = usePlayerContext()
+	const { recentTracks } = useHomeContext()
 
-    const { nowPlaying, usePlayNewQueue } = usePlayerContext();
-    const { recentTracks } = useHomeContext();
+	return useMemo(() => {
+		return (
+			<View>
+				<XStack
+					alignItems='center'
+					onPress={() => {
+						navigation.navigate('Tracks', {
+							tracks: recentTracks,
+							queue: 'Recently Played',
+						})
+					}}
+				>
+					<H2 marginLeft={'$2'}>Play it again</H2>
+					<Icon name='arrow-right' />
+				</XStack>
 
-    return (
-        useMemo(() => {
-            return (
-                <View>
-                <H2 marginLeft={"$2"}>Play it again</H2>
-
-                <HorizontalCardList
-                    squared
-                    data={recentTracks}
-                    onSeeMore={() => {
-                        navigation.navigate("Tracks", {
-                            query: QueryKeys.RecentlyPlayed
-                        })
-                    }}
-                    renderItem={({ index, item: recentlyPlayedTrack }) => 
-                        <ItemCard
-                            caption={recentlyPlayedTrack.Name}
-                            subCaption={`${recentlyPlayedTrack.Artists?.join(", ")}`}
-                            squared
-                            width={150}
-                            item={recentlyPlayedTrack}
-                            onPress={() => {
-                                usePlayNewQueue.mutate({ 
-                                    track: recentlyPlayedTrack, 
-                                    index: index,
-                                    tracklist: recentTracks ?? [recentlyPlayedTrack],
-                                    queue: "Recently Played",
-                                    queuingType: QueuingType.FromSelection
-                                });
-                            }}
-                            onLongPress={() => {
-                                trigger("impactMedium");
-                                navigation.navigate("Details", {
-                                    item: recentlyPlayedTrack,
-                                    isNested: false
-                                })
-                            }}
-                        />                                
-                    }
-                    />
-            </View>
-            )
-        }, [
-            recentTracks,
-            nowPlaying
-        ])
-    )
+				<HorizontalCardList
+					squared
+					data={
+						recentTracks?.length ?? 0 > 10 ? recentTracks!.slice(0, 10) : recentTracks
+					}
+					renderItem={({ index, item: recentlyPlayedTrack }) => (
+						<ItemCard
+							size={'$12'}
+							caption={recentlyPlayedTrack.Name}
+							subCaption={`${recentlyPlayedTrack.Artists?.join(', ')}`}
+							squared
+							item={recentlyPlayedTrack}
+							onPress={() => {
+								usePlayNewQueue.mutate({
+									track: recentlyPlayedTrack,
+									index: index,
+									tracklist: recentTracks ?? [recentlyPlayedTrack],
+									queue: 'Recently Played',
+									queuingType: QueuingType.FromSelection,
+								})
+							}}
+							onLongPress={() => {
+								trigger('impactMedium')
+								navigation.navigate('Details', {
+									item: recentlyPlayedTrack,
+									isNested: false,
+								})
+							}}
+						/>
+					)}
+				/>
+			</View>
+		)
+	}, [recentTracks, nowPlaying])
 }

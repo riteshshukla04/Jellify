@@ -1,89 +1,125 @@
-import React, { createContext, ReactNode, useContext, useState } from "react";
-import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { useQuery } from "@tanstack/react-query";
-import { QueryKeys } from "../../enums/query-keys";
-import { fetchRecentlyPlayed, fetchRecentlyPlayedArtists } from "../../api/queries/functions/recents";
-import { queryClient } from "../../constants/query-client";
-import { QueryConfig } from "../../api/queries/query.config";
+import React, { createContext, ReactNode, useContext, useState } from 'react'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
+import { useQuery } from '@tanstack/react-query'
+import { QueryKeys } from '../../enums/query-keys'
+import {
+	fetchRecentlyPlayed,
+	fetchRecentlyPlayedArtists,
+} from '../../api/queries/functions/recents'
+import { queryClient } from '../../constants/query-client'
+import { QueryConfig } from '../../api/queries/query.config'
+import {
+	fetchFrequentlyPlayed,
+	fetchFrequentlyPlayedArtists,
+} from '../../api/queries/functions/frequents'
 
 interface HomeContext {
-    refreshing: boolean;
-    onRefresh: () => void;
-    recentArtists: BaseItemDto[] | undefined;
-    recentTracks: BaseItemDto[] | undefined;
+	refreshing: boolean
+	onRefresh: () => void
+	recentArtists: BaseItemDto[] | undefined
+	recentTracks: BaseItemDto[] | undefined
+	frequentArtists: BaseItemDto[] | undefined
+	frequentlyPlayed: BaseItemDto[] | undefined
 }
 
 const HomeContextInitializer = () => {
-    const [refreshing, setRefreshing] = useState<boolean>(false);
+	const [refreshing, setRefreshing] = useState<boolean>(false)
 
-    const { data : recentTracks, refetch : refetchRecentTracks } = useQuery({
-        queryKey: [QueryKeys.RecentlyPlayed],
-        queryFn: () => fetchRecentlyPlayed()
-    });
-    const { data : recentArtists, refetch : refetchRecentArtists } = useQuery({
-        queryKey: [QueryKeys.RecentlyPlayedArtists],
-        queryFn: () => fetchRecentlyPlayedArtists()
-    });
+	const { data: recentTracks, refetch: refetchRecentTracks } = useQuery({
+		queryKey: [QueryKeys.RecentlyPlayed],
+		queryFn: () => fetchRecentlyPlayed(),
+	})
+	const { data: recentArtists, refetch: refetchRecentArtists } = useQuery({
+		queryKey: [QueryKeys.RecentlyPlayedArtists],
+		queryFn: () => fetchRecentlyPlayedArtists(),
+	})
 
-    const onRefresh = async () => {
-        setRefreshing(true);
+	const { data: frequentlyPlayed, refetch: refetchFrequentlyPlayed } = useQuery({
+		queryKey: [QueryKeys.FrequentlyPlayed],
+		queryFn: () => fetchFrequentlyPlayed(),
+	})
 
-        queryClient.invalidateQueries({
-            queryKey: [QueryKeys.RecentlyPlayedArtists, QueryConfig.limits.recents * 4, QueryConfig.limits.recents]
-        });
+	const { data: frequentArtists, refetch: refetchFrequentArtists } = useQuery({
+		queryKey: [QueryKeys.FrequentArtists],
+		queryFn: () => fetchFrequentlyPlayedArtists(),
+	})
 
-        queryClient.invalidateQueries({
-            queryKey: [QueryKeys.RecentlyPlayed, QueryConfig.limits.recents * 4, QueryConfig.limits.recents]
-        });
-        
-        await Promise.all([
-            refetchRecentTracks(),
-            refetchRecentArtists()
-        ])
+	const onRefresh = async () => {
+		setRefreshing(true)
 
-        setRefreshing(false);
-    }
+		queryClient.invalidateQueries({
+			queryKey: [
+				QueryKeys.RecentlyPlayedArtists,
+				QueryConfig.limits.recents * 4,
+				QueryConfig.limits.recents,
+			],
+		})
 
-    return {
-        refreshing,
-        onRefresh,
-        recentArtists,
-        recentTracks,
-    };
+		queryClient.invalidateQueries({
+			queryKey: [
+				QueryKeys.RecentlyPlayed,
+				QueryConfig.limits.recents * 4,
+				QueryConfig.limits.recents,
+			],
+		})
+
+		await Promise.all([
+			refetchRecentTracks(),
+			refetchRecentArtists(),
+			refetchFrequentArtists(),
+			refetchFrequentlyPlayed(),
+		])
+
+		setRefreshing(false)
+	}
+
+	return {
+		refreshing,
+		onRefresh,
+		recentArtists,
+		recentTracks,
+		frequentArtists,
+		frequentlyPlayed,
+	}
 }
 
 const HomeContext = createContext<HomeContext>({
-    refreshing: false,
-    onRefresh: () => {},
-    recentArtists: undefined,
-    recentTracks: undefined
-});
+	refreshing: false,
+	onRefresh: () => {},
+	recentArtists: undefined,
+	recentTracks: undefined,
+	frequentArtists: undefined,
+	frequentlyPlayed: undefined,
+})
 
-export const HomeProvider: ({ children }: {
-    children: ReactNode;
-}) => React.JSX.Element = ({ 
-    children 
-} : { 
-    children: ReactNode
+export const HomeProvider: ({ children }: { children: ReactNode }) => React.JSX.Element = ({
+	children,
+}: {
+	children: ReactNode
 }) => {
+	const {
+		refreshing,
+		onRefresh,
+		recentTracks,
+		recentArtists,
+		frequentArtists,
+		frequentlyPlayed,
+	} = HomeContextInitializer()
 
-    const {
-        refreshing,
-        onRefresh,
-        recentTracks,
-        recentArtists,
-    } = HomeContextInitializer();
-
-    return (
-        <HomeContext.Provider value={{
-            refreshing,
-            onRefresh,
-            recentTracks,
-            recentArtists
-        }}>
-            { children }
-        </HomeContext.Provider>
-    )
+	return (
+		<HomeContext.Provider
+			value={{
+				refreshing,
+				onRefresh,
+				recentTracks,
+				recentArtists,
+				frequentArtists,
+				frequentlyPlayed,
+			}}
+		>
+			{children}
+		</HomeContext.Provider>
+	)
 }
 
-export const useHomeContext = () => useContext(HomeContext);
+export const useHomeContext = () => useContext(HomeContext)

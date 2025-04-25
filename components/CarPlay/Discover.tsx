@@ -1,7 +1,10 @@
-import { ListTemplate } from "react-native-carplay";
+import { ListTemplate } from 'react-native-carplay'
+import uuid from 'react-native-uuid'
 
 const CarPlayDiscover = new ListTemplate({
-    tabTitle: "Discover"
+	id: uuid.v4(),
+	tabTitle: 'Discover',
+	tabSystemImageName: 'globe',
 })
 
-export default CarPlayDiscover;
+export default CarPlayDiscover

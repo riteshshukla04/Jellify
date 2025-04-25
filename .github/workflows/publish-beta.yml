@@ -1,11 +1,11 @@
-name: publish-beta
+name: Publish Android APK and TestFlight Betas
 on:
   push:
     branches:
       - 'main'
 jobs:
-  publish-ios-beta:
-    runs-on: macos-latest
+  publish-beta:
+    runs-on: macos-15
     steps:
       - name: 🛒 Checkout
         uses: actions/checkout@v4
@@ -16,40 +16,82 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
+      
+      - name: 🧵 Run yarn install
+        run: yarn install
 
+      - name: 🍫 Install CocoaPods
+        run: yarn pod:install
+
+      - name: ➕ Version Up
+        run: yarn react-native bump-version --type patch  
+
+    
       - name: 💬 Echo package.json version to Github ENV
-        run: echo VERSION_NUMBER=$(npm version minor --tag-version-prefix="" --no-commit-hooks) >> $GITHUB_ENV
-
-      - name: 🟢 Run npm run init
-        run: npm run init:new-arch
+        run: echo VERSION_NUMBER=$(node -p -e "require('./package.json').version") >> $GITHUB_ENV
 
       - name: 🤫 Output App Store Connect API Key JSON to Fastlane
         run: echo -e '${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}' > appstore_connect_api_key.json
         working-directory: ./ios/fastlane
 
+      - name: 🚀 Run Android fastlane build
+        run: yarn fastlane:android:build
+
       - name: 🚀 Run iOS fastlane build and publish to TestFlight
-        run: npm run fastlane:ios:beta
+        run: yarn fastlane:ios:beta
         env:
           APPSTORE_CONNECT_API_KEY_JSON: ${{ secrets.APPSTORE_CONNECT_API_KEY_JSON }}
           FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD: ${{ secrets.FASTLANE_APPLE_APPLICATION_SPECIFIC_PASSWORD }}
           MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
           MATCH_REPO_PAT: "anultravioletaurora:${{ secrets.SIGNING_REPO_PAT }}"
 
-      - name: 🚀 Run Android fastlane build
-        run: npm run fastlane:android:build
-
       # Commit Fastlane Xcode build number increment
-      - name: 🔢 Commit Xcode build number increment
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "[skip actions]"
-          file_pattern: "ios/Jellify.xcodeproj/project.pbxproj"
-          
+      - name: 🔢 Commit changes for version increment
+        run: |
+          git config --global user.email "jellify@cosmonautical.com"
+          git config --global user.name "anultravioletaurora"
+          git add package.json
+          git add ios/Jellify.xcodeproj/project.pbxproj
+          git add android/app/build.gradle
+          git commit -m "[skip actions]"
+          git push origin main
+
+      - name: 🔢 Set artifact version numbers
+        run: |
+          # Create artifacts folder for uploading to release
+          mkdir artifacts
+
+          # Move the iOS IPA
+          mv ./ios/Jellify.ipa ./artifacts/Jellify-${{ env.VERSION_NUMBER }}.ipa
+
+          # Move and rename all android release APKs
+          for apk in ./android/app/build/outputs/apk/release/*.apk; do
+            filename=$(basename "$apk")
+            newname="Jellify-${{ env.VERSION_NUMBER }}-${filename}"
+            cp "$apk" "./artifacts/$newname"
+          done
+
       - name: 🎉 Create Github release 
         uses: ncipollo/release-action@v1
+        id: githubRelease
         with:
-          artifacts: "ios/Jellify.ipa,android/app/build/outputs/apk/release/app-release.apk"
+          artifacts: "./artifacts/*"
           name: ${{ env.VERSION_NUMBER }}
+          generateReleaseNotes: true
           prerelease: true
           tag: ${{ env.VERSION_NUMBER }}
           token: ${{ secrets.SIGNING_REPO_PAT }}
+      
+
+
+
+      - name: 🗣️ Notify on Discord
+        run: |
+          cd ios
+          bundle exec fastlane notifyOnDiscord
+          cd ..
+
+        env: 
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          APP_VERSION: ${{ env.VERSION_NUMBER }}
+          release_url: ${{ steps.githubRelease.outputs.html_url }}

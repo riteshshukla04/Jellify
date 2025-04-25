@@ -1,76 +1,67 @@
-import Client from "../../client";
-import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { getUserViewsApi } from "@jellyfin/sdk/lib/utils/api";
-import { getItemsApi } from "@jellyfin/sdk/lib/utils/api/items-api";
-import { isUndefined } from "lodash";
+import Client from '../../client'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
+import { getUserViewsApi } from '@jellyfin/sdk/lib/utils/api'
+import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api'
+import { isUndefined } from 'lodash'
 
+export async function fetchMusicLibraries(): Promise<BaseItemDto[] | void> {
+	console.debug('Fetching music libraries from Jellyfin')
 
-export function fetchMusicLibraries(): Promise<BaseItemDto[]> {
-    return new Promise(async (resolve, reject) => {
-        console.debug("Fetching music libraries from Jellyfin");
-        
-        let libraries = await getItemsApi(Client.api!).getItems({ 
-            includeItemTypes: ['CollectionFolder'] 
-        });
+	const libraries = await getItemsApi(Client.api!).getItems({
+		includeItemTypes: ['CollectionFolder'],
+	})
 
-        if (isUndefined(libraries.data.Items)) {
-            console.warn("No libraries found on Jellyfin");
-            return reject("No libraries found on Jellyfin");
-        }
+	if (isUndefined(libraries.data.Items)) {
+		console.warn('No libraries found on Jellyfin')
+		return
+	}
 
-        let musicLibraries = libraries.data.Items!.filter(library => 
-            library.CollectionType == 'music');
-        
-        return resolve(musicLibraries);
-    });
+	const musicLibraries = libraries.data.Items!.filter(
+		(library) => library.CollectionType == 'music',
+	)
+
+	return musicLibraries
 }
 
-export function fetchPlaylistLibrary(): Promise<BaseItemDto> {
-    return new Promise(async (resolve, reject) => {
-        console.debug("Fetching playlist library from Jellyfin");
-        
-        let libraries = await getItemsApi(Client.api!).getItems({ 
-            includeItemTypes: ['ManualPlaylistsFolder'], 
-            excludeItemTypes: ['CollectionFolder'] 
-        });
+export async function fetchPlaylistLibrary(): Promise<BaseItemDto | void> {
+	console.debug('Fetching playlist library from Jellyfin')
 
-        if (isUndefined(libraries.data.Items)) {
-            console.warn("No playlist libraries found on Jellyfin");
-            return reject("No playlist libraries found on Jellyfin");
-        }
+	const libraries = await getItemsApi(Client.api!).getItems({
+		includeItemTypes: ['ManualPlaylistsFolder'],
+		excludeItemTypes: ['CollectionFolder'],
+	})
 
-        console.debug("Playlist libraries", libraries.data.Items!)
+	if (isUndefined(libraries.data.Items)) {
+		console.warn('No playlist libraries found on Jellyfin')
+		return
+	}
 
-        let playlistLibrary = libraries.data.Items!.filter(library => 
-            library.CollectionType == 'playlists'
-        )[0];
+	console.debug('Playlist libraries', libraries.data.Items!)
 
-        if (isUndefined(playlistLibrary)) {
-            console.warn("Playlist libary does not exist on server");
-            return reject("Playlist library does not exist on server");
-        }
-        
-        return resolve(playlistLibrary);
-    })
+	const playlistLibrary = libraries.data.Items!.filter(
+		(library) => library.CollectionType == 'playlists',
+	)[0]
+
+	if (isUndefined(playlistLibrary)) {
+		console.warn('Playlist libary does not exist on server')
+		return
+	}
+
+	return playlistLibrary
 }
 
-export function fetchUserViews() : Promise<BaseItemDto[]> {
-    return new Promise(async (resolve, reject) => {
-        console.debug("Fetching user views")
+export async function fetchUserViews(): Promise<BaseItemDto[] | void> {
+	console.debug('Fetching user views')
 
-        getUserViewsApi(Client.api!)
-            .getUserViews({
-                userId: Client.user!.id
-            })
-            .then((response) => {
-                if (response.data.Items)
-                    resolve(response.data.Items)
-
-                else
-                    resolve([])
-            })
-            .catch((error) => {
-                reject(error)
-            })
-    });
+	return await getUserViewsApi(Client.api!)
+		.getUserViews({
+			userId: Client.user!.id,
+		})
+		.then((response) => {
+			if (response.data.Items) return response.data.Items
+			else return []
+		})
+		.catch((error) => {
+			console.warn(error)
+		})
 }

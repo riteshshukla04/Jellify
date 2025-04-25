@@ -38,30 +38,68 @@ platform :ios do
       app_identifier: "com.cosmonautical.jellify",
       readonly: true
     )
+    # we dont need to increment version number here anymore, because we  will increment it in the github action
+    # increment_version_number(
+    #   version_number: ENV['VERSION_NUMBER'],
+    #   xcodeproj: "Jellify.xcodeproj"
+    # )
 
-    increment_version_number(
-      version_number: ENV['VERSION_NUMBER'],
-      xcodeproj: "Jellify.xcodeproj"
-    )
-
-    increment_build_number(
-      xcodeproj: "Jellify.xcodeproj"
-    )
+    # increment_build_number(
+    #   xcodeproj: "Jellify.xcodeproj"
+    # )
     build_app(
       scheme: "Jellify - Release",
       workspace: "Jellify.xcworkspace", 
+    )
+    changelog_from_git_commits(
+      date_format: "short",
+      commits_count: 1,
+      match_lightweight_tag: false
     )
     # http://docs.fastlane.tools/actions/upload_to_testflight/#upload_to_testflight
     upload_to_testflight(
       api_key_path: "fastlane/appstore_connect_api_key.json",
       beta_app_feedback_email: "violet@cosmonautical.cloud",
       beta_app_description: "A music app for Jellyfin",
-      expire_previous_builds: true,
+      expire_previous_builds: false,
       distribute_external: true,
-      changelog: "Updated Sign In components, Player Optimizations, 'See More' buttons",
       groups: [
         "Selfhosters"
       ]
     )
+  end
+   
+  lane :notifyOnDiscord do
+    app_version = ENV["APP_VERSION"] || "N/A"
+    changelog = sh("git log -n 3 --pretty=format:'• %s (%h) - %an'").split("\n").join("\n")
+    discord_url = ENV["DISCORD_WEBHOOK_URL"] || "N/A"
+    release_url = ENV["release_url"]
+    testflight_url = "https://testflight.apple.com/join/etVSc7ZQ"
+    discord_notifier(
+        webhook_url: ENV["DISCORD_WEBHOOK_URL"], 
+        title: "🎉 App v#{app_version} Released!",
+        description: "**A new version of Jellify has just been released**",
+        
+        fields: [
+          {
+            name: "📱 Version",
+            value: app_version
+          },
+          {
+            name: "📦 Download URL",
+            value:  "TestFlight URL: #{testflight_url}\nRelease URL: #{release_url}"
+          },
+          {
+            name: "🕒 Released On",
+            value: Time.now.strftime("%B %d, %Y at %I:%M %p")
+          },
+          {
+            name: "📝 Recent Commits",
+            value: "```#{changelog}```"
+          }
+        ],
+        success:true
+      )
+    
   end
 end

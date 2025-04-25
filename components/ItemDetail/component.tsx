@@ -1,147 +1,153 @@
-import { BaseItemDto } from "@jellyfin/sdk/lib/generated-client/models";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { useSafeAreaFrame } from "react-native-safe-area-context";
-import { StackParamList } from "../types";
-import TrackOptions from "./helpers/TrackOptions";
-import { getTokens, ScrollView, Spacer, View, XStack, YStack } from "tamagui";
-import BlurhashedImage from "../Global/components/blurhashed-image";
-import { Text } from "../Global/helpers/text";
-import FavoriteButton from "../Global/components/favorite-button";
-import { useEffect } from "react";
-import { trigger } from "react-native-haptic-feedback";
-import TextTicker from "react-native-text-ticker";
-import { TextTickerConfig } from "../Player/component.config";
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import { StackParamList } from '../types'
+import TrackOptions from './helpers/TrackOptions'
+import { getToken, getTokens, ScrollView, Spacer, View, XStack, YStack } from 'tamagui'
+import { Text } from '../Global/helpers/text'
+import FavoriteButton from '../Global/components/favorite-button'
+import { useEffect } from 'react'
+import { trigger } from 'react-native-haptic-feedback'
+import TextTicker from 'react-native-text-ticker'
+import { TextTickerConfig } from '../Player/component.config'
+import { Image } from 'expo-image'
+import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
+import Client from '../../api/client'
+import Icon from '../Global/helpers/icon'
+import { Platform } from 'react-native'
 
-export default function ItemDetail({ 
-    item, 
-    navigation,
-    isNested
-} : { 
-    item: BaseItemDto, 
-    navigation: NativeStackNavigationProp<StackParamList>,
-    isNested?: boolean | undefined
-}) : React.JSX.Element {
+export default function ItemDetail({
+	item,
+	navigation,
+	isNested,
+}: {
+	item: BaseItemDto
+	navigation: NativeStackNavigationProp<StackParamList>
+	isNested?: boolean | undefined
+}): React.JSX.Element {
+	let options: React.JSX.Element | undefined = undefined
 
-    let options: React.JSX.Element | undefined = undefined;
+	useEffect(() => {
+		trigger('impactMedium')
+	}, [item])
 
-    useEffect(() => {
-        trigger("impactMedium");
-    }, [
-        item
-    ]);
+	const { width } = useSafeAreaFrame()
 
-    const { width } = useSafeAreaFrame();
+	switch (item.Type) {
+		case 'Audio': {
+			options = TrackOptions({ track: item, navigation, isNested })
+			break
+		}
 
-    switch (item.Type) {
-        case "Audio": {
-            options = TrackOptions({ track: item, navigation, isNested });
-            break;
-        }
+		case 'MusicAlbum': {
+			break
+		}
 
-        case "MusicAlbum" : {
+		case 'MusicArtist': {
+			break
+		}
 
-            break;
-        }
+		case 'Playlist': {
+			break
+		}
 
-        case "MusicArtist" : {
+		default: {
+			break
+		}
+	}
 
-            break;
-        }
+	return (
+		<ScrollView contentInsetAdjustmentBehavior='automatic' removeClippedSubviews>
+			<YStack alignItems='center' flex={1} marginTop={'$4'}>
+				<XStack
+					justifyContent='center'
+					alignItems='flex-start'
+					minHeight={width / 1.5}
+					minWidth={width / 1.5}
+				>
+					{/**
+					 * Android needs a dismiss chevron here
+					 */}
+					{Platform.OS === 'android' ? (
+						<Icon
+							name='chevron-down'
+							onPress={() => {
+								navigation.goBack()
+							}}
+							small
+						/>
+					) : (
+						<Spacer />
+					)}
 
-        case "Playlist" : {
+					<Spacer />
 
-            break;
-        }
+					<Image
+						source={getImageApi(Client.api!).getItemImageUrlById(
+							item.Type === 'Audio' ? item.AlbumId! : item.Id!,
+						)}
+						style={{
+							width: width / 1.5,
+							height: width / 1.5,
+							borderRadius:
+								item.Type === 'MusicArtist' ? width / 1.5 : getToken('$5'),
+						}}
+					/>
 
-        default : {
-            break;
-        }
-    }
+					<Spacer />
+					<Spacer />
+				</XStack>
 
-    return (
-        <ScrollView 
-            contentInsetAdjustmentBehavior="automatic"
-            removeClippedSubviews
-        >
-            <YStack 
-                alignItems="center" 
-                flex={1}
-                marginTop={"$4"}
-            >
+				{/* Item Name, Artist, Album, and Favorite Button */}
+				<XStack maxWidth={width / 1.5}>
+					<YStack
+						marginLeft={'$0.5'}
+						alignItems='flex-start'
+						alignContent='flex-start'
+						justifyContent='flex-start'
+						flex={3}
+					>
+						<TextTicker {...TextTickerConfig}>
+							<Text bold fontSize={'$6'}>
+								{item.Name ?? 'Untitled Track'}
+							</Text>
+						</TextTicker>
 
-                <XStack 
-                    justifyContent="center"
-                    alignItems="center"
-                    maxHeight={width / 1.5}
-                    maxWidth={width / 1.5}
-                >
+						<TextTicker {...TextTickerConfig}>
+							<Text
+								fontSize={'$6'}
+								color={getTokens().color.telemagenta}
+								onPress={() => {
+									if (item.ArtistItems) {
+										if (isNested) navigation.getParent()!.goBack()
 
-                    <BlurhashedImage
-                        item={item}
-                        width={width / 1.5}
-                        borderRadius={item.Type === "MusicArtist" ? 100 : 2}
-                        />
-                </XStack>
+										navigation.goBack()
+										navigation.navigate('Artist', {
+											artist: item.ArtistItems[0],
+										})
+									}
+								}}
+							>
+								{item.Artists?.join(', ') ?? 'Unknown Artist'}
+							</Text>
+						</TextTicker>
 
-                {/* Item Name, Artist, Album, and Favorite Button */}
-                <XStack maxWidth={width / 1.5}>
-                    <YStack 
-                        marginLeft={"$0.5"} 
-                        alignItems="flex-start"
-                        alignContent="flex-start"
-                        justifyContent="flex-start"
-                        flex={3}
-                    >
-                        <TextTicker {...TextTickerConfig}>
-                            <Text bold fontSize={"$6"}>
-                                { item.Name ?? "Untitled Track" }
-                            </Text>
-                        </TextTicker>
+						<TextTicker {...TextTickerConfig}>
+							<Text fontSize={'$6'} color={'$borderColor'}>
+								{item.Album ?? ''}
+							</Text>
+						</TextTicker>
+					</YStack>
 
-                        <TextTicker {...TextTickerConfig}>
-                            <Text 
-                                fontSize={"$6"} 
-                                color={getTokens().color.telemagenta}
-                                onPress={() => {
-                                    if (item.ArtistItems) {
-                                        
-                                        if (isNested)
-                                            navigation.getParent()!.goBack();
-                                        
-                                        navigation.goBack();
-                                        navigation.navigate("Artist", {
-                                            artist: item.ArtistItems[0]
-                                        });
-                                    }
-                                }}>
-                                { item.Artists?.join(", ") ?? "Unknown Artist"}
-                            </Text>
-                        </TextTicker>
+					<YStack flex={1} alignItems='flex-end' justifyContent='center'>
+						<FavoriteButton item={item} />
+					</YStack>
+				</XStack>
 
-                        <TextTicker {...TextTickerConfig}>
-                            <Text 
-                                fontSize={"$6"} 
-                                color={"$borderColor"}
-                                >
-                                { item.Album ?? "" }
-                            </Text>
-                        </TextTicker>        
-                    </YStack>
+				<Spacer />
 
-                    <YStack 
-                        flex={1}
-                        alignItems="flex-end"
-                        justifyContent="center"
-                    >
-                        <FavoriteButton item={item} />
-                    </YStack>
-                </XStack>
-                    
-                <Spacer />
-                    
-                { options ?? <View /> }
-
-            </YStack>
-        </ScrollView>
-    )
+				{options ?? <View />}
+			</YStack>
+		</ScrollView>
+	)
 }

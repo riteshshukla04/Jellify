@@ -1,54 +1,46 @@
-import { useSafeAreaFrame } from "react-native-safe-area-context";
-import React from "react";
-import { FlatList, RefreshControl } from "react-native";
-import { ItemCard } from "../Global/components/item-card";
-import { ArtistsProps } from "../types";
-import { QueryKeys } from "../../enums/query-keys";
-import { useQuery } from "@tanstack/react-query";
-import { fetchRecentlyPlayedArtists } from "../../api/queries/functions/recents";
-import { fetchFavoriteArtists } from "../../api/queries/functions/favorites";
-import { QueryConfig } from "../../api/queries/query.config";
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
+import React from 'react'
+import { FlatList, RefreshControl } from 'react-native'
+import { ItemCard } from '../Global/components/item-card'
+import { ArtistsProps } from '../types'
+import { QueryKeys } from '../../enums/query-keys'
+import { useQuery } from '@tanstack/react-query'
+import { fetchRecentlyPlayedArtists } from '../../api/queries/functions/recents'
+import { fetchFavoriteArtists } from '../../api/queries/functions/favorites'
+import { QueryConfig } from '../../api/queries/query.config'
+import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
+import { YStack } from 'tamagui'
+import { Text } from '../Global/helpers/text'
 
-export default function Artists({ 
-    navigation,
-    route
-}: ArtistsProps): React.JSX.Element {
+interface ArtistsComponentProps extends ArtistsProps {
+	artists: BaseItemDto[]
+}
 
-    const { data: artists, refetch, isPending } = 
-        route.params.query === 
-            QueryKeys.RecentlyPlayedArtists ? useQuery({
-                queryKey: [QueryKeys.RecentlyPlayedArtists, QueryConfig.limits.recents * 4, QueryConfig.limits.recents],
-                queryFn: () => fetchRecentlyPlayedArtists(QueryConfig.limits.recents * 4, QueryConfig.limits.recents)
-            }) :
-            
-            useQuery({
-                queryKey: [QueryKeys.FavoriteArtists],
-                queryFn: () => fetchFavoriteArtists()
-            });
-
-    const { width } = useSafeAreaFrame();
-
-    return (
-        <FlatList
-            contentInsetAdjustmentBehavior="automatic"
-            numColumns={2}
-            data={artists}
-            refreshControl={
-                <RefreshControl
-                    refreshing={isPending}
-                    onRefresh={refetch}
-                />
-            }
-            renderItem={({ index, item: artist}) =>
-                <ItemCard
-                    item={artist}
-                    caption={artist.Name ?? "Unknown Artist"}
-                    onPress={() => {
-                        navigation.navigate("Artist", { artist })
-                    }}
-                    width={width / 2.1}
-                />
-            }
-        />
-    )
+export default function Artists({ navigation, route }: ArtistsProps): React.JSX.Element {
+	return (
+		<FlatList
+			contentContainerStyle={{
+				flexGrow: 1,
+				alignItems: 'center',
+			}}
+			contentInsetAdjustmentBehavior='automatic'
+			numColumns={2}
+			data={route.params.artists}
+			renderItem={({ index, item: artist }) => (
+				<ItemCard
+					item={artist}
+					caption={artist.Name ?? 'Unknown Artist'}
+					onPress={() => {
+						navigation.navigate('Artist', { artist })
+					}}
+					size={'$14'}
+				/>
+			)}
+			ListEmptyComponent={
+				<YStack justifyContent='center'>
+					<Text>No artists</Text>
+				</YStack>
+			}
+		/>
+	)
 }

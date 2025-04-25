@@ -1,3 +1,1 @@
-export function handlePlayerError() {
-    
-}
+export function handlePlayerError() {}
