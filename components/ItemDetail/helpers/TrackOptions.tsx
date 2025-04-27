@@ -1,4 +1,3 @@
-import { usePlayerContext } from '../../../player/provider'
 import { StackParamList } from '../../../components/types'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -33,6 +32,7 @@ import { Image } from 'expo-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../../../api/client'
 import { useNetworkContext } from '../../../components/Network/provider'
+import { useQueueContext } from '../../../player/queue-provider'
 
 interface TrackOptionsProps {
 	track: BaseItemDto
@@ -67,7 +67,7 @@ export default function TrackOptions({
 		queryFn: () => fetchUserPlaylists(),
 	})
 
-	const { useAddToQueue } = usePlayerContext()
+	const { useAddToQueue } = useQueueContext()
 
 	const { width } = useSafeAreaFrame()
 
@@ -173,7 +173,8 @@ export default function TrackOptions({
 						name={isDownloaded ? 'delete' : 'download'}
 						title={isDownloaded ? 'Remove Download' : 'Download'}
 						onPress={() => {
-							(isDownloaded ? useRemoveDownload : useDownload).mutate(track)
+							if (isDownloaded) useRemoveDownload.mutate(track)
+							else useDownload.mutate(track)
 						}}
 						size={width / 6}
 					/>

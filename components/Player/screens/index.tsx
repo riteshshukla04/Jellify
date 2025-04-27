@@ -1,5 +1,5 @@
 import { StackParamList } from '../../../components/types'
-import { usePlayerContext } from '../../../player/provider'
+import { usePlayerContext } from '../../../player/player-provider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
 import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
@@ -15,13 +15,16 @@ import Controls from '../helpers/controls'
 import { Image } from 'expo-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../../../api/client'
+import { useQueueContext } from '../../../player/queue-provider'
 
 export default function PlayerScreen({
 	navigation,
 }: {
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
-	const { nowPlayingIsFavorite, setNowPlayingIsFavorite, nowPlaying, queue } = usePlayerContext()
+	const { nowPlayingIsFavorite, setNowPlayingIsFavorite, nowPlaying } = usePlayerContext()
+
+	const { queueRef } = useQueueContext()
 
 	const { width } = useSafeAreaFrame()
 
@@ -57,9 +60,9 @@ export default function PlayerScreen({
 											>
 												{
 													// If the Queue is a BaseItemDto, display the name of it
-													typeof queue === 'object'
-														? (queue as BaseItemDto).Name ?? 'Untitled'
-														: queue
+													typeof queueRef === 'object'
+														? queueRef.Name ?? 'Untitled'
+														: queueRef
 												}
 											</Text>
 										</YStack>
@@ -91,7 +94,7 @@ export default function PlayerScreen({
 									</XStack>
 								</>
 							)
-						}, [nowPlaying, queue])}
+						}, [nowPlaying, queueRef])}
 
 						<XStack marginHorizontal={20} paddingVertical={5}>
 							{/** Memoize TextTickers otherwise they won't animate due to the progress being updated in the PlayerContext */}

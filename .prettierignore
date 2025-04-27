@@ -6,3 +6,6 @@ node_modules/
 
 # Ignore Markdown files
 *.md
+
+# Ignore iOS Pods directory
+ios/**/*

@@ -10,7 +10,7 @@ export async function fetchMediaInfo(itemId: string): Promise<PlaybackInfoRespon
 				userId: Client.user?.id,
 			})
 			.then(({ data }) => {
-				console.debug(data)
+				console.debug('Received media info response')
 				resolve(data)
 			})
 			.catch((error) => {

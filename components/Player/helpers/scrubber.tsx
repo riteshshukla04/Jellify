@@ -5,16 +5,18 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { trigger } from 'react-native-haptic-feedback'
 import { XStack, YStack } from 'tamagui'
 import { useSafeAreaFrame } from 'react-native-safe-area-context'
-import { usePlayerContext } from '../../../player/provider'
+import { usePlayerContext } from '../../../player/player-provider'
 import { RunTimeSeconds } from '../../../components/Global/helpers/time-codes'
 import { UPDATE_INTERVAL } from '../../../player/config'
 import { ProgressMultiplier } from '../component.config'
-import { useSharedValue } from 'react-native-reanimated'
+import { useQueueContext } from '../../../player/queue-provider'
 
 const scrubGesture = Gesture.Pan()
 
 export default function Scrubber(): React.JSX.Element {
-	const { useSeekTo, useSkip, usePrevious } = usePlayerContext()
+	const { useSeekTo } = usePlayerContext()
+
+	const { useSkip, usePrevious } = useQueueContext()
 
 	const { width } = useSafeAreaFrame()
 

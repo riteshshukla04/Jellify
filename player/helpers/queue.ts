@@ -23,7 +23,7 @@ export function buildNewQueue(
 	return newQueue
 }
 
-export function networkStatusCheck(
+export function filterTracksOnNetworkStatus(
 	networkStatus: networkStatusTypes | undefined,
 	queuedItems: BaseItemDto[],
 	downloadedTracks: JellifyDownload[],

@@ -1,6 +1,6 @@
 import React from 'react'
 import { getToken, getTokens, useTheme, View, XStack, YStack } from 'tamagui'
-import { usePlayerContext } from '../../player/provider'
+import { usePlayerContext } from '../../player/player-provider'
 import { BottomTabNavigationEventMap } from '@react-navigation/bottom-tabs'
 import { NavigationHelpers, ParamListBase } from '@react-navigation/native'
 import Icon from '../Global/helpers/icon'
@@ -11,6 +11,7 @@ import { TextTickerConfig } from './component.config'
 import { Image } from 'expo-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../../api/client'
+import { useQueueContext } from '../../player/queue-provider'
 
 export function Miniplayer({
 	navigation,
@@ -19,7 +20,8 @@ export function Miniplayer({
 }): React.JSX.Element {
 	const theme = useTheme()
 
-	const { nowPlaying, useSkip } = usePlayerContext()
+	const { nowPlaying } = usePlayerContext()
+	const { useSkip } = useQueueContext()
 
 	return (
 		<View
