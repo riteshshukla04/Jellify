@@ -10,8 +10,8 @@ class CarSceneDelegate: UIResponder, CPTemplateApplicationSceneDelegate {
   }
 
   func templateApplicationScene(_ templateApplicationScene: CPTemplateApplicationScene, didDisconnectInterfaceController interfaceController: CPInterfaceController) {
-  
     RNCarPlay.disconnect()
     
   }
 }
+

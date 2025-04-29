@@ -10,6 +10,8 @@
 		00E356F31AD99517003FC87E /* JellifyTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* JellifyTests.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		217EBE16A3E8C5FBF476C905 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = F757EB73303E0AC21EF34F64 /* PrivacyInfo.xcprivacy */; };
+		36F25DE72DC15E1D000DC544 /* CarScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F25DE62DC15E17000DC544 /* CarScene.swift */; };
+		36F25DE92DC15E29000DC544 /* PhoneScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 36F25DE82DC15E24000DC544 /* PhoneScene.swift */; };
 		66BC9C5D1B536CD0799EEC89 /* ExpoModulesProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 82DE980BB8253E3C5F2207CE /* ExpoModulesProvider.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		92C580068317633958E4B0F9 /* libPods-Jellify.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 4912CEDF8E675A9B3515C88E /* libPods-Jellify.a */; };
@@ -58,8 +60,6 @@
 		CF6B19FA2D55121E002464CB /* icon_tinted_60pt_3x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF6B19F12D55121E002464CB /* icon_tinted_60pt_3x.png */; };
 		CF6B19FB2D55121E002464CB /* icon_tinted_40pt_2x.png in Resources */ = {isa = PBXBuildFile; fileRef = CF6B19EE2D55121E002464CB /* icon_tinted_40pt_2x.png */; };
 		CF71790B2CBC486C0021BCA3 /* dummy-rntp.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF71790A2CBC486C0021BCA3 /* dummy-rntp.swift */; };
-		CF98CA472D3E99E0003D88B7 /* CarScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF98CA452D3E99DF003D88B7 /* CarScene.swift */; };
-		CF98CA482D3E99E0003D88B7 /* PhoneScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF98CA462D3E99DF003D88B7 /* PhoneScene.swift */; };
 		CF98CA492D3E99E0003D88B7 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF98CA442D3E99DF003D88B7 /* AppDelegate.swift */; };
 /* End PBXBuildFile section */
 
@@ -81,6 +81,8 @@
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = Jellify/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = Jellify/Info.plist; sourceTree = "<group>"; };
 		13B07FB81A68108700A75B9A /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = PrivacyInfo.xcprivacy; path = Jellify/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		36F25DE62DC15E17000DC544 /* CarScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarScene.swift; sourceTree = "<group>"; };
+		36F25DE82DC15E24000DC544 /* PhoneScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneScene.swift; sourceTree = "<group>"; };
 		4912CEDF8E675A9B3515C88E /* libPods-Jellify.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-Jellify.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = Jellify/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		82DE980BB8253E3C5F2207CE /* ExpoModulesProvider.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = ExpoModulesProvider.swift; path = "Pods/Target Support Files/Pods-Jellify/ExpoModulesProvider.swift"; sourceTree = "<group>"; };
@@ -150,8 +152,6 @@
 		CF7179092CBC486C0021BCA3 /* Jellify-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Jellify-Bridging-Header.h"; sourceTree = "<group>"; };
 		CF71790A2CBC486C0021BCA3 /* dummy-rntp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "dummy-rntp.swift"; sourceTree = "<group>"; };
 		CF98CA442D3E99DF003D88B7 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		CF98CA452D3E99DF003D88B7 /* CarScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CarScene.swift; sourceTree = "<group>"; };
-		CF98CA462D3E99DF003D88B7 /* PhoneScene.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneScene.swift; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 		F757EB73303E0AC21EF34F64 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Jellify/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -195,9 +195,9 @@
 		13B07FAE1A68108700A75B9A /* Jellify */ = {
 			isa = PBXGroup;
 			children = (
+				36F25DE82DC15E24000DC544 /* PhoneScene.swift */,
+				36F25DE62DC15E17000DC544 /* CarScene.swift */,
 				CF98CA442D3E99DF003D88B7 /* AppDelegate.swift */,
-				CF98CA452D3E99DF003D88B7 /* CarScene.swift */,
-				CF98CA462D3E99DF003D88B7 /* PhoneScene.swift */,
 				CF6588752D25C12400AECE18 /* Jellify.entitlements */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
 				13B07FB61A68108700A75B9A /* Info.plist */,
@@ -604,9 +604,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				CF98CA472D3E99E0003D88B7 /* CarScene.swift in Sources */,
-				CF98CA482D3E99E0003D88B7 /* PhoneScene.swift in Sources */,
 				CF98CA492D3E99E0003D88B7 /* AppDelegate.swift in Sources */,
+				36F25DE92DC15E29000DC544 /* PhoneScene.swift in Sources */,
+				36F25DE72DC15E1D000DC544 /* CarScene.swift in Sources */,
 				CF71790B2CBC486C0021BCA3 /* dummy-rntp.swift in Sources */,
 				66BC9C5D1B536CD0799EEC89 /* ExpoModulesProvider.swift in Sources */,
 			);
@@ -843,10 +843,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) DEBUG";
@@ -932,10 +929,7 @@
 					"-DFOLLY_CFG_NO_COROUTINES=1",
 					"-DFOLLY_HAVE_CLOCK_GETTIME=1",
 				);
-				OTHER_LDFLAGS = (
-					"$(inherited)",
-					" ",
-				);
+				OTHER_LDFLAGS = "$(inherited)  ";
 				REACT_NATIVE_PATH = "${PODS_ROOT}/../../node_modules/react-native";
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
