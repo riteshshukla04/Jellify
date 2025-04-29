@@ -1,5 +1,5 @@
 import _ from 'lodash'
-import React from 'react'
+import React, { useEffect } from 'react'
 import Navigation from './navigation'
 import Login from './Login/component'
 import { JellyfinAuthenticationProvider } from './Login/provider'
@@ -11,8 +11,15 @@ import { ToastProvider } from '@tamagui/toast'
 import { JellifyUserDataProvider } from './user-data-provider'
 import { NetworkContextProvider } from './Network/provider'
 import { QueueProvider } from '../player/queue-provider'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export default function Jellify(): React.JSX.Element {
+	const insets = useSafeAreaInsets()
+
+	useEffect(() => {
+		console.debug(insets)
+	}, [insets])
+
 	return (
 		<PortalProvider shouldAddRootHost>
 			<ToastProvider burntOptions={{ from: 'top' }}>
