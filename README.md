@@ -80,6 +80,10 @@ Album
 
 <img src="screenshots/album.png" alt="Album" width="275" height="600">
 
+Offline Mode
+
+<img src="screenshots/offline_album.png" alt="Offline Album" width="275" height="600">
+
 Track Options
 
 <img src="screenshots/track_options.png" alt="Track Options" width="275" height="600">
