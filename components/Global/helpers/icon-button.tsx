@@ -48,7 +48,7 @@ export default function IconButton({
 						disabled={disabled}
 					/>
 
-					{title && <Text>{title}</Text>}
+					{title && <Text textAlign='center'>{title}</Text>}
 				</Square>
 			</TouchableOpacity>
 		</Theme>

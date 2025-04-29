@@ -130,18 +130,28 @@ export const saveAudio = async (
 			track.url = downloadtrack
 			track.artwork = dowloadalbum
 		}
+
+		const index = existingArray.findIndex((t) => t.item.Id === track.item.Id)
+
+		if (index >= 0) {
+			// Replace existing
+			existingArray[index] = {
+				...track,
+				savedAt: new Date().toISOString(),
+				isAutoDownloaded,
+				path: downloadtrack,
+			}
+		} else {
+			// Add new
+			existingArray.push({
+				...track,
+				savedAt: new Date().toISOString(),
+				isAutoDownloaded,
+				path: downloadtrack,
+			})
+		}
 	} catch (error) {
 		console.error(error)
-	}
-
-	const index = existingArray.findIndex((t) => t.item.Id === track.item.Id)
-
-	if (index >= 0) {
-		// Replace existing
-		existingArray[index] = { ...track, savedAt: new Date().toISOString(), isAutoDownloaded }
-	} else {
-		// Add new
-		existingArray.push({ ...track, savedAt: new Date().toISOString(), isAutoDownloaded })
 	}
 	mmkv.set(MMKV_OFFLINE_MODE_KEYS.AUDIO_CACHE, JSON.stringify(existingArray))
 }

@@ -176,7 +176,7 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 					navigation={navigation}
 					track={track}
 					tracklist={tracks!}
-					index={getIndex()}
+					index={getIndex() ?? 0}
 					queue={playlist}
 					showArtwork
 					onLongPress={editing ? drag : undefined}

@@ -9,7 +9,6 @@ export interface QueueMutation {
 	tracklist: BaseItemDto[]
 	queue: Queue
 	queuingType?: QueuingType | undefined
-	trackListOffline?: JellifyTrack
 }
 
 export interface AddToQueueMutation {

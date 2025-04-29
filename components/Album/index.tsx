@@ -128,7 +128,7 @@ export function AlbumScreen({ route, navigation }: HomeAlbumProps): React.JSX.El
 				<Track
 					track={track}
 					tracklist={discs?.flatMap((disc) => disc.data)}
-					index={index}
+					index={discs?.flatMap((disc) => disc.data).indexOf(track) ?? index}
 					navigation={navigation}
 					queue={album}
 				/>

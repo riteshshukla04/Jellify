@@ -1,7 +1,7 @@
 import { State } from 'react-native-track-player'
 import { Colors } from 'react-native/Libraries/NewAppScreen'
 import { Circle, Spinner, View } from 'tamagui'
-import { usePlayerContext } from '../../../player/provider'
+import { usePlayerContext } from '../../../player/player-provider'
 import IconButton from '../../../components/Global/helpers/icon-button'
 
 export default function PlayPauseButton({
@@ -9,7 +9,7 @@ export default function PlayPauseButton({
 }: {
 	size?: number | undefined
 }): React.JSX.Element {
-	const { playbackState, useTogglePlayback } = usePlayerContext()
+	const { useTogglePlayback, playbackState } = usePlayerContext()
 
 	let button: React.JSX.Element
 

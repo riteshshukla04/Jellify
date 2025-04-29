@@ -1,9 +1,9 @@
 import { StackParamList } from '../../../components/types'
-import { usePlayerContext } from '../../../player/provider'
+import { usePlayerContext } from '../../../player/player-provider'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useMemo } from 'react'
 import { SafeAreaView, useSafeAreaFrame } from 'react-native-safe-area-context'
-import { YStack, XStack, Spacer, getTokens } from 'tamagui'
+import { YStack, XStack, Spacer, getTokens, getToken } from 'tamagui'
 import { Text } from '../../../components/Global/helpers/text'
 import Icon from '../../../components/Global/helpers/icon'
 import FavoriteButton from '../../Global/components/favorite-button'
@@ -15,13 +15,16 @@ import Controls from '../helpers/controls'
 import { Image } from 'expo-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../../../api/client'
+import { useQueueContext } from '../../../player/queue-provider'
 
 export default function PlayerScreen({
 	navigation,
 }: {
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
-	const { nowPlayingIsFavorite, setNowPlayingIsFavorite, nowPlaying, queue } = usePlayerContext()
+	const { nowPlaying } = usePlayerContext()
+
+	const { queueRef } = useQueueContext()
 
 	const { width } = useSafeAreaFrame()
 
@@ -57,9 +60,9 @@ export default function PlayerScreen({
 											>
 												{
 													// If the Queue is a BaseItemDto, display the name of it
-													typeof queue === 'object'
-														? (queue as BaseItemDto).Name ?? 'Untitled'
-														: queue
+													typeof queueRef === 'object'
+														? queueRef.Name ?? 'Untitled'
+														: queueRef
 												}
 											</Text>
 										</YStack>
@@ -70,7 +73,7 @@ export default function PlayerScreen({
 									<XStack
 										justifyContent='center'
 										alignContent='center'
-										minHeight={width / 1.1}
+										minHeight={'$20'}
 									>
 										<Image
 											source={getImageApi(Client.api!).getItemImageUrlById(
@@ -84,16 +87,33 @@ export default function PlayerScreen({
 													: undefined
 											}
 											style={{
-												borderRadius: 2,
-												width: width / 1.1,
+												borderRadius: getToken('$4'),
+												width:
+													getToken('$20') +
+													getToken('$20') +
+													getToken('$5'),
+												height:
+													getToken('$20') +
+													getToken('$20') +
+													getToken('$5'),
+												shadowRadius: getToken('$4'),
+												shadowOffset: {
+													width: 0,
+													height: -getToken('$4'),
+												},
 											}}
 										/>
 									</XStack>
 								</>
 							)
-						}, [nowPlaying, queue])}
+						}, [nowPlaying, queueRef])}
 
-						<XStack marginHorizontal={20} paddingVertical={5}>
+						<XStack
+							justifyContent='center'
+							marginHorizontal={'auto'}
+							maxWidth={getToken('$20') + getToken('$20') + getToken('$5')}
+							paddingVertical={5}
+						>
 							{/** Memoize TextTickers otherwise they won't animate due to the progress being updated in the PlayerContext */}
 							{useMemo(() => {
 								return (
@@ -152,10 +172,7 @@ export default function PlayerScreen({
 
 								<Spacer />
 
-								<FavoriteButton
-									item={nowPlaying!.item}
-									onToggle={() => setNowPlayingIsFavorite(!nowPlayingIsFavorite)}
-								/>
+								<FavoriteButton item={nowPlaying!.item} />
 							</XStack>
 						</XStack>
 

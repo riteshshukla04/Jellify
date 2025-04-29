@@ -4,7 +4,6 @@ import Icon from '../helpers/icon'
 import { useQuery } from '@tanstack/react-query'
 import { isUndefined } from 'lodash'
 import { getTokens, Spinner } from 'tamagui'
-import { usePlayerContext } from '../../..//player/provider'
 import { QueryKeys } from '../../../enums/query-keys'
 import { fetchUserData } from '../../../api/queries/functions/favorites'
 import { useJellifyUserDataContext } from '../../../components/user-data-provider'
@@ -20,8 +19,6 @@ export default function FavoriteButton({
 	item: BaseItemDto
 	onToggle?: () => void
 }): React.JSX.Element {
-	usePlayerContext()
-
 	const [isFavorite, setFavorite] = useState<boolean>(isFavoriteItem(item))
 
 	const { toggleFavorite } = useJellifyUserDataContext()

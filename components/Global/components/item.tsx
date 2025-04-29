@@ -1,4 +1,3 @@
-import { usePlayerContext } from '../../../player/provider'
 import { StackParamList } from '../../../components/types'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
@@ -9,6 +8,8 @@ import BlurhashedImage from './blurhashed-image'
 import Icon from '../helpers/icon'
 import { QueuingType } from '../../../enums/queuing-type'
 import { RunTimeTicks } from '../helpers/time-codes'
+import { useQueueContext } from '../../../player/queue-provider'
+import { usePlayerContext } from '../../../player/player-provider'
 
 export default function Item({
 	item,
@@ -19,7 +20,8 @@ export default function Item({
 	queueName: string
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
-	const { usePlayNewQueue } = usePlayerContext()
+	const { useStartPlayback } = usePlayerContext()
+	const { useLoadNewQueue } = useQueueContext()
 
 	const { width } = useSafeAreaFrame()
 
@@ -48,12 +50,18 @@ export default function Item({
 						}
 
 						case 'Audio': {
-							usePlayNewQueue.mutate({
-								track: item,
-								tracklist: [item],
-								queue: 'Search',
-								queuingType: QueuingType.FromSelection,
-							})
+							useLoadNewQueue.mutate(
+								{
+									track: item,
+									tracklist: [item],
+									index: 0,
+									queue: 'Search',
+									queuingType: QueuingType.FromSelection,
+								},
+								{
+									onSuccess: () => useStartPlayback.mutate(),
+								},
+							)
 							break
 						}
 					}

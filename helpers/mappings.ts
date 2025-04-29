@@ -1,10 +1,17 @@
-import { BaseItemDto, ImageType } from '@jellyfin/sdk/lib/generated-client/models'
+import {
+	BaseItemDto,
+	ImageType,
+	PlaybackInfoResponse,
+} from '@jellyfin/sdk/lib/generated-client/models'
 import { JellifyTrack } from '../types/JellifyTrack'
 import { RatingType, TrackType } from 'react-native-track-player'
 import { QueuingType } from '../enums/queuing-type'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../api/client'
 import { isUndefined } from 'lodash'
+import { JellifyDownload } from '../types/JellifyDownload'
+import { queryClient } from '../constants/query-client'
+import { QueryKeys } from '../enums/query-keys'
 
 /**
  * The container that the Jellyfin server will attempt to transcode to
@@ -26,7 +33,11 @@ const transcodingContainer = 'ts'
  * @param queuingType The type of queuing we are performing
  * @returns A `JellifyTrack`, which represents a Jellyfin library track queued in the player
  */
-export function mapDtoToTrack(item: BaseItemDto, queuingType?: QueuingType): JellifyTrack {
+export function mapDtoToTrack(
+	item: BaseItemDto,
+	downloadedTracks: JellifyDownload[],
+	queuingType?: QueuingType,
+): JellifyTrack {
 	const urlParams = {
 		Container: item.Container!,
 		TranscodingContainer: transcodingContainer,
@@ -37,12 +48,35 @@ export function mapDtoToTrack(item: BaseItemDto, queuingType?: QueuingType): Jel
 		PlaySessionId: Client.sessionId,
 	}
 
+	console.debug(`Mapping BaseItemDTO to Track object`)
 	const isFavorite = !isUndefined(item.UserData) && (item.UserData.IsFavorite ?? false)
 
+	const downloads = downloadedTracks.filter((download) => download.item.Id === item.Id)
+
+	let url: string
+
+	if (downloads.length > 0 && downloads[0].path) url = downloads[0].path
+	else {
+		const PlaybackInfoResponse = queryClient.getQueryData([
+			QueryKeys.MediaSources,
+			item.Id!,
+		]) as PlaybackInfoResponse | undefined
+
+		if (
+			PlaybackInfoResponse &&
+			PlaybackInfoResponse.MediaSources &&
+			PlaybackInfoResponse.MediaSources[0].TranscodingUrl
+		)
+			url = PlaybackInfoResponse.MediaSources![0].TranscodingUrl
+		else
+			url = `${Client.api!.basePath}/Audio/${item.Id!}/universal?${new URLSearchParams(
+				urlParams,
+			)}`
+	}
+
+	console.debug(url.length)
 	return {
-		url: `${Client.api!.basePath}/Audio/${item.Id!}/universal?${new URLSearchParams(
-			urlParams,
-		)}`,
+		url,
 		type: TrackType.Default,
 		headers: {
 			'X-Emby-Token': Client.api!.accessToken,

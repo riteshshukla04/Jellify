@@ -62,8 +62,7 @@ export default function ItemDetail({
 				<XStack
 					justifyContent='center'
 					alignItems='flex-start'
-					minHeight={width / 1.5}
-					minWidth={width / 1.5}
+					minHeight={getToken('$20') + getToken('$20') + getToken('$5')}
 				>
 					{/**
 					 * Android needs a dismiss chevron here
@@ -87,10 +86,12 @@ export default function ItemDetail({
 							item.Type === 'Audio' ? item.AlbumId! : item.Id!,
 						)}
 						style={{
-							width: width / 1.5,
-							height: width / 1.5,
+							width: getToken('$20') + getToken('$20') + getToken('$5'),
+							height: getToken('$20') + getToken('$20') + getToken('$5'),
 							borderRadius:
-								item.Type === 'MusicArtist' ? width / 1.5 : getToken('$5'),
+								item.Type === 'MusicArtist'
+									? getToken('$20') + getToken('$20') + getToken('$5')
+									: getToken('$5'),
 						}}
 					/>
 
@@ -99,7 +100,7 @@ export default function ItemDetail({
 				</XStack>
 
 				{/* Item Name, Artist, Album, and Favorite Button */}
-				<XStack maxWidth={width / 1.5}>
+				<XStack maxWidth={getToken('$20') + getToken('$20') + getToken('$5')}>
 					<YStack
 						marginLeft={'$0.5'}
 						alignItems='flex-start'

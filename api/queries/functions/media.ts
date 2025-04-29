@@ -1,6 +1,6 @@
 import { PlaybackInfoResponse } from '@jellyfin/sdk/lib/generated-client/models'
 import Client from '../../../api/client'
-import { getMediaInfoApi } from '@jellyfin/sdk/lib/utils/api'
+import { getAudioApi, getMediaInfoApi } from '@jellyfin/sdk/lib/utils/api'
 
 export async function fetchMediaInfo(itemId: string): Promise<PlaybackInfoResponse> {
 	return new Promise((resolve, reject) => {
@@ -10,7 +10,7 @@ export async function fetchMediaInfo(itemId: string): Promise<PlaybackInfoRespon
 				userId: Client.user?.id,
 			})
 			.then(({ data }) => {
-				console.debug(data)
+				console.debug('Received media info response')
 				resolve(data)
 			})
 			.catch((error) => {

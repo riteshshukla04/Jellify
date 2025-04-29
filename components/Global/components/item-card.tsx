@@ -6,6 +6,9 @@ import { Text } from '../helpers/text'
 import { Image } from 'expo-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import Client from '../../../api/client'
+import { useQuery } from '@tanstack/react-query'
+import { QueryKeys } from '../../../enums/query-keys'
+import { fetchMediaInfo } from '../../../api/queries/functions/media'
 
 interface CardProps extends TamaguiCardProps {
 	caption?: string | null | undefined
@@ -15,6 +18,11 @@ interface CardProps extends TamaguiCardProps {
 }
 
 export function ItemCard(props: CardProps) {
+	const mediaInfo = useQuery({
+		queryKey: [QueryKeys.MediaSources, props.item.Id!],
+		queryFn: () => fetchMediaInfo(props.item.Id!),
+	})
+
 	return (
 		<View alignItems='center' margin={5}>
 			<TamaguiCard

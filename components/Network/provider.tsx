@@ -1,13 +1,6 @@
 import React, { createContext, ReactNode, useContext } from 'react'
 import { JellifyDownload } from '../../types/JellifyDownload'
-import {
-	QueryObserverResult,
-	RefetchOptions,
-	useMutation,
-	UseMutationResult,
-	useQuery,
-	useQueryClient,
-} from '@tanstack/react-query'
+import { useMutation, UseMutationResult, useQuery, useQueryClient } from '@tanstack/react-query'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { mapDtoToTrack } from '../../helpers/mappings'
 import { deleteAudio, getAudioCache, saveAudio } from './offlineModeUtils'
@@ -28,7 +21,7 @@ const NetworkContextInitializer = () => {
 
 	const useDownload = useMutation({
 		mutationFn: (trackItem: BaseItemDto) => {
-			const track = mapDtoToTrack(trackItem)
+			const track = mapDtoToTrack(trackItem, [])
 
 			return saveAudio(track, queryClient, false)
 		},

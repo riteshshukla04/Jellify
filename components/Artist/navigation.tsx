@@ -13,6 +13,7 @@ import {
 } from '@react-navigation/material-top-tabs'
 import { StackParamList } from '../types'
 import { useArtistContext } from './provider'
+import { ImageType } from '@jellyfin/sdk/lib/generated-client/models'
 
 const ArtistTabs = createMaterialTopTabNavigator<StackParamList>()
 
@@ -37,7 +38,10 @@ export default function ArtistNavigation(): React.JSX.Element {
 				<>
 					<Animated.View style={[animatedBannerStyle]}>
 						<Image
-							source={getImageApi(Client.api!).getItemImageUrlById(artist.Id!)}
+							source={getImageApi(Client.api!).getItemImageUrlById(
+								artist.Id!,
+								ImageType.Backdrop,
+							)}
 							style={{ width: width, height: '100%' }}
 						/>
 					</Animated.View>
