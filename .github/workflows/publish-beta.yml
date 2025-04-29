@@ -17,11 +17,8 @@ jobs:
         with:
           node-version: 20
       
-      - name: 🧵 Run yarn install
-        run: yarn install
-
-      - name: 🍫 Install CocoaPods
-        run: yarn pod:install
+      - name: 🍎 Run yarn init-ios:new-arch
+        run: yarn init-ios:new-arch
 
       - name: ➕ Version Up
         run: yarn react-native bump-version --type patch  
