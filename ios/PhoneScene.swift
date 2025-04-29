@@ -32,7 +32,7 @@ class PhoneSceneDelegate: UIResponder, UIWindowSceneDelegate {
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     guard let appDelegate = UIApplication.shared.delegate as? AppDelegate else { return }
     guard let windowScene = scene as? UIWindowScene else { return }
-    guard let appRootView = appDelegate.window.rootViewController?.view else { return }
+    guard let appRootView = appDelegate.window?.rootViewController?.view else { return }
 
     let containerViewController = UIViewController()
     containerViewController.view.backgroundColor = .systemBackground // dynamic light/dark

@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, StyleSheet, Pressable, Alert, FlatList } from 'react-native'
+import { StyleSheet, Pressable, Alert, FlatList } from 'react-native'
 import RNFS from 'react-native-fs'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { deleteAudioCache } from '../Network/offlineModeUtils'
 import { useNetworkContext } from '../Network/provider'
-import DownloadProgress from '../../types/DownloadProgress'
 import Icon from '../Global/helpers/icon'
+import { View } from 'tamagui'
+import { Text } from '../Global/helpers/text'
 
 // 🔹 Single Download Item with animated progress bar
-const DownloadItem = ({
+function DownloadItem({
 	name,
 	progress,
 	fileName,
@@ -16,7 +17,7 @@ const DownloadItem = ({
 	name: string
 	progress: number
 	fileName: string
-}) => {
+}): React.JSX.Element {
 	const progressValue = useSharedValue(progress)
 
 	useEffect(() => {
@@ -38,7 +39,7 @@ const DownloadItem = ({
 }
 
 // 🔹 Main UI Component
-export const StorageBar = () => {
+export default function StorageBar(): React.JSX.Element {
 	const [used, setUsed] = useState(0)
 	const [total, setTotal] = useState(1)
 
@@ -86,7 +87,9 @@ export const StorageBar = () => {
 			{/* Storage Usage */}
 			<Text style={styles.title}>📦 Storage Usage</Text>
 			<Text style={styles.usage}>
-				{(used / 1024 / 1024).toFixed(2)} MB / {(total / 1024 / 1024 / 1024).toFixed(2)} GB
+				{`${(used / 1024 / 1024).toFixed(2)} MB / ${(total / 1024 / 1024 / 1024).toFixed(
+					2,
+				)} GB`}
 			</Text>
 			<View style={styles.progressBackground}>
 				<Animated.View style={[styles.progressFill, storageBarStyle]} />

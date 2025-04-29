@@ -1,5 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { View, Text, StyleSheet, TouchableOpacity, Dimensions } from 'react-native'
+
+import { ErrorBoundary as ReactErrorBoundary } from 'react-error-boundary'
 
 type Props = {
 	reloader: number
@@ -8,59 +10,48 @@ type Props = {
 	children: React.ReactNode
 }
 
-type State = {
-	hasError: boolean
-	error: Error | null
-}
+export default function ErrorBoundary({
+	reloader,
+	onRetry,
+	onError,
+	children,
+}: Props): React.JSX.Element {
+	const [hasError, setHasError] = useState(false)
+	const [error, setError] = useState<Error | null>(null)
 
-export default class ErrorBoundary extends React.Component<Props, State> {
-	constructor(props: Props) {
-		super(props)
-		this.state = { hasError: false, error: null }
+	// Reset error state if the `reloader` prop changes
+	useEffect(() => {
+		setHasError(false)
+		setError(null)
+	}, [reloader])
+
+	// Handle retry button press
+	const handleRetry = () => {
+		if (onRetry) onRetry()
 	}
 
-	static getDerivedStateFromError(error: Error): State {
-		return { hasError: true, error }
+	// Custom fallback UI for errors
+	if (hasError) {
+		console.log('hasError', hasError)
+		return (
+			<View style={styles.container}>
+				<Text style={styles.emoji}>🎵😵‍💫</Text>
+				<Text style={styles.title}>Oops! That was a wrong note.</Text>
+				<Text style={styles.subtitle}>
+					Jellify stopped unexpectedly. Let’s tune things up and try again!
+				</Text>
+				<TouchableOpacity style={styles.button} onPress={handleRetry}>
+					<Text style={styles.buttonText}>Retry</Text>
+				</TouchableOpacity>
+				{/* {__DEV__ && error && (
+                    <Text style={styles.devError}>{error.toString()}</Text>
+                )} */}
+			</View>
+		)
 	}
 
-	componentDidCatch(error: Error, info: React.ErrorInfo) {
-		if (__DEV__) return
-		this.setState({ hasError: true, error })
-	}
-
-	componentDidUpdate(prevProps: Props) {
-		// Reset error state if reloader prop changes
-		if (this.props.reloader !== prevProps.reloader) {
-			this.setState({ hasError: false, error: null })
-		}
-	}
-
-	handleRetry = () => {
-		if (this.props.onRetry) this.props.onRetry()
-		// Parent should increment reloader to trigger reset
-	}
-
-	render() {
-		if (this.state.hasError) {
-			console.log('this.state.hasError', this.state.hasError)
-			return (
-				<View style={styles.container}>
-					<Text style={styles.emoji}>🎵😵‍💫</Text>
-					<Text style={styles.title}>Oops! That was a wrong note.</Text>
-					<Text style={styles.subtitle}>
-						Jellify stopped unexpectedly. Lets tune things up and try again!
-					</Text>
-					<TouchableOpacity style={styles.button} onPress={this.handleRetry}>
-						<Text style={styles.buttonText}>Retry</Text>
-					</TouchableOpacity>
-					{/* {__DEV__ && this.state.error && (
-						<Text style={styles.devError}>{this.state.error.toString()}</Text>
-					)} */}
-				</View>
-			)
-		}
-		return this.props.children
-	}
+	// Wrap children in React's ErrorBoundary
+	return <ReactErrorBoundary fallback={<View></View>}>{children}</ReactErrorBoundary>
 }
 
 const { width, height } = Dimensions.get('window')
