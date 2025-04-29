@@ -10,6 +10,7 @@ import Client from '../../api/client'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import FrequentArtists from './helpers/frequent-artists'
 import FrequentlyPlayedTracks from './helpers/frequent-tracks'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 
 export function ProvidedHome({
 	navigation,
@@ -17,6 +18,8 @@ export function ProvidedHome({
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
 	const { refreshing: refetching, onRefresh } = useHomeContext()
+
+	const insets = useSafeAreaInsets()
 
 	return (
 		<ScrollView
