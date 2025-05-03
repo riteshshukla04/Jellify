@@ -10,13 +10,24 @@ import { RunTimeSeconds } from '../../../components/Global/helpers/time-codes'
 import { UPDATE_INTERVAL } from '../../../player/config'
 import { ProgressMultiplier } from '../component.config'
 import { useQueueContext } from '../../../player/queue-provider'
+import { runOnJS, useDerivedValue, useSharedValue } from 'react-native-reanimated'
 
-const scrubGesture = Gesture.Pan()
+
 
 export default function Scrubber(): React.JSX.Element {
 	const { useSeekTo } = usePlayerContext()
 
 	const { useSkip, usePrevious } = useQueueContext()
+	
+	const [isScrubbing, setIsScrubbing] = useState<boolean>(false)
+
+	
+
+	const scrubGesture = Gesture.Pan().onBegin((event) => {
+		runOnJS(setIsScrubbing)(true)
+	}).onEnd(() => {
+		runOnJS(setIsScrubbing)(false)
+	})
 
 	const { width } = useSafeAreaFrame()
 
@@ -24,9 +35,14 @@ export default function Scrubber(): React.JSX.Element {
 
 	const progress = useProgress(UPDATE_INTERVAL)
 
-	const [position, setPosition] = useState<number>(
+	// const [position, setPosition] = useState<number>(
+	// 	progress && progress.position ? Math.floor(progress.position * ProgressMultiplier) : 0,
+	// )
+	const position = useSharedValue(
 		progress && progress.position ? Math.floor(progress.position * ProgressMultiplier) : 0,
-	)
+	  )
+
+
 
 	/**
 	 * Update position in the scrubber if the user isn't interacting
@@ -37,20 +53,20 @@ export default function Scrubber(): React.JSX.Element {
 			!useSkip.isPending &&
 			!usePrevious.isPending &&
 			!useSeekTo.isPending &&
-			progress.position
+			progress.position &&
+			!isScrubbing
 		)
-			setPosition(Math.floor(progress.position * ProgressMultiplier))
+			position.value = Math.floor(progress.position * ProgressMultiplier)
 	}, [progress.position])
 
-	useEffect(() => {
-		if (useSeekTo.isIdle) setSeeking(false)
-	}, [useSeekTo.isIdle])
+	const derivedSeconds = useDerivedValue(() => Math.floor(position.value / ProgressMultiplier))
+
 
 	return (
 		<YStack>
 			<GestureDetector gesture={scrubGesture}>
 				<HorizontalSlider
-					value={position}
+					value={position.value}
 					max={
 						progress && progress.duration > 0
 							? Math.floor(progress.duration * ProgressMultiplier)
@@ -62,7 +78,7 @@ export default function Scrubber(): React.JSX.Element {
 						// If user swipes off of the slider we should seek to the spot
 						onPressOut: () => {
 							trigger('notificationSuccess')
-							useSeekTo.mutate(Math.floor(position / ProgressMultiplier))
+							useSeekTo.mutate(Math.floor(position.value / ProgressMultiplier))
 							setSeeking(false)
 						},
 						onSlideStart: (event, value) => {
@@ -76,11 +92,11 @@ export default function Scrubber(): React.JSX.Element {
 								Math.floor(value / ProgressMultiplier) > -1 &&
 								Math.floor(value / ProgressMultiplier) < progress.duration
 							)
-								setPosition(Math.floor(value))
+								position.value = Math.floor(value)
 						},
 						onSlideEnd: (event, value) => {
 							trigger('notificationSuccess')
-							setPosition(Math.floor(value))
+							position.value = Math.floor(value)
 							useSeekTo.mutate(Math.floor(value / ProgressMultiplier))
 							setSeeking(false)
 						},
@@ -90,7 +106,7 @@ export default function Scrubber(): React.JSX.Element {
 
 			<XStack margin={'$2'} marginTop={'$3'}>
 				<YStack flex={1} alignItems='flex-start'>
-					<RunTimeSeconds>{Math.floor(position / ProgressMultiplier)}</RunTimeSeconds>
+					<RunTimeSeconds>{derivedSeconds.value}</RunTimeSeconds>
 				</YStack>
 
 				<YStack flex={1} alignItems='center'>
