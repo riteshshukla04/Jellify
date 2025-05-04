@@ -14,12 +14,14 @@ import Suggestions from './suggestions'
 import { isEmpty } from 'lodash'
 import HorizontalCardList from '../Global/components/horizontal-list'
 import { ItemCard } from '../Global/components/item-card'
-
+import { useJellifyContext } from '../provider'
 export default function Search({
 	navigation,
 }: {
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
+	const { api } = useJellifyContext()
+
 	const [searchString, setSearchString] = useState<string | undefined>(undefined)
 
 	const {
@@ -28,7 +30,7 @@ export default function Search({
 		isFetching: fetchingResults,
 	} = useQuery({
 		queryKey: [QueryKeys.Search, searchString],
-		queryFn: () => fetchSearchResults(searchString),
+		queryFn: () => fetchSearchResults(api, searchString),
 	})
 
 	const {
@@ -37,7 +39,7 @@ export default function Search({
 		refetch: refetchSuggestions,
 	} = useQuery({
 		queryKey: [QueryKeys.SearchSuggestions],
-		queryFn: () => fetchSearchSuggestions(),
+		queryFn: () => fetchSearchSuggestions(api),
 	})
 
 	const search = useCallback(() => {

@@ -7,7 +7,8 @@ import { deleteAudio, getAudioCache, saveAudio } from './offlineModeUtils'
 import { QueryKeys } from '../../enums/query-keys'
 import { networkStatusTypes } from './internetConnectionWatcher'
 import DownloadProgress from '../../types/DownloadProgress'
-
+import { useJellifyContext } from '../provider'
+import { isUndefined } from 'lodash'
 interface NetworkContext {
 	useDownload: UseMutationResult<void, Error, BaseItemDto, unknown>
 	useRemoveDownload: UseMutationResult<void, Error, BaseItemDto, unknown>
@@ -17,11 +18,14 @@ interface NetworkContext {
 }
 
 const NetworkContextInitializer = () => {
+	const { api, sessionId } = useJellifyContext()
 	const queryClient = useQueryClient()
 
 	const useDownload = useMutation({
 		mutationFn: (trackItem: BaseItemDto) => {
-			const track = mapDtoToTrack(trackItem, [])
+			if (isUndefined(api)) throw new Error('API client not initialized')
+
+			const track = mapDtoToTrack(api, sessionId, trackItem, [])
 
 			return saveAudio(track, queryClient, false)
 		},

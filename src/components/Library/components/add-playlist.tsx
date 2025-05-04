@@ -11,6 +11,7 @@ import { trigger } from 'react-native-haptic-feedback'
 import { queryClient } from '../../../constants/query-client'
 import { QueryKeys } from '../../../enums/query-keys'
 import Toast from 'react-native-toast-message'
+import { useJellifyContext } from '../../provider'
 // import * as Burnt from 'burnt'
 
 export default function AddPlaylist({
@@ -18,10 +19,11 @@ export default function AddPlaylist({
 }: {
 	navigation: NativeStackNavigationProp<StackParamList, 'AddPlaylist'>
 }): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
 	const [name, setName] = useState<string>('')
 
 	const useAddPlaylist = useMutation({
-		mutationFn: ({ name }: { name: string }) => createPlaylist(name),
+		mutationFn: ({ name }: { name: string }) => createPlaylist(api, user, name),
 		onSuccess: (data, { name }) => {
 			trigger('notificationSuccess')
 

@@ -12,12 +12,11 @@ import TextTicker from 'react-native-text-ticker'
 import { TextTickerConfig } from '../Player/component.config'
 import FastImage from 'react-native-fast-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../api/client'
 import Icon from '../Global/helpers/icon'
 import { Platform, useColorScheme } from 'react-native'
 import JellifyToastConfig from '../../constants/toast.config'
 import Toast from 'react-native-toast-message'
-
+import { useJellifyContext } from '../provider'
 export default function ItemDetail({
 	item,
 	navigation,
@@ -28,6 +27,8 @@ export default function ItemDetail({
 	isNested?: boolean | undefined
 }): React.JSX.Element {
 	let options: React.JSX.Element | undefined = undefined
+
+	const { api } = useJellifyContext()
 
 	useEffect(() => {
 		trigger('impactMedium')
@@ -85,7 +86,7 @@ export default function ItemDetail({
 
 					<FastImage
 						source={{
-							uri: getImageApi(Client.api!).getItemImageUrlById(
+							uri: getImageApi(api!).getItemImageUrlById(
 								item.Type === 'Audio' ? item.AlbumId! : item.Id!,
 							),
 						}}

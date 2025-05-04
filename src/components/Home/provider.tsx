@@ -6,7 +6,7 @@ import { fetchRecentlyPlayed, fetchRecentlyPlayedArtists } from '../../api/queri
 import { queryClient } from '../../constants/query-client'
 import QueryConfig from '../../api/queries/query.config'
 import { fetchFrequentlyPlayed, fetchFrequentlyPlayedArtists } from '../../api/queries/frequents'
-
+import { useJellifyContext } from '../provider'
 interface HomeContext {
 	refreshing: boolean
 	onRefresh: () => void
@@ -17,25 +17,26 @@ interface HomeContext {
 }
 
 const HomeContextInitializer = () => {
+	const { api, library, user } = useJellifyContext()
 	const [refreshing, setRefreshing] = useState<boolean>(false)
 
 	const { data: recentTracks, refetch: refetchRecentTracks } = useQuery({
 		queryKey: [QueryKeys.RecentlyPlayed],
-		queryFn: () => fetchRecentlyPlayed(),
+		queryFn: () => fetchRecentlyPlayed(api, library),
 	})
 	const { data: recentArtists, refetch: refetchRecentArtists } = useQuery({
 		queryKey: [QueryKeys.RecentlyPlayedArtists],
-		queryFn: () => fetchRecentlyPlayedArtists(),
+		queryFn: () => fetchRecentlyPlayedArtists(api, library),
 	})
 
 	const { data: frequentlyPlayed, refetch: refetchFrequentlyPlayed } = useQuery({
 		queryKey: [QueryKeys.FrequentlyPlayed],
-		queryFn: () => fetchFrequentlyPlayed(),
+		queryFn: () => fetchFrequentlyPlayed(api, library),
 	})
 
 	const { data: frequentArtists, refetch: refetchFrequentArtists } = useQuery({
 		queryKey: [QueryKeys.FrequentArtists],
-		queryFn: () => fetchFrequentlyPlayedArtists(),
+		queryFn: () => fetchFrequentlyPlayedArtists(api, library),
 	})
 
 	const onRefresh = async () => {

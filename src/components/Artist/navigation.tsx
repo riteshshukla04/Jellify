@@ -1,4 +1,3 @@
-import Client from '../../api/client'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import React, { useEffect } from 'react'
 import Animated, { useSharedValue, useAnimatedStyle, withTiming } from 'react-native-reanimated'
@@ -14,10 +13,11 @@ import {
 import { StackParamList } from '../types'
 import { useArtistContext } from './provider'
 import { ImageType } from '@jellyfin/sdk/lib/generated-client/models'
-
+import { useJellifyContext } from '../provider'
 const ArtistTabs = createMaterialTopTabNavigator<StackParamList>()
 
 export default function ArtistNavigation(): React.JSX.Element {
+	const { api } = useJellifyContext()
 	const { artist, scroll } = useArtistContext()
 
 	const { width } = useSafeAreaFrame()
@@ -39,7 +39,7 @@ export default function ArtistNavigation(): React.JSX.Element {
 					<Animated.View style={[animatedBannerStyle]}>
 						<FastImage
 							source={{
-								uri: getImageApi(Client.api!).getItemImageUrlById(
+								uri: getImageApi(api!).getItemImageUrlById(
 									artist.Id!,
 									ImageType.Backdrop,
 								),

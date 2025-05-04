@@ -10,16 +10,15 @@ import PlayPauseButton from './helpers/buttons'
 import { TextTickerConfig } from './component.config'
 import FastImage from 'react-native-fast-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../api/client'
 import { useQueueContext } from '../../player/queue-provider'
-
+import { useJellifyContext } from '../provider'
 export function Miniplayer({
 	navigation,
 }: {
 	navigation: NavigationHelpers<ParamListBase, BottomTabNavigationEventMap>
 }): React.JSX.Element {
 	const theme = useTheme()
-
+	const { api } = useJellifyContext()
 	const { nowPlaying } = usePlayerContext()
 	const { useSkip } = useQueueContext()
 
@@ -46,7 +45,7 @@ export function Miniplayer({
 					>
 						<FastImage
 							source={{
-								uri: getImageApi(Client.api!).getItemImageUrlById(
+								uri: getImageApi(api!).getItemImageUrlById(
 									nowPlaying!.item.AlbumId!,
 								),
 							}}

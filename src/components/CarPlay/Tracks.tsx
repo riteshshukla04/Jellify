@@ -1,4 +1,4 @@
-import { mapDtoToTrack } from '../..//helpers/mappings'
+import { mapDtoToTrack } from '../../helpers/mappings'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { CarPlay, ListTemplate } from 'react-native-carplay'
 import TrackPlayer from 'react-native-track-player'
@@ -6,8 +6,9 @@ import uuid from 'react-native-uuid'
 import CarPlayNowPlaying from './NowPlaying'
 import { queryClient } from '../../constants/query-client'
 import { QueryKeys } from '../../enums/query-keys'
+import { Api } from '@jellyfin/sdk'
 
-const RecentTracksTemplate = (items: BaseItemDto[]) =>
+const TracksTemplate = (api: Api, sessionId: string, items: BaseItemDto[]) =>
 	new ListTemplate({
 		id: uuid.v4(),
 		sections: [
@@ -24,7 +25,12 @@ const RecentTracksTemplate = (items: BaseItemDto[]) =>
 		onItemSelect: async (item) => {
 			await TrackPlayer.setQueue(
 				items.map((item) =>
-					mapDtoToTrack(item, queryClient.getQueryData([QueryKeys.AudioCache]) ?? []),
+					mapDtoToTrack(
+						api,
+						sessionId,
+						item,
+						queryClient.getQueryData([QueryKeys.AudioCache]) ?? [],
+					),
 				),
 			)
 
@@ -36,4 +42,4 @@ const RecentTracksTemplate = (items: BaseItemDto[]) =>
 		},
 	})
 
-export default RecentTracksTemplate
+export default TracksTemplate

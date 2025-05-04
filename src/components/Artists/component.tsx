@@ -7,15 +7,17 @@ import { fetchFavoriteArtists } from '../../api/queries/favorites'
 import { YStack } from 'tamagui'
 import { Text } from '../Global/helpers/text'
 import { FlatList } from 'react-native'
+import { useJellifyContext } from '../provider'
 
 export default function Artists({ navigation, route }: ArtistsProps): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
 	const {
 		data: favoriteArtists,
 		refetch,
 		isPending,
 	} = useQuery({
 		queryKey: [QueryKeys.FavoriteArtists],
-		queryFn: fetchFavoriteArtists,
+		queryFn: () => fetchFavoriteArtists(api, user, library),
 	})
 
 	return (

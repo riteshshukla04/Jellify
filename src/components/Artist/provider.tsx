@@ -1,5 +1,4 @@
 import fetchSimilar from '../../api/queries/similar'
-import Client from '../../api/client'
 import { QueryKeys } from '../../enums/query-keys'
 import {
 	BaseItemDto,
@@ -11,6 +10,7 @@ import { getItemsApi } from '@jellyfin/sdk/lib/utils/api'
 import { useQuery } from '@tanstack/react-query'
 import { createContext, ReactNode, SetStateAction, useContext, useState } from 'react'
 import { SharedValue, useSharedValue } from 'react-native-reanimated'
+import { useJellifyContext } from '../provider'
 
 interface ArtistContext {
 	fetchingAlbums: boolean
@@ -24,6 +24,8 @@ interface ArtistContext {
 }
 
 const ArtistContextInitializer = (artist: BaseItemDto) => {
+	const { api, user } = useJellifyContext()
+
 	const {
 		data: albums,
 		refetch: refetchAlbums,
@@ -31,7 +33,7 @@ const ArtistContextInitializer = (artist: BaseItemDto) => {
 	} = useQuery({
 		queryKey: [QueryKeys.ArtistAlbums, artist.Id!],
 		queryFn: ({ queryKey }) => {
-			return getItemsApi(Client.api!)
+			return getItemsApi(api!)
 				.getItems({
 					includeItemTypes: [BaseItemKind.MusicAlbum],
 					recursive: true,
@@ -56,7 +58,7 @@ const ArtistContextInitializer = (artist: BaseItemDto) => {
 		isPending: fetchingSimilarArtists,
 	} = useQuery({
 		queryKey: [QueryKeys.SimilarItems, artist.Id],
-		queryFn: () => fetchSimilar(artist.Id!),
+		queryFn: () => fetchSimilar(api, user, artist.Id!),
 	})
 
 	const refresh = () => {

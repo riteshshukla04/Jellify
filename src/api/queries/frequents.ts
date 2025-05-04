@@ -1,4 +1,3 @@
-import Client from '../client'
 import {
 	BaseItemDto,
 	BaseItemKind,
@@ -6,13 +5,28 @@ import {
 	SortOrder,
 } from '@jellyfin/sdk/lib/generated-client/models'
 import { getItemsApi } from '@jellyfin/sdk/lib/utils/api'
+import { Api } from '@jellyfin/sdk'
+import { isUndefined } from 'lodash'
+import { JellifyLibrary } from '../../types/JellifyLibrary'
 
-export function fetchFrequentlyPlayed(): Promise<BaseItemDto[]> {
+/**
+ * Fetches the 100 most frequently played items from the user's library
+ * @param api The Jellyfin {@link Api} instance
+ * @param library The Jellyfin {@link JellifyLibrary} instance
+ * @returns The 100 most frequently played items from the user's library
+ */
+export function fetchFrequentlyPlayed(
+	api: Api | undefined,
+	library: JellifyLibrary | undefined,
+): Promise<BaseItemDto[]> {
 	return new Promise((resolve, reject) => {
-		getItemsApi(Client.api!)
+		if (isUndefined(api)) return reject('Client instance not set')
+		if (isUndefined(library)) return reject('Library instance not set')
+
+		getItemsApi(api!)
 			.getItems({
 				includeItemTypes: [BaseItemKind.Audio],
-				parentId: Client.library!.musicLibraryId,
+				parentId: library!.musicLibraryId,
 				recursive: true,
 				limit: 100,
 				sortBy: [ItemSortBy.PlayCount],
@@ -28,12 +42,22 @@ export function fetchFrequentlyPlayed(): Promise<BaseItemDto[]> {
 	})
 }
 
-export function fetchFrequentlyPlayedArtists(): Promise<BaseItemDto[]> {
+/**
+ * Fetches most frequently played artists from the user's library based on the
+ * {@link fetchFrequentlyPlayed} query
+ * @param api The Jellyfin {@link Api} instance
+ * @param library The Jellyfin {@link JellifyLibrary} instance
+ * @returns The most frequently played artists from the user's library
+ */
+export function fetchFrequentlyPlayedArtists(
+	api: Api | undefined,
+	library: JellifyLibrary | undefined,
+): Promise<BaseItemDto[]> {
 	return new Promise((resolve, reject) => {
 		console.debug('Fetching frequently played artists')
 
 		try {
-			fetchFrequentlyPlayed()
+			fetchFrequentlyPlayed(api, library)
 				.then((frequentlyPlayed) => {
 					console.debug('Received frequently played artists response')
 					return frequentlyPlayed.map((played) => played.ArtistItems![0] as BaseItemDto)

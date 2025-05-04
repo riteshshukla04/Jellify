@@ -1,67 +1,79 @@
-import Client from '../client'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { getUserViewsApi } from '@jellyfin/sdk/lib/utils/api'
 import { getItemsApi } from '@jellyfin/sdk/lib/utils/api/items-api'
 import { isUndefined } from 'lodash'
+import { Api } from '@jellyfin/sdk'
+import { JellifyUser } from '../../types/JellifyUser'
 
-export async function fetchMusicLibraries(): Promise<BaseItemDto[] | void> {
+export async function fetchMusicLibraries(api: Api | undefined): Promise<BaseItemDto[] | void> {
 	console.debug('Fetching music libraries from Jellyfin')
 
-	const libraries = await getItemsApi(Client.api!).getItems({
-		includeItemTypes: ['CollectionFolder'],
+	return new Promise((resolve, reject) => {
+		if (isUndefined(api)) return reject('Client instance not set')
+
+		getItemsApi(api)
+			.getItems({
+				includeItemTypes: ['CollectionFolder'],
+			})
+			.then((response) => {
+				if (response.data.Items) return resolve(response.data.Items)
+				else return resolve([])
+			})
+			.catch((error) => {
+				console.error(error)
+				return reject(error)
+			})
 	})
-
-	if (isUndefined(libraries.data.Items)) {
-		console.warn('No libraries found on Jellyfin')
-		return
-	}
-
-	const musicLibraries = libraries.data.Items!.filter(
-		(library) => library.CollectionType == 'music',
-	)
-
-	return musicLibraries
 }
 
-export async function fetchPlaylistLibrary(): Promise<BaseItemDto | void> {
+export async function fetchPlaylistLibrary(api: Api | undefined): Promise<BaseItemDto | undefined> {
 	console.debug('Fetching playlist library from Jellyfin')
 
-	const libraries = await getItemsApi(Client.api!).getItems({
-		includeItemTypes: ['ManualPlaylistsFolder'],
-		excludeItemTypes: ['CollectionFolder'],
+	return new Promise((resolve, reject) => {
+		if (isUndefined(api)) return reject('Client instance not set')
+
+		getItemsApi(api)
+			.getItems({
+				includeItemTypes: ['ManualPlaylistsFolder'],
+				excludeItemTypes: ['CollectionFolder'],
+			})
+			.then((response) => {
+				if (response.data.Items)
+					return resolve(
+						response.data.Items.filter(
+							(library) => library.CollectionType == 'playlists',
+						)[0],
+					)
+				else return resolve(undefined)
+			})
+			.catch((error) => {
+				console.error(error)
+				return reject(error)
+			})
 	})
-
-	if (isUndefined(libraries.data.Items)) {
-		console.warn('No playlist libraries found on Jellyfin')
-		return
-	}
-
-	console.debug('Playlist libraries', libraries.data.Items!)
-
-	const playlistLibrary = libraries.data.Items!.filter(
-		(library) => library.CollectionType == 'playlists',
-	)[0]
-
-	if (isUndefined(playlistLibrary)) {
-		console.warn('Playlist libary does not exist on server')
-		return
-	}
-
-	return playlistLibrary
 }
 
-export async function fetchUserViews(): Promise<BaseItemDto[] | void> {
+export async function fetchUserViews(
+	api: Api | undefined,
+	user: JellifyUser | undefined,
+): Promise<BaseItemDto[] | void> {
 	console.debug('Fetching user views')
 
-	return await getUserViewsApi(Client.api!)
-		.getUserViews({
-			userId: Client.user!.id,
-		})
-		.then((response) => {
-			if (response.data.Items) return response.data.Items
-			else return []
-		})
-		.catch((error) => {
-			console.warn(error)
-		})
+	return new Promise((resolve, reject) => {
+		if (isUndefined(api)) return reject('Client instance not set')
+		if (isUndefined(user)) return reject('User instance not set')
+
+		getUserViewsApi(api)
+			.getUserViews({
+				userId: user.id,
+			})
+			.then((response) => {
+				if (response.data.Items) return resolve(response.data.Items)
+				else return resolve([])
+			})
+			.catch((error) => {
+				console.error(error)
+				return reject(error)
+			})
+	})
 }

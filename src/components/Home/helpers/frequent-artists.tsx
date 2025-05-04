@@ -1,6 +1,5 @@
 import HorizontalCardList from '../../../components/Global/components/horizontal-list'
 import { StackParamList } from '../../../components/types'
-import { QueryKeys } from '../../../enums/query-keys'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React from 'react'
 import { ItemCard } from '../../../components/Global/components/item-card'
@@ -32,7 +31,7 @@ export default function FrequentArtists({
 
 			<HorizontalCardList
 				data={
-					frequentArtists?.length ?? 0 > 10
+					(frequentArtists?.length ?? 0 > 10)
 						? frequentArtists!.slice(0, 10)
 						: frequentArtists
 				}

@@ -1,4 +1,5 @@
-import Client from '../client'
+import { JellifyUser } from '../../types/JellifyUser'
+import { Api } from '@jellyfin/sdk'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { getItemsApi } from '@jellyfin/sdk/lib/utils/api'
 import { isUndefined } from 'lodash'
@@ -14,15 +15,19 @@ import { isUndefined } from 'lodash'
  *
  * @param item The item to mark as played
  */
-export async function markItemPlayed(item: BaseItemDto): Promise<void> {
+export async function markItemPlayed(
+	api: Api | undefined,
+	user: JellifyUser | undefined,
+	item: BaseItemDto,
+): Promise<void> {
 	return new Promise((resolve, reject) => {
-		if (isUndefined(Client.api) || isUndefined(Client.user))
-			return reject('Client instance not set')
+		if (isUndefined(api)) return reject('Client instance not set')
+		if (isUndefined(user)) return reject('User instance not set')
 
-		getItemsApi(Client.api)
+		getItemsApi(api)
 			.updateItemUserData({
 				itemId: item.Id!,
-				userId: Client.user.id,
+				userId: user.id,
 				updateUserItemDataDto: {
 					LastPlayedDate: new Date().getUTCDate().toLocaleString(),
 					Played: true,

@@ -5,13 +5,14 @@ import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../enums/query-keys'
 import { fetchUserData } from '../../../api/queries/favorites'
 import { useEffect, useState } from 'react'
+import { useJellifyContext } from '../../provider'
 
 export default function FavoriteIcon({ item }: { item: BaseItemDto }): React.JSX.Element {
 	const [isFavorite, setIsFavorite] = useState<boolean>(item.UserData?.IsFavorite ?? false)
-
+	const { api, user, library } = useJellifyContext()
 	const { data: userData } = useQuery({
 		queryKey: [QueryKeys.UserData, item.Id!],
-		queryFn: () => fetchUserData(item.Id!),
+		queryFn: () => fetchUserData(api, user, item.Id!),
 		staleTime: 1000 * 60 * 5, // 5 minutes,
 	})
 

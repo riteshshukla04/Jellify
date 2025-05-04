@@ -4,15 +4,17 @@ import { FlatList, RefreshControl } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../enums/query-keys'
 import { fetchFavoriteAlbums } from '../../api/queries/favorites'
+import { useJellifyContext } from '../provider'
 
 export default function Albums({ navigation, route }: AlbumsProps): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
 	const {
 		data: albums,
 		refetch,
 		isPending,
 	} = useQuery({
 		queryKey: [QueryKeys.FavoriteAlbums],
-		queryFn: fetchFavoriteAlbums,
+		queryFn: () => fetchFavoriteAlbums(api, user, library),
 	})
 
 	return (

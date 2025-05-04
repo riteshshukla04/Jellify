@@ -1,24 +1,32 @@
 import React from 'react'
-import Client from '../../../api/client'
-import { Text } from 'react-native'
 import { YStack, XStack } from 'tamagui'
-import { H5 } from '../../../components/Global/helpers/text'
+import { H5, Text } from '../../../components/Global/helpers/text'
 import Icon from '../../../components/Global/helpers/icon'
-
+import { useJellifyContext } from '../../provider'
 export default function ServerDetails(): React.JSX.Element {
+	const { api, library } = useJellifyContext()
 	return (
 		<YStack>
-			{Client.api && (
+			{api && (
 				<YStack>
 					<H5>Access Token</H5>
 					<XStack>
 						<Icon name='hand-coin-outline' />
-						<Text>{Client.api!.accessToken}</Text>
+						<Text>{api.accessToken}</Text>
 					</XStack>
 					<H5>Jellyfin Server</H5>
 					<XStack>
 						<Icon name='server-network' />
-						<Text>{Client.api!.basePath}</Text>
+						<Text>{api.basePath}</Text>
+					</XStack>
+				</YStack>
+			)}
+			{library && (
+				<YStack>
+					<H5>Library</H5>
+					<XStack>
+						<Icon name='book-outline' />
+						<Text>{library.musicLibraryName!}</Text>
 					</XStack>
 				</YStack>
 			)}

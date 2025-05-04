@@ -21,6 +21,7 @@ import { filterTracksOnNetworkStatus } from './helpers/queue'
 import { SKIP_TO_PREVIOUS_THRESHOLD } from './config'
 import { isUndefined } from 'lodash'
 import Toast from 'react-native-toast-message'
+import { useJellifyContext } from '../components/provider'
 interface QueueContext {
 	queueRef: Queue
 	playQueue: JellifyTrack[]
@@ -36,17 +37,21 @@ interface QueueContext {
 }
 
 const QueueContextInitailizer = () => {
+	const currentIndexValue = storage.getNumber(MMKVStorageKeys.CurrentIndex)
 	const queueRefJson = storage.getString(MMKVStorageKeys.Queue)
 	const playQueueJson = storage.getString(MMKVStorageKeys.PlayQueue)
 
 	const queueRefInit = queueRefJson ? JSON.parse(queueRefJson) : 'Recently Played'
 	const playQueueInit = playQueueJson ? JSON.parse(playQueueJson) : []
 
-	const [queueRef, setQueueRef] = useState<Queue>(queueRefInit)
 	const [playQueue, setPlayQueue] = useState<JellifyTrack[]>(playQueueInit)
+	const [queueRef, setQueueRef] = useState<Queue>(queueRefInit)
 
-	const [currentIndex, setCurrentIndex] = useState<number>(-1)
+	const [currentIndex, setCurrentIndex] = useState<number>(
+		!isUndefined(currentIndexValue) ? currentIndexValue : -1,
+	)
 
+	const { api, sessionId, user } = useJellifyContext()
 	const { downloadedTracks, networkStatus } = useNetworkContext()
 
 	useTrackPlayerEvents([Event.PlaybackActiveTrackChanged], ({ index }) => {
@@ -81,7 +86,13 @@ const QueueContextInitailizer = () => {
 
 			TrackPlayer.remove([queueItemIndex]).then(() => {
 				TrackPlayer.add(
-					mapDtoToTrack(track, downloadedTracks ?? [], queueItem.QueuingType),
+					mapDtoToTrack(
+						api!,
+						sessionId,
+						track,
+						downloadedTracks ?? [],
+						queueItem.QueuingType,
+					),
 					queueItemIndex,
 				)
 			})
@@ -93,14 +104,8 @@ const QueueContextInitailizer = () => {
 		queuingRef: Queue,
 		startIndex: number = 0,
 	) => {
+		trigger('impactLight')
 		console.debug(`Queuing ${audioItems.length} items`)
-
-		/**
-		 * If the start index matches the current index,
-		 * then our useEffect won't fire - this ensures
-		 * it does
-		 */
-		setCurrentIndex(-1)
 
 		const availableAudioItems = filterTracksOnNetworkStatus(
 			networkStatus,
@@ -115,7 +120,7 @@ const QueueContextInitailizer = () => {
 		)
 
 		const queue = availableAudioItems.map((item) =>
-			mapDtoToTrack(item, downloadedTracks ?? [], QueuingType.FromSelection),
+			mapDtoToTrack(api!, sessionId, item, downloadedTracks ?? [], QueuingType.FromSelection),
 		)
 
 		setQueueRef(queuingRef)
@@ -132,7 +137,13 @@ const QueueContextInitailizer = () => {
 	const playNextInQueue = async (item: BaseItemDto) => {
 		console.debug(`Playing item next in queue`)
 
-		const playNextTrack = mapDtoToTrack(item, downloadedTracks ?? [], QueuingType.PlayingNext)
+		const playNextTrack = mapDtoToTrack(
+			api!,
+			sessionId,
+			item,
+			downloadedTracks ?? [],
+			QueuingType.PlayingNext,
+		)
 
 		TrackPlayer.add([playNextTrack], currentIndex + 1)
 		setPlayQueue((await getQueue()) as JellifyTrack[])
@@ -149,7 +160,13 @@ const QueueContextInitailizer = () => {
 
 		await TrackPlayer.add(
 			items.map((item) =>
-				mapDtoToTrack(item, downloadedTracks ?? [], QueuingType.DirectlyQueued),
+				mapDtoToTrack(
+					api!,
+					sessionId,
+					item,
+					downloadedTracks ?? [],
+					QueuingType.DirectlyQueued,
+				),
 			),
 			insertIndex,
 		)
@@ -175,8 +192,6 @@ const QueueContextInitailizer = () => {
 
 	const skip = async (index?: number | undefined) => {
 		trigger('impactMedium')
-
-		setCurrentIndex(-1)
 
 		console.debug(
 			`Skip to next triggered. Index is ${`using ${
@@ -220,7 +235,7 @@ const QueueContextInitailizer = () => {
 		onSuccess: async (data, { queue }: QueueMutation) => {
 			trigger('notificationSuccess')
 
-			if (typeof queue === 'object') await markItemPlayed(queue)
+			if (typeof queue === 'object' && api && user) await markItemPlayed(api, user, queue)
 		},
 	})
 
@@ -267,20 +282,34 @@ const QueueContextInitailizer = () => {
 	//#endregion Hooks
 
 	//#region useEffect(s)
+
 	/**
-	 * Update RNTP Queue when our queue
-	 * is updated
+	 * Store play queue in storage when it changes
 	 */
 	useEffect(() => {
 		storage.set(MMKVStorageKeys.PlayQueue, JSON.stringify(playQueue))
 	}, [playQueue])
 
+	/**
+	 * Store queue ref in storage when it changes
+	 */
 	useEffect(() => {
 		storage.set(MMKVStorageKeys.Queue, JSON.stringify(queueRef))
 	}, [queueRef])
 
+	/**
+	 * Store current index in storage when it changes
+	 */
+	useEffect(() => {
+		if (currentIndex !== -1) {
+			console.debug(`Storing current index ${currentIndex}`)
+			storage.set(MMKVStorageKeys.CurrentIndex, currentIndex)
+		}
+	}, [currentIndex])
+
 	//#endregion useEffect(s)
 
+	//#region Return
 	return {
 		queueRef,
 		playQueue,
@@ -294,6 +323,7 @@ const QueueContextInitailizer = () => {
 		useSkip,
 		usePrevious,
 	}
+	//#endregion Return
 }
 
 export const QueueContext = createContext<QueueContext>({

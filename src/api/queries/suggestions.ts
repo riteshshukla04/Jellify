@@ -1,10 +1,18 @@
-import { getItemsApi, getSuggestionsApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../client'
+import { getItemsApi } from '@jellyfin/sdk/lib/utils/api'
 import { BaseItemDto, BaseItemKind } from '@jellyfin/sdk/lib/generated-client/models'
+import { Api } from '@jellyfin/sdk'
+import { isUndefined } from 'lodash'
 
-export async function fetchSearchSuggestions(): Promise<BaseItemDto[]> {
+/**
+ * Fetches search suggestions from the Jellyfin server
+ * @param api The Jellyfin {@link Api} client
+ * @returns A promise of a {@link BaseItemDto} array, be it empty or not
+ */
+export async function fetchSearchSuggestions(api: Api | undefined): Promise<BaseItemDto[]> {
 	return new Promise((resolve, reject) => {
-		getItemsApi(Client.api!)
+		if (isUndefined(api)) return reject('Client instance not set')
+
+		getItemsApi(api)
 			.getItems({
 				recursive: true,
 				limit: 10,
@@ -18,69 +26,6 @@ export async function fetchSearchSuggestions(): Promise<BaseItemDto[]> {
 			})
 			.then(({ data }) => {
 				if (data.Items) resolve(data.Items)
-				else resolve([])
-			})
-			.catch((error) => {
-				reject(error)
-			})
-	})
-}
-
-/**
- * @deprecated Use Items API based functions instead of Suggestions API
- * @returns
- */
-export async function fetchSuggestedArtists(): Promise<BaseItemDto[]> {
-	return new Promise((resolve, reject) => {
-		getSuggestionsApi(Client.api!)
-			.getSuggestions({
-				userId: Client.user!.id,
-				type: ['MusicArtist'],
-			})
-			.then((response) => {
-				if (response.data.Items) resolve(response.data.Items)
-				else resolve([])
-			})
-			.catch((error) => {
-				reject(error)
-			})
-	})
-}
-
-/**
- * @deprecated Use Items API based functions instead of Suggestions API
- * @returns
- */
-export async function fetchSuggestedAlbums(): Promise<BaseItemDto[]> {
-	return new Promise((resolve, reject) => {
-		getSuggestionsApi(Client.api!)
-			.getSuggestions({
-				userId: Client.user!.id,
-				type: ['MusicAlbum'],
-			})
-			.then((response) => {
-				if (response.data.Items) resolve(response.data.Items)
-				else resolve([])
-			})
-			.catch((error) => {
-				reject(error)
-			})
-	})
-}
-
-/**
- * @deprecated Use Items API based functions instead of Suggestions API
- * @returns
- */
-export async function fetchSuggestedTracks(): Promise<BaseItemDto[]> {
-	return new Promise((resolve, reject) => {
-		getSuggestionsApi(Client.api!)
-			.getSuggestions({
-				userId: Client.user!.id,
-				type: ['Audio'],
-			})
-			.then((response) => {
-				if (response.data.Items) resolve(response.data.Items)
 				else resolve([])
 			})
 			.catch((error) => {

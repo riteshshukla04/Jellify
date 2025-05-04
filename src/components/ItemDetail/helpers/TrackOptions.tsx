@@ -26,9 +26,8 @@ import { queryClient } from '../../../constants/query-client'
 import { QueryKeys } from '../../../enums/query-keys'
 import { fetchItem } from '../../../api/queries/item'
 import { fetchUserPlaylists } from '../../../api/queries/playlists'
-
+import { useJellifyContext } from '../../provider'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../../api/client'
 import { useNetworkContext } from '../../../components/Network/provider'
 import { useQueueContext } from '../../../player/queue-provider'
 import Toast from 'react-native-toast-message'
@@ -49,9 +48,11 @@ export default function TrackOptions({
 	navigation,
 	isNested,
 }: TrackOptionsProps): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
+
 	const { data: album, isSuccess: albumFetchSuccess } = useQuery({
 		queryKey: [QueryKeys.Item, track.AlbumId!],
-		queryFn: () => fetchItem(track.AlbumId!),
+		queryFn: () => fetchItem(api, track.AlbumId!),
 	})
 
 	const { useDownload, useRemoveDownload, downloadedTracks } = useNetworkContext()
@@ -64,7 +65,7 @@ export default function TrackOptions({
 		isSuccess: playlistsFetchSuccess,
 	} = useQuery({
 		queryKey: [QueryKeys.UserPlaylists],
-		queryFn: () => fetchUserPlaylists(),
+		queryFn: () => fetchUserPlaylists(api, user, library),
 	})
 
 	const { useAddToQueue } = useQueueContext()
@@ -74,14 +75,9 @@ export default function TrackOptions({
 	const useAddToPlaylist = useMutation({
 		mutationFn: ({ track, playlist }: AddToPlaylistMutation) => {
 			trigger('impactLight')
-			return addToPlaylist(track, playlist)
+			return addToPlaylist(api, user, track, playlist)
 		},
 		onSuccess: (data, { playlist }) => {
-			// Burnt.alert({
-			// 	title: `Added to playlist`,
-			// 	duration: 1,
-			// 	preset: 'done',
-			// })
 			Toast.show({
 				text1: 'Added to playlist',
 				type: 'success',
@@ -98,11 +94,6 @@ export default function TrackOptions({
 			})
 		},
 		onError: () => {
-			// Burnt.alert({
-			// 	title: `Unable to add`,
-			// 	duration: 1,
-			// 	preset: 'error',
-			// })
 			Toast.show({
 				text1: 'Unable to add',
 				type: 'error',
@@ -216,9 +207,9 @@ export default function TrackOptions({
 											<YStack flex={1}>
 												<FastImage
 													source={{
-														uri: getImageApi(
-															Client.api!,
-														).getItemImageUrlById(playlist.Id!),
+														uri: getImageApi(api!).getItemImageUrlById(
+															playlist.Id!,
+														),
 													}}
 													style={{
 														borderRadius: getToken('$1.5'),

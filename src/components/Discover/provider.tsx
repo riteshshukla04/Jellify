@@ -3,7 +3,7 @@ import { fetchRecentlyAdded, fetchRecentlyPlayed } from '../../api/queries/recen
 import { QueryKeys } from '../../enums/query-keys'
 import { createContext, ReactNode, useContext, useState } from 'react'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
-
+import { useJellifyContext } from '../provider'
 interface DiscoverContext {
 	refreshing: boolean
 	refresh: () => void
@@ -12,16 +12,17 @@ interface DiscoverContext {
 }
 
 const DiscoverContextInitializer = () => {
+	const { api, library } = useJellifyContext()
 	const [refreshing, setRefreshing] = useState<boolean>(false)
 
 	const { data: recentlyAdded, refetch } = useQuery({
 		queryKey: [QueryKeys.RecentlyAdded],
-		queryFn: () => fetchRecentlyAdded(),
+		queryFn: () => fetchRecentlyAdded(api, library),
 	})
 
 	const { data: recentlyPlayed, refetch: refetchRecentlyPlayed } = useQuery({
 		queryKey: [QueryKeys.RecentlyPlayed],
-		queryFn: () => fetchRecentlyPlayed(),
+		queryFn: () => fetchRecentlyPlayed(api, library),
 	})
 
 	const refresh = async () => {

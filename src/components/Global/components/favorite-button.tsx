@@ -7,6 +7,7 @@ import { getTokens, Spinner } from 'tamagui'
 import { QueryKeys } from '../../../enums/query-keys'
 import { fetchUserData } from '../../../api/queries/favorites'
 import { useJellifyUserDataContext } from '../../../components/user-data-provider'
+import { useJellifyContext } from '../../provider'
 
 interface SetFavoriteMutation {
 	item: BaseItemDto
@@ -21,11 +22,12 @@ export default function FavoriteButton({
 }): React.JSX.Element {
 	const [isFavorite, setFavorite] = useState<boolean>(isFavoriteItem(item))
 
+	const { api, user } = useJellifyContext()
 	const { toggleFavorite } = useJellifyUserDataContext()
 
 	const { data, isFetching, refetch } = useQuery({
 		queryKey: [QueryKeys.UserData, item.Id!],
-		queryFn: () => fetchUserData(item.Id!),
+		queryFn: () => fetchUserData(api, user, item.Id!),
 	})
 
 	useEffect(() => {
@@ -57,6 +59,6 @@ export function isFavoriteItem(item: BaseItemDto): boolean {
 	return isUndefined(item.UserData)
 		? false
 		: isUndefined(item.UserData.IsFavorite)
-		? false
-		: item.UserData.IsFavorite
+			? false
+			: item.UserData.IsFavorite
 }

@@ -3,34 +3,31 @@ import { useMutation } from '@tanstack/react-query'
 import _ from 'lodash'
 import { JellyfinCredentials } from '../../../api/types/jellyfin-credentials'
 import { getToken, Spacer, Spinner, XStack, YStack } from 'tamagui'
-import { useAuthenticationContext } from '../provider'
 import { H2 } from '../../Global/helpers/text'
 import Button from '../../Global/helpers/button'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Client from '../../../api/client'
 import { JellifyUser } from '../../../types/JellifyUser'
-import { ServerAuthenticationProps } from '../../../components/types'
+import { StackParamList } from '../../../components/types'
 import Input from '../../../components/Global/helpers/input'
 import Icon from '../../../components/Global/helpers/icon'
-// import Toast from '../../../components/Global/components/toast'
+import { useJellifyContext } from '../../provider'
+import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import Toast from 'react-native-toast-message'
 
 export default function ServerAuthentication({
-	route,
 	navigation,
-}: ServerAuthenticationProps): React.JSX.Element {
-	// const toast = useToastController()
-
+}: {
+	navigation: NativeStackNavigationProp<StackParamList>
+}): React.JSX.Element {
+	const { api } = useJellifyContext()
 	const [username, setUsername] = useState<string | undefined>(undefined)
 	const [password, setPassword] = React.useState<string | undefined>(undefined)
 
-	const { setUser, setServer } = useAuthenticationContext()
+	const { server, setUser, setServer } = useJellifyContext()
 
 	const useApiMutation = useMutation({
 		mutationFn: async (credentials: JellyfinCredentials) => {
-			return await Client.api!.authenticateUserByName(
-				credentials.username,
-				credentials.password,
-			)
+			return await api!.authenticateUserByName(credentials.username, credentials.password)
 		},
 		onSuccess: async (authResult) => {
 			console.log(`Received auth response from server`)
@@ -51,16 +48,18 @@ export default function ServerAuthentication({
 				accessToken: authResult.data.AccessToken as string,
 			}
 
-			Client.setUser(user)
 			setUser(user)
 
-			navigation.navigate('LibrarySelection', { user })
+			navigation.navigate('LibrarySelection')
 		},
 		onError: async (error: Error) => {
 			console.error('An error occurred connecting to the Jellyfin instance', error)
 
-			// toast.show('Sign in failed', {})
-			return Promise.reject(`An error occured signing into ${Client.server!.name}`)
+			Toast.show({
+				text1: `Unable to sign in to ${server!.name}`,
+				type: 'error',
+			})
+			return Promise.reject(`An error occured signing into ${server!.name}`)
 		},
 	})
 
@@ -68,7 +67,7 @@ export default function ServerAuthentication({
 		<SafeAreaView style={{ flex: 1 }}>
 			<YStack maxHeight={'$19'} flex={1} justifyContent='center'>
 				<H2 marginHorizontal={'$2'} textAlign='center'>
-					{`Sign in to ${route.params.server.name}`}
+					{`Sign in to ${server?.name ?? 'Jellyfin'}`}
 				</H2>
 			</YStack>
 			<YStack marginHorizontal={'$2'}>
@@ -109,8 +108,11 @@ export default function ServerAuthentication({
 						icon={() => <Icon name='chevron-left' small />}
 						bordered={0}
 						onPress={() => {
-							Client.switchServer()
-							navigation.push('ServerAddress')
+							if (navigation.canGoBack()) navigation.goBack()
+							else
+								navigation.navigate('ServerAddress', undefined, {
+									pop: false,
+								})
 						}}
 					>
 						Switch Server

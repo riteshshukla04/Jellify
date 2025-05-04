@@ -13,22 +13,25 @@ import Scrubber from '../helpers/scrubber'
 import Controls from '../helpers/controls'
 import FastImage from 'react-native-fast-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../../api/client'
 import { useQueueContext } from '../../../player/queue-provider'
 import Toast from 'react-native-toast-message'
 import JellifyToastConfig from '../../../constants/toast.config'
 import { useColorScheme } from 'react-native'
 import { useFocusEffect } from '@react-navigation/native'
+
 import TrackPlayer from 'react-native-track-player'
 import { JellifyShuffle, PLAY_AFTER_SHUFFLE } from '../../../helpers/shuffle'
 import { JellifyTrack } from '../../../types/JellifyTrack'
 import { QueuingType } from '../../../enums/queuing-type'
+import { useJellifyContext } from '../../provider'
 
 export default function PlayerScreen({
 	navigation,
 }: {
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
+	const { api } = useJellifyContext()
+
 	const [showToast, setShowToast] = useState(true)
 
 	const isDarkMode = useColorScheme() === 'dark'
@@ -100,7 +103,7 @@ export default function PlayerScreen({
 												{
 													// If the Queue is a BaseItemDto, display the name of it
 													typeof queueRef === 'object'
-														? queueRef.Name ?? 'Untitled'
+														? (queueRef.Name ?? 'Untitled')
 														: queueRef
 												}
 											</Text>
@@ -116,7 +119,7 @@ export default function PlayerScreen({
 									>
 										<FastImage
 											source={{
-												uri: getImageApi(Client.api!).getItemImageUrlById(
+												uri: getImageApi(api!).getItemImageUrlById(
 													nowPlaying!.item.AlbumId!,
 												),
 											}}

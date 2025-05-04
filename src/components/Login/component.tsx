@@ -3,30 +3,29 @@ import ServerAuthentication from './screens/server-authentication'
 import ServerAddress from './screens/server-address'
 import { createStackNavigator } from '@react-navigation/stack'
 import ServerLibrary from './screens/server-library'
-import { useAuthenticationContext } from './provider'
-import { useEffect } from 'react'
+import { useJellifyContext } from '../provider'
 
+const LoginStack = createStackNavigator()
+
+/**
+ * The login screen.
+ * @returns The login screen.
+ */
 export default function Login(): React.JSX.Element {
-	const { user, server, setTriggerAuth } = useAuthenticationContext()
-
-	const Stack = createStackNavigator()
-
-	useEffect(() => {
-		setTriggerAuth(false)
-	})
+	const { user, server } = useJellifyContext()
 
 	return (
-		<Stack.Navigator
+		<LoginStack.Navigator
 			initialRouteName={
 				isUndefined(server)
 					? 'ServerAddress'
 					: isUndefined(user)
-					? 'ServerAuthentication'
-					: 'LibrarySelection'
+						? 'ServerAuthentication'
+						: 'LibrarySelection'
 			}
 			screenOptions={{ headerShown: false }}
 		>
-			<Stack.Screen
+			<LoginStack.Screen
 				name='ServerAddress'
 				options={{
 					headerShown: false,
@@ -34,22 +33,20 @@ export default function Login(): React.JSX.Element {
 				component={ServerAddress}
 			/>
 
-			<Stack.Screen
+			<LoginStack.Screen
 				name='ServerAuthentication'
 				options={{
 					headerShown: false,
 				}}
-				initialParams={{ server }}
-				//@ts-expect-error TOOD: Explain why this exists
 				component={ServerAuthentication}
 			/>
-			<Stack.Screen
+			<LoginStack.Screen
 				name='LibrarySelection'
 				options={{
 					headerShown: false,
 				}}
 				component={ServerLibrary}
 			/>
-		</Stack.Navigator>
+		</LoginStack.Navigator>
 	)
 }

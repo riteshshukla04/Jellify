@@ -7,10 +7,11 @@ import { getToken } from 'tamagui'
 import { fetchFavoritePlaylists } from '../../api/queries/favorites'
 import { QueryKeys } from '../../enums/query-keys'
 import { useQuery } from '@tanstack/react-query'
-
+import { useJellifyContext } from '../provider'
 export default function FavoritePlaylists({
 	navigation,
 }: FavoritePlaylistsProps): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
 	navigation.setOptions({
 		headerRight: () => {
 			return (
@@ -29,7 +30,7 @@ export default function FavoritePlaylists({
 		refetch,
 	} = useQuery({
 		queryKey: [QueryKeys.UserPlaylists],
-		queryFn: () => fetchFavoritePlaylists(),
+		queryFn: () => fetchFavoritePlaylists(api, user, library),
 	})
 
 	return (

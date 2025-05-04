@@ -14,9 +14,9 @@ import { trigger } from 'react-native-haptic-feedback'
 import { queryClient } from '../../constants/query-client'
 import { QueryKeys } from '../../enums/query-keys'
 import { getImageApi, getItemsApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../api/client'
 import { RefreshControl } from 'react-native'
 import FastImage from 'react-native-fast-image'
+import { useJellifyContext } from '../provider'
 
 interface PlaylistProps {
 	playlist: BaseItemDto
@@ -36,6 +36,8 @@ interface RemoveFromPlaylistMutation {
 }
 
 export default function Playlist({ playlist, navigation }: PlaylistProps): React.JSX.Element {
+	const { api, user } = useJellifyContext()
+
 	const [editing, setEditing] = useState<boolean>(false)
 	const [playlistTracks, setPlaylistTracks] = useState<BaseItemDto[]>([])
 	const {
@@ -46,7 +48,7 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 	} = useQuery({
 		queryKey: [QueryKeys.ItemTracks, playlist.Id!],
 		queryFn: () => {
-			return getItemsApi(Client.api!)
+			return getItemsApi(api!)
 				.getItems({
 					parentId: playlist.Id!,
 				})
@@ -94,6 +96,7 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 	const useUpdatePlaylist = useMutation({
 		mutationFn: ({ playlist, tracks }: { playlist: BaseItemDto; tracks: BaseItemDto[] }) => {
 			return updatePlaylist(
+				api,
 				playlist.Id!,
 				playlist.Name!,
 				tracks.map((track) => track.Id!),
@@ -116,7 +119,7 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 
 	const useRemoveFromPlaylist = useMutation({
 		mutationFn: ({ playlist, track, index }: RemoveFromPlaylistMutation) => {
-			return removeFromPlaylist(track, playlist)
+			return removeFromPlaylist(api, track, playlist)
 		},
 		onSuccess: (data, { index }) => {
 			trigger('notificationSuccess')
@@ -145,7 +148,7 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 			ListHeaderComponent={
 				<YStack alignItems='center' marginTop={'$4'}>
 					<FastImage
-						source={{ uri: getImageApi(Client.api!).getItemImageUrlById(playlist.Id!) }}
+						source={{ uri: getImageApi(api!).getItemImageUrlById(playlist.Id!) }}
 						style={{
 							borderRadius: getToken('$5'),
 							width: getToken('$20') + getToken('$15'),
@@ -172,19 +175,30 @@ export default function Playlist({ playlist, navigation }: PlaylistProps): React
 			}}
 			refreshing={isPending}
 			renderItem={({ item: track, getIndex, drag }) => (
-				<Track
-					navigation={navigation}
-					track={track}
-					tracklist={tracks!}
-					index={getIndex() ?? 0}
-					queue={playlist}
-					showArtwork
-					onLongPress={editing ? drag : undefined}
-					showRemove={editing}
-					onRemove={() =>
-						useRemoveFromPlaylist.mutate({ playlist, track, index: getIndex()! })
-					}
-				/>
+				<XStack alignItems='center'>
+					{editing && <Icon name='drag' onPress={drag} />}
+
+					<Track
+						navigation={navigation}
+						track={track}
+						tracklist={tracks!}
+						index={getIndex() ?? 0}
+						queue={playlist}
+						showArtwork
+						onLongPress={() => {
+							editing
+								? drag()
+								: navigation.navigate('Details', {
+										item: track,
+										isNested: false,
+									})
+						}}
+						showRemove={editing}
+						onRemove={() =>
+							useRemoveFromPlaylist.mutate({ playlist, track, index: getIndex()! })
+						}
+					/>
+				</XStack>
 			)}
 			ListFooterComponent={
 				<XStack justifyContent='flex-end'>

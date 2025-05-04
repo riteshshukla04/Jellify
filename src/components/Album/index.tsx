@@ -1,22 +1,20 @@
 import { HomeAlbumProps, StackParamList } from '../types'
 import { YStack, XStack, Separator, getToken, Spacer } from 'tamagui'
 import { H5, Text } from '../Global/helpers/text'
-import { FlatList, SectionList, useWindowDimensions } from 'react-native'
+import { ActivityIndicator, FlatList, SectionList, useWindowDimensions } from 'react-native'
 import { RunTimeTicks } from '../Global/helpers/time-codes'
 import Track from '../Global/components/track'
 import FavoriteButton from '../Global/components/favorite-button'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../enums/query-keys'
-import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../api/client'
 import { ItemCard } from '../Global/components/item-card'
 import { fetchAlbumDiscs } from '../../api/queries/item'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import InstantMixButton from '../Global/components/instant-mix-button'
-import FastImage from 'react-native-fast-image'
 import ItemImage from '../Global/components/image'
 import React from 'react'
+import { useJellifyContext } from '../provider'
 
 /**
  * The screen for an Album's track list
@@ -31,9 +29,11 @@ import React from 'react'
 export function AlbumScreen({ route, navigation }: HomeAlbumProps): React.JSX.Element {
 	const { album } = route.params
 
-	const { data: discs } = useQuery({
+	const { api } = useJellifyContext()
+
+	const { data: discs, isPending } = useQuery({
 		queryKey: [QueryKeys.ItemTracks, album.Id!],
-		queryFn: () => fetchAlbumDiscs(album),
+		queryFn: () => fetchAlbumDiscs(api, album),
 	})
 
 	return (
@@ -63,6 +63,15 @@ export function AlbumScreen({ route, navigation }: HomeAlbumProps): React.JSX.El
 				/>
 			)}
 			ListFooterComponent={() => AlbumTrackListFooter(album, navigation)}
+			ListEmptyComponent={() => (
+				<YStack>
+					{isPending ? (
+						<ActivityIndicator size='large' color={'$background'} />
+					) : (
+						<Text>No tracks found</Text>
+					)}
+				</YStack>
+			)}
 		/>
 	)
 }
@@ -133,7 +142,7 @@ function AlbumTrackListHeader(
 				horizontal
 				keyExtractor={(item) => item.Id!}
 				data={album.AlbumArtists}
-				renderItem={({ index, item: artist }) => (
+				renderItem={({ item: artist }) => (
 					<ItemCard
 						size={'$10'}
 						item={artist}

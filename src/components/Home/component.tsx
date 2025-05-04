@@ -5,19 +5,18 @@ import RecentArtists from './helpers/recent-artists'
 import RecentlyPlayed from './helpers/recently-played'
 import { useHomeContext } from './provider'
 import { H3 } from '../Global/helpers/text'
-import Client from '../../api/client'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import FrequentArtists from './helpers/frequent-artists'
 import FrequentlyPlayedTracks from './helpers/frequent-tracks'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-
+import { useJellifyContext } from '../provider'
 export function ProvidedHome({
 	navigation,
 }: {
 	navigation: NativeStackNavigationProp<StackParamList>
 }): React.JSX.Element {
+	const { user } = useJellifyContext()
 	const { refreshing: refetching, onRefresh } = useHomeContext()
-
 	const insets = useSafeAreaInsets()
 
 	return (
@@ -28,7 +27,7 @@ export function ProvidedHome({
 		>
 			<YStack alignContent='flex-start'>
 				<XStack margin={'$2'}>
-					<H3>{`Hi, ${Client.user!.name}`}</H3>
+					<H3>{`Hi, ${user?.name ?? 'there'}`}</H3>
 				</XStack>
 
 				<Separator marginVertical={'$2'} />

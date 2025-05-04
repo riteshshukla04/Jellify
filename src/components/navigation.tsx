@@ -3,14 +3,17 @@ import Player from './Player/stack'
 import { Tabs } from './tabs'
 import { StackParamList } from './types'
 import { useTheme } from 'tamagui'
+import { useJellifyContext } from './provider'
+import Login from './Login/component'
+const RootStack = createNativeStackNavigator<StackParamList>()
 
 export default function Navigation(): React.JSX.Element {
-	const RootStack = createNativeStackNavigator<StackParamList>()
-
 	const theme = useTheme()
 
+	const { api, library } = useJellifyContext()
+
 	return (
-		<RootStack.Navigator>
+		<RootStack.Navigator initialRouteName={api && library ? 'Tabs' : 'Login'}>
 			<RootStack.Screen
 				name='Tabs'
 				component={Tabs}
@@ -25,6 +28,13 @@ export default function Navigation(): React.JSX.Element {
 				options={{
 					headerShown: false,
 					presentation: 'modal',
+				}}
+			/>
+			<RootStack.Screen
+				name='Login'
+				component={Login}
+				options={{
+					headerShown: false,
 				}}
 			/>
 		</RootStack.Navigator>

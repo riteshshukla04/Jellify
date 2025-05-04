@@ -1,11 +1,10 @@
-import Client from '../../../api/client'
 import { BaseItemDto } from '@jellyfin/sdk/lib/generated-client/models'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
 import { isUndefined } from 'lodash'
 import { StyleProp } from 'react-native'
 import FastImage, { ImageStyle } from 'react-native-fast-image'
 import { FontSizeTokens, getFontSizeToken, getToken, getTokenValue, Token } from 'tamagui'
-
+import { useJellifyContext } from '../../provider'
 interface ImageProps {
 	item: BaseItemDto
 	circular?: boolean | undefined
@@ -21,9 +20,11 @@ export default function ItemImage({
 	height,
 	style,
 }: ImageProps): React.JSX.Element {
+	const { api } = useJellifyContext()
+
 	return (
 		<FastImage
-			source={{ uri: getImageApi(Client.api!).getItemImageUrlById(item.Id!) }}
+			source={{ uri: getImageApi(api!).getItemImageUrlById(item.Id!) }}
 			style={{
 				borderRadius: getBorderRadius(circular, width),
 				width: !isUndefined(width)

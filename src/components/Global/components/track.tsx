@@ -12,15 +12,16 @@ import { Queue } from '../../../player/types/queue-item'
 import FavoriteIcon from './favorite-icon'
 import FastImage from 'react-native-fast-image'
 import { getImageApi } from '@jellyfin/sdk/lib/utils/api'
-import Client from '../../../api/client'
 import { networkStatusTypes } from '../../../components/Network/internetConnectionWatcher'
 import { useNetworkContext } from '../../../components/Network/provider'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../../enums/query-keys'
 import { fetchMediaInfo } from '../../../api/queries/media'
 import { useQueueContext } from '../../../player/queue-provider'
+import { fetchItem } from '../../../api/queries/item'
+import { useJellifyContext } from '../../provider'
 
-interface TrackProps {
+export interface TrackProps {
 	track: BaseItemDto
 	navigation: NativeStackNavigationProp<StackParamList>
 	tracklist?: BaseItemDto[] | undefined
@@ -47,11 +48,11 @@ export default function Track({
 	onLongPress,
 	isNested,
 	invertedColors,
-	prependElement,
 	showRemove,
 	onRemove,
 }: TrackProps): React.JSX.Element {
 	const theme = useTheme()
+	const { api, user } = useJellifyContext()
 	const { nowPlaying, useStartPlayback } = usePlayerContext()
 	const { playQueue, useLoadNewQueue } = useQueueContext()
 	const { downloadedTracks, networkStatus } = useNetworkContext()
@@ -63,9 +64,16 @@ export default function Track({
 
 	const isOffline = networkStatus === networkStatusTypes.DISCONNECTED
 
+	// Fetch media info so it's available in the player
 	const mediaInfo = useQuery({
 		queryKey: [QueryKeys.MediaSources, track.Id!],
-		queryFn: () => fetchMediaInfo(track.Id!),
+		queryFn: () => fetchMediaInfo(api, user, track.Id!),
+	})
+
+	// Fetch album so it's available in the Details screen
+	const { data: album } = useQuery({
+		queryKey: [QueryKeys.MediaSources, track.Id!],
+		queryFn: () => fetchItem(api, track.Id!),
 	})
 
 	return (
@@ -100,27 +108,21 @@ export default function Track({
 									item: track,
 									isNested: isNested,
 								})
-						  }
+							}
 				}
 				paddingVertical={'$2'}
 			>
-				{prependElement && (
-					<YStack alignContent='center' justifyContent='center' flex={1}>
-						{prependElement}
-					</YStack>
-				)}
-
 				<XStack
 					alignContent='center'
 					justifyContent='center'
-					flex={showArtwork ? 2 : 1}
+					flex={1}
 					marginHorizontal={'$2'}
 					minHeight={showArtwork ? '$4' : 'unset'}
 				>
 					{showArtwork ? (
 						<FastImage
 							source={{
-								uri: getImageApi(Client.api!).getItemImageUrlById(track.AlbumId!),
+								uri: getImageApi(api!).getItemImageUrlById(track.AlbumId!),
 							}}
 							style={{
 								width: getToken('$12'),
@@ -142,10 +144,10 @@ export default function Track({
 							isPlaying
 								? getTokens().color.telemagenta
 								: isOffline
-								? isDownloaded
-									? theme.color
-									: '$purpleGray'
-								: theme.color
+									? isDownloaded
+										? theme.color
+										: '$purpleGray'
+									: theme.color
 						}
 						lineBreakStrategyIOS='standard'
 						numberOfLines={1}

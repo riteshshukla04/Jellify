@@ -6,11 +6,13 @@ import { Separator } from 'tamagui'
 import { useQuery } from '@tanstack/react-query'
 import { QueryKeys } from '../../enums/query-keys'
 import { fetchFavoriteTracks } from '../../api/queries/favorites'
+import { useJellifyContext } from '../provider'
 
 export default function TracksScreen({ route, navigation }: TracksProps): React.JSX.Element {
+	const { api, user, library } = useJellifyContext()
 	const { data: favoriteTracks } = useQuery({
 		queryKey: [QueryKeys.FavoriteTracks],
-		queryFn: fetchFavoriteTracks,
+		queryFn: () => fetchFavoriteTracks(api, user, library),
 	})
 
 	return (
@@ -29,8 +31,8 @@ export default function TracksScreen({ route, navigation }: TracksProps): React.
 						route.params.tracks
 							? route.params.tracks.slice(index, index + 50)
 							: favoriteTracks
-							? favoriteTracks.slice(index, index + 50)
-							: []
+								? favoriteTracks.slice(index, index + 50)
+								: []
 					}
 					queue={route.params.queue}
 				/>

@@ -1,4 +1,4 @@
-export const UPDATE_INTERVAL: number = 50 // 8 milliseconds
+export const UPDATE_INTERVAL: number = 200 // 20 milliseconds
 
 /**
  * Indicates the seconds the progress position must be
